@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RVCA — Weekly Email Performance · Jun 29–Jul 6 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Expanded:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+ :root{
+ --ink:#141414; --ink-soft:#3a3a38; --paper:#ffffff; --paper-2:#f4f3ef;
+ --line:#141414; --hair:#dcd9d1; --up:#2f6b4f; --down:#b23a2e; --flat:#6b665a;
+ --biz-bg:#141414; --gold:#c9a24b;
+ --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+ --disp:"Archivo Expanded","Archivo",system-ui,sans-serif;
+ --body:"Archivo",system-ui,-apple-system,sans-serif;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ html{-webkit-font-smoothing:antialiased}
+ body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.45;font-size:15px}
+ .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+ .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-soft)}
+ .num{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:.92}
+ .label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--flat)}
+ h2.sec{font-family:var(--disp);font-weight:800;font-size:clamp(21px,3.2vw,31px);letter-spacing:-.02em;text-transform:uppercase}
+ .d{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.02em;white-space:nowrap;display:inline-flex;gap:4px;align-items:center}
+ .d.up{color:var(--up)} .d.down{color:var(--down)} .d.flat{color:var(--flat)}
+ .d small{font-family:var(--mono);font-weight:400;letter-spacing:.12em;color:var(--flat);font-size:9px;text-transform:uppercase}
+
+ /* masthead */
+ header{border-bottom:2px solid var(--line);padding-top:34px}
+ .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-bottom:20px}
+ .mark{display:flex;align-items:center;gap:18px}
+ .mark img{width:66px;height:auto;display:block}
+ .mark .divider{width:1px;height:44px;background:var(--hair)}
+ .mark .sub .eyebrow{display:block}
+ .mark .sub b{font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:-.01em;display:block;margin-top:3px}
+ .period{text-align:right}
+ .period .big{font-family:var(--disp);font-weight:800;font-size:clamp(24px,3.6vw,36px);letter-spacing:-.02em;line-height:.9;text-transform:uppercase}
+ .balance{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);display:flex;gap:10px;align-items:center;padding:8px 0}
+ .balance span{opacity:.55}
+
+ /* tabs */
+ .tabs{display:flex;gap:0;border-bottom:2px solid var(--line)}
+ .tab{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:14px 22px;cursor:pointer;background:none;border:none;color:var(--flat);border-bottom:2px solid transparent;margin-bottom:-2px}
+ .tab.active{color:var(--ink);border-bottom:2px solid var(--ink);font-weight:700}
+ .panel{display:none} .panel.active{display:block}
+
+ section{padding:42px 0;border-bottom:1px solid var(--hair)}
+ .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:24px}
+ .sec-head .n{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--flat)}
+ .sec-note{font-size:13.5px;color:var(--ink-soft);max-width:66ch;margin-top:2px}
+ .offbadge{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--hair);padding:3px 8px;color:var(--flat);margin-left:10px;vertical-align:middle}
+
+ /* overview dual */
+ .dual{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--line)}
+ .dual>div{padding:26px 26px}
+ .dual .r{border-left:1px solid var(--hair)}
+ .dual .cap{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+ .dual .big{font-family:var(--disp);font-weight:800;font-size:clamp(30px,4.6vw,46px);letter-spacing:-.02em;line-height:.95}
+ .dual .tot-label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--flat);margin:6px 0 2px}
+ .orow{display:grid;grid-template-columns:1.4fr .8fr .8fr auto;gap:8px;align-items:center;padding:11px 0;border-top:1px solid var(--hair);font-size:13px}
+ .orow .onm{font-family:var(--body);font-weight:600}
+ .orow .oval,.orow .osh{font-family:var(--mono);font-size:12.5px;text-align:right}
+ .orow .osh{color:var(--flat)}
+ /* strategy callout */
+ .callout{border:2px solid var(--line);margin-top:24px}
+ .callout .bar{background:var(--ink);color:var(--paper);padding:9px 22px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase}
+ .callout .cbody{padding:22px 24px 24px}
+ .callout h4{font-family:var(--disp);font-weight:800;font-size:clamp(18px,2.6vw,25px);text-transform:uppercase;letter-spacing:-.01em;line-height:1.02;margin-bottom:16px}
+ .callout .proofs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+ .callout .p{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:16px 18px}
+ .callout .p .pn{font-family:var(--disp);font-weight:800;font-size:30px;line-height:.9}
+ .callout .p .pl{font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.35}
+ .callout .take{font-size:14.5px;font-weight:600;border-top:2px solid var(--line);padding-top:16px;margin-top:18px}
+ .callout .take b{font-family:var(--disp);font-weight:800}
+ @media (max-width:860px){.callout .proofs{grid-template-columns:1fr}}
+
+ /* metric hero + list */
+ .statcard{border:2px solid var(--line)}
+ .statcard .heroes{display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--line)}
+ .statcard .heroes .hero{padding:22px 26px}
+ .statcard .heroes .hero + .hero{border-left:1px solid var(--hair)}
+ .hero .hl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--flat);margin-bottom:8px}
+ .hero .num{font-size:clamp(28px,4vw,40px);margin-bottom:10px;line-height:.9}
+ .mgrid{display:grid;grid-template-columns:1fr 1fr}
+ .mgrid .mrow{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 26px;border-bottom:1px solid var(--hair)}
+ .mgrid .mrow:nth-child(odd){border-right:1px solid var(--hair)}
+ .mgrid .mrow:nth-last-child(1),.mgrid .mrow:nth-last-child(2){border-bottom:none}
+ .mrow .mn{font-size:13.5px}
+ .mrow .mr{display:flex;gap:16px;align-items:center}
+ .mrow .mv{font-family:var(--mono);font-size:13px;font-weight:500}
+ .mrow .md{min-width:80px;text-align:right}
+ /* horizontal stat band (signup) */
+ .statband{display:grid;border:2px solid var(--line)}
+ .statband .s{padding:20px 24px;border-right:1px solid var(--hair)}
+ .statband .s:last-child{border-right:none}
+ .statband .s .hl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--flat);margin-bottom:8px}
+ .statband .s .num{font-size:clamp(22px,3vw,30px);line-height:.9}
+ .statband .s .sm{font-family:var(--mono);font-size:11px;color:var(--flat);margin-top:8px;display:block}
+
+ /* tables */
+ .tbl-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);font-weight:700;margin:26px 0 10px;padding-bottom:6px;border-bottom:1.5px solid var(--line)}
+ table{width:100%;border-collapse:collapse;font-size:13.5px}
+ thead th{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--flat);text-align:right;padding:0 12px 10px;border-bottom:1px solid var(--hair);font-weight:500}
+ thead th:first-child,tbody td:first-child{text-align:left}
+ tbody td{padding:12px;border-bottom:1px solid var(--hair);text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+ tbody td.name{font-family:var(--body);font-size:13.5px;font-weight:600}
+ tbody td .sub{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--flat);font-weight:400;margin-top:3px;text-transform:none}
+ tbody tr:hover{background:var(--paper-2)}
+ .rank{font-family:var(--disp);font-weight:800;color:var(--hair);font-size:14px;padding-right:8px}
+ .rev-strong{font-weight:700;font-family:var(--disp)!important;font-size:15px!important}
+ .tag{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--hair);padding:2px 6px;color:var(--flat);margin-left:6px;vertical-align:middle}
+
+ /* commentary trio */
+ .comm{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--hair);border-left:1px solid var(--hair);margin-top:30px}
+ .comm .col{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:20px 20px}
+ .comm .col h3{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding-bottom:12px;margin-bottom:14px;border-bottom:1.5px solid var(--line);display:flex;gap:8px;align-items:center}
+ .comm .col h3 .mkr{font-weight:700}
+ .comm .col.w h3 .mkr{color:var(--up)} .comm .col.a h3 .mkr{color:var(--down)} .comm .col.o h3 .mkr{color:var(--ink)}
+ .comm .bullet{margin-bottom:14px}
+ .comm .bullet:last-child{margin-bottom:0}
+ .comm .bullet b{font-family:var(--body);font-weight:700;font-size:13px;display:block;margin-bottom:2px}
+ .comm .bullet span{font-size:12.5px;color:var(--ink-soft);line-height:1.4}
+
+ /* SMS comparison table + signup */
+ .cmp td:first-child{font-family:var(--body);font-weight:600}
+ .cmp .chg td{font-weight:700}
+ .statcard .cmp thead th{padding-top:16px}
+ .statcard .cmp th:first-child,.statcard .cmp td:first-child{padding-left:26px}
+ .statcard .cmp th:last-child,.statcard .cmp td:last-child{padding-right:26px}
+
+ /* business validation (muted) */
+ .val{background:var(--biz-bg);color:var(--paper);border:2px solid var(--line);padding:24px 26px;margin-top:8px}
+ .val .label{color:#8f8b7d}
+ .val h3{font-family:var(--disp);font-weight:800;font-size:16px;text-transform:uppercase;color:var(--paper);margin-bottom:4px}
+ .val .vnote{color:#b8b4a6;font-size:12.5px;max-width:70ch;margin-bottom:18px}
+ .val-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid #333;border-left:1px solid #333}
+ .val-kpi{border-right:1px solid #333;border-bottom:1px solid #333;padding:14px 14px}
+ .val-kpi .num{color:var(--paper);font-size:clamp(19px,2.6vw,24px);margin:6px 0 6px}
+ .val-kpi .d small{color:#8f8b7d}
+ .val-kpi .d.up{color:#6bbf98} .val-kpi .d.down{color:#e08a7e} .val-kpi .d.flat{color:#8f8b7d}
+
+ /* persona tab */
+ .persona-scaffold{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+ .pslot{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:22px 18px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;background:repeating-linear-gradient(-45deg,transparent,transparent 12px,rgba(20,20,20,.02) 12px,rgba(20,20,20,.02) 13px)}
+ .pslot .pn{font-family:var(--body);font-weight:600;font-size:15px}
+ .pslot .pmeta{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--flat);margin-top:4px}
+ .pslot .pending{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--flat);border:1px dashed var(--hair);padding:5px 8px;align-self:flex-start;margin-top:14px}
+ .pending-banner{border:2px solid var(--line);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px;background:var(--paper-2)}
+ .pending-banner .msg{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+
+ @media (max-width:860px){
+ .mgrid{grid-template-columns:1fr}
+ .mgrid .mrow:nth-child(odd){border-right:none}
+ .mgrid .mrow:nth-last-child(2){border-bottom:1px solid var(--hair)}
+ .statcard .heroes{grid-template-columns:1fr}
+ .statcard .heroes .hero + .hero{border-left:none;border-top:1px solid var(--hair)}
+ .statband{grid-template-columns:1fr 1fr!important}
+ .statband .s{border-bottom:1px solid var(--hair)}
+ .comm,.persona-scaffold{grid-template-columns:1fr}
+ .dual,.val-grid{grid-template-columns:1fr}
+ .val-grid{grid-template-columns:repeat(2,1fr)}
+ .mast{align-items:flex-start}.period{text-align:left}
+ }
+ /* persona lifecycle spotlights */
+ .psp-intro{margin-bottom:24px}
+ .psp-groups{display:flex;gap:0;border-bottom:2px solid var(--line);margin-bottom:24px}
+ .psp-grp{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--flat);padding:6px 0;margin-right:26px;border-bottom:2px solid transparent;margin-bottom:-2px}
+ .grouplabel{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);font-weight:700;border-bottom:1.5px solid var(--line);padding-bottom:8px;margin:32px 0 18px;display:flex;justify-content:space-between;align-items:baseline}
+ .grouplabel span{color:var(--flat);font-weight:400;letter-spacing:.1em}
+ .grouplabel:first-of-type{margin-top:6px}
+ .spot{background:#141414;color:#f4f3ef;border:2px solid var(--line);margin-bottom:20px}
+ .spot .shead{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;padding:22px 28px 20px;border-bottom:1px solid #2a2a28}
+ .spot .eyebrow2{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+ .spot .pname{font-family:var(--disp);font-weight:800;font-size:clamp(20px,2.8vw,27px);letter-spacing:-.01em;line-height:1;margin-top:9px;color:#fff}
+ .spot .ptag{font-style:italic;font-size:13px;color:#b0ac9e;margin-top:9px;max-width:54ch;line-height:1.45}
+ .spot .pmeta2{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#8a867a;margin-top:11px}
+ .spot .hero-stat{text-align:right;flex-shrink:0;min-width:120px}
+ .spot .hero-stat .hn{font-family:var(--disp);font-weight:800;font-size:clamp(32px,5vw,50px);line-height:.82;color:var(--gold);letter-spacing:-.02em}
+ .spot .hero-stat .hl2{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8a867a;margin-top:9px;line-height:1.4;max-width:150px;margin-left:auto}
+ .tl{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;padding:28px 28px 10px}
+ .tnode{position:relative;padding:0 8px}
+ .tnode::before{content:"";position:absolute;top:12px;left:0;right:0;height:2px;background:#2a2a28;z-index:0}
+ .tnode:first-child::before{left:50%}
+ .tnode:last-child::before{right:50%}
+ .tdot{position:relative;z-index:1;width:26px;height:26px;border-radius:50%;background:#141414;border:2px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;margin:0 auto 13px}
+ .tdot.done{background:var(--gold);color:#141414;font-weight:700}
+ .tdot.mute{border-color:#46453f;color:#6b665a}
+ .tnode .tt{font-family:var(--body);font-weight:700;font-size:11px;text-align:center;color:#f4f3ef;line-height:1.25}
+ .tnode .td{font-family:var(--mono);font-size:8.5px;color:#8a867a;text-align:center;margin-top:4px;line-height:1.4}
+ .tnode .tdate{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);text-align:center;margin-top:6px}
+ .spot .pbody{padding:16px 28px 6px;font-size:12.5px;color:#c4c0b3;line-height:1.6;max-width:82ch}
+ .spot .pquote{margin:14px 28px 26px;padding:11px 0 11px 18px;border-left:3px solid var(--gold);font-style:italic;font-size:13.5px;color:#f4f3ef;line-height:1.5}
+ .spot .eng{margin:4px 28px 2px;border-top:1px solid #2a2a28;padding-top:16px}
+ .eng-label{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:13px}
+ .eng-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:26px}
+ .eng-grid .erow{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #232321}
+ .eng-grid .ecol.stats .erow:last-child{border-bottom:none}
+ .erow .ek{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#8a867a;white-space:nowrap}
+ .erow .ev{font-size:12px;color:#e8e5db;text-align:right;line-height:1.35}
+ .erow .ev em{color:#8a867a;font-style:normal;font-size:10.5px}
+ .ecol.emails > .ek{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8a867a;margin-bottom:10px}
+ .chip{display:inline-block;font-size:10.5px;line-height:1.3;padding:4px 9px;margin:0 6px 6px 0;border:1px solid #3a3a38;color:#c4c0b3}
+ .chip.open{border-color:var(--gold);color:var(--gold)}
+ .chip.click{background:var(--gold);border-color:var(--gold);color:#141414;font-weight:600}
+ .chip.none{border-color:#383836;color:#6b665a}
+ .psp-take{border:2px solid var(--line);margin-top:8px}
+ .psp-take .bar{background:var(--ink);color:var(--paper);padding:9px 22px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+ .psp-take .tk{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+ .psp-take .tk .c{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:16px 18px}
+ .psp-take .tk .c b{font-family:var(--body);font-weight:700;font-size:13px;display:block;margin-bottom:4px}
+ .psp-take .tk .c span{font-size:12.5px;color:var(--ink-soft);line-height:1.4}
+ .dataflag{border:2px solid var(--line);margin-top:20px}
+ .dataflag .fbar{background:var(--ink);color:var(--paper);padding:9px 22px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;display:flex;align-items:center;gap:9px}
+ .dataflag .fbar .warn{color:var(--gold);font-size:13px}
+ .dataflag .fbody{padding:20px 24px 22px}
+ .dataflag .fbody p{font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:12px;max-width:82ch}
+ .dataflag .fbody p:last-child{margin-bottom:0}
+ .dataflag .fbody b{color:var(--ink);font-weight:700}
+ .dataflag code{font-family:var(--mono);font-size:11.5px;background:var(--paper-2);border:1px solid var(--hair);padding:1px 5px}
+ @media (max-width:860px){
+ .tl{grid-auto-flow:row;grid-auto-columns:unset}
+ .tnode{padding:0 0 20px 36px}
+ .tnode::before{top:0;bottom:0;left:12px;right:auto!important;width:2px;height:auto}
+ .tnode:first-child::before{top:12px}
+ .tnode:last-child::before{bottom:auto;height:14px}
+ .tdot{margin:0;position:absolute;left:0;top:0}
+ .tnode .tt,.tnode .td,.tnode .tdate{text-align:left}
+ .spot .shead{flex-direction:column;gap:14px}
+ .spot .hero-stat{text-align:left}
+ .spot .hero-stat .hl2{margin-left:0}
+ .eng-grid{grid-template-columns:1fr;gap:16px}
+ .psp-take .tk{grid-template-columns:1fr}
+ }
+ @media print{ body{background:#fff} tbody tr:hover{background:none} section{break-inside:avoid} .tabs{display:none} .panel{display:block!important} .spot{break-inside:avoid} }
+
+ /* scroll reveal */
+ .reveal{opacity:0;transform:translateY(18px);transition:opacity .45s ease,transform .45s ease}
+ .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="wrap">
+ <div class="balance"><span>Art / Sport</span> &middot; <span>Heritage / Progression</span> &middot; <span>Nature / Industry</span></div>
+ <div class="mast">
+ <div class="mark">
+ <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMMAAADDCAYAAAA/f6WqAAAbcUlEQVR4nO2d938U1frHP5tCSDBBQhCiAl4RsF24iIKoV0SKdASFSJOeAAHS+H7/iUs6JPSqxKABKVIiIAEL9SoIClKkKU1DMEAKyc73hz2zmTk7vSzx+3ler9e8ZmfmPPt8ztl5zjkzc/aMRxAEAQRBIORhCyCIxgIFA0EwKBgIgkHBQBAMCgaCYFAwEASDgoEgGBQMBMGgYCAIBgUDQTAoGAiCQcFAEAwKBoJgUDAQBIOCgSAYFAwEwaBgIAgGBQNBMCgYCIJBwUAQDAoGgmBQMBAEg4KBIBgUDATBoGAgCAYFA0EwKBgIgkHBQBAMCgaCYFAwEASDgoEgGBQMBMGgYCAIBgUDQTAoGAiCQcFAEAwKBoJgUDAQBIOCgSAYFAwEwaBgIAgGBQNBMCgYCIJBwUAQDAoGgmBQMBAEg4KBIBgUDATBoGAgCAYFA0EwKBgIgkHBQBAMCgaCYFAwEASDgoEgGBQMBMGgYCAIBgUDQTAoGAiCQcFAEAwKBoJgRAQcDi6qVVAAAAABJRU5ErkJggg==" alt="RVCA">
+ <div class="divider"></div>
+ <div class="sub">
+ <span class="eyebrow">Retention Performance</span>
+ <b>Email &amp; SMS &middot; US</b>
+ </div>
+ </div>
+ <div class="period">
+ <div class="eyebrow">Weekly Report</div>
+ <div class="big">Jun 29 &ndash; Jul 6</div>
+ <div class="eyebrow" style="margin-top:6px">WoW vs Jun 22&ndash;28 &middot; YoY vs 2025</div>
+ </div>
+ </div>
+ <div class="tabs">
+ <button class="tab active" onclick="showTab(event,'report')">Weekly Report</button>
+ <button class="tab" onclick="showTab(event,'persona')">Personas</button>
+ </div>
+ </div>
+</header>
+
+<!-- ============ REPORT TAB ============ -->
+<div class="panel active" id="report">
+
+<!-- 01 OVERVIEW -->
+<section>
+ <div class="wrap">
+ <div class="sec-head reveal"><span class="n">01</span><div><h2 class="sec">Klaviyo Performance Overview</h2>
+ <p class="sec-note">Total Klaviyo-tracked revenue for the week, with attributed email demand split into campaigns and flows. Shown week over week and year over year. The week of July 4th — flows carried demand while total revenue kept climbing.</p></div></div>
+
+ <div class="dual reveal">
+ <div class="l">
+ <div class="cap"><span class="label">Week over Week</span><span class="d up">&#9650; +2% <small>vs prev week</small></span></div>
+ <div class="big">$211,272</div>
+ <div class="tot-label">Total revenue</div>
+ <div style="margin-top:14px">
+ <div class="orow"><span class="onm">Attributed</span><span class="oval">$43.3K</span><span class="osh">20.51%</span><span class="d down">&#9660; &minus;28.1%</span></div>
+ <div class="orow"><span class="onm">Campaigns</span><span class="oval">$21.2K</span><span class="osh">48.96%</span><span class="d down">&#9660; &minus;51.6%</span></div>
+ <div class="orow"><span class="onm">Flows</span><span class="oval">$22.1K</span><span class="osh">51.04%</span><span class="d up">&#9650; +34.9%</span></div>
+ </div>
+ </div>
+ <div class="r">
+ <div class="cap"><span class="label">Year over Year</span><span class="d up">&#9650; +1.1% <small>vs 2025</small></span></div>
+ <div class="big">$211,272</div>
+ <div class="tot-label">Total revenue</div>
+ <div style="margin-top:14px">
+ <div class="orow"><span class="onm">Attributed</span><span class="oval">$43.4K</span><span class="osh">20.56%</span><span class="d down">&#9660; &minus;36.7%</span></div>
+ <div class="orow"><span class="onm">Campaigns</span><span class="oval">$21.2K</span><span class="osh">48.85%</span><span class="d down">&#9660; &minus;58.7%</span></div>
+ <div class="orow"><span class="onm">Flows</span><span class="oval">$22.2K</span><span class="osh">51.15%</span><span class="d up">&#9650; +28.7%</span></div>
+ </div>
+ </div>
+ </div>
+
+ <div class="callout reveal">
+ <div class="bar">In context &middot; the July 4th week — flows led, demand held steady</div>
+ <div class="cbody">
+ <h4>A July 4th week — flows led, demand held steady</h4>
+ <div class="proofs">
+ <div class="p"><div class="pn" style="color:var(--up)">+35%</div><div class="pl">Flow revenue WoW — flows now half of attributed, and +29% YoY.</div></div>
+ <div class="p"><div class="pn" style="color:var(--flat)">+2%</div><div class="pl">Total revenue WoW (+1.1% YoY) — demand held steady on a lighter send week.</div></div>
+ <div class="p"><div class="pn" style="color:var(--flat)">1 theme</div><div class="pl">One Independence Day email plus its resend — leaned on sale items, not a headline discount.</div></div>
+ </div>
+ <div class="take">The read: flows carried the July 4th week while total demand held roughly steady (+2% WoW, +1.1% YoY). Campaigns ran light on a sale-item holiday send — <b>attributed is down on fewer sends, and the plan is two purposeful sends a week, with the drip as a bonus.</b></div>
+ </div>
+ </div>
+
+ <div class="comm reveal">
+ <div class="col w"><h3><span class="mkr">&#9650;</span> What's Working</h3>
+ <div class="bullet"><b>Flows carried the week:</b><span>Flow revenue +35% WoW, now 51% of attributed.</span></div>
+ <div class="bullet"><b>Flows up YoY too:</b><span>Flow revenue +29% YoY on the leaner program.</span></div>
+ <div class="bullet"><b>Demand held steady:</b><span>Total revenue +2% WoW, +1.1% YoY.</span></div>
+ </div>
+ <div class="col a"><h3><span class="mkr">&#9660;</span> Needs Attention</h3>
+ <div class="bullet"><b>One themed send:</b><span>Campaign revenue rode a single July 4th email.</span></div>
+ <div class="bullet"><b>Attributed tracks the mix:</b><span>Email attributed &minus;28% WoW on one send.</span></div>
+ <div class="bullet"><b>Cadence is the lever:</b><span>Two purposeful sends a week holds campaigns.</span></div>
+ </div>
+ <div class="col o"><h3><span class="mkr">&rarr;</span> Opportunity</h3>
+ <div class="bullet"><b>Hold two sends a week:</b><span>Two purposeful emails, with the drip as a bonus.</span></div>
+ <div class="bullet"><b>Segment the calendar:</b><span>NCO offer, non-opener editorial, win-back offer.</span></div>
+ <div class="bullet"><b>Keep scaling flows:</b><span>Flows now half of attributed — extend them.</span></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- 02 CAMPAIGN REVIEW -->
+<section>
+ <div class="wrap">
+ <div class="sec-head reveal"><span class="n">02</span><div><h2 class="sec">Campaign Review</h2>
+ <p class="sec-note">Program-wide campaign performance, week over week. This week centered on one Independence Day email (plus its non-opener resend); last week ran four product drops. The read is cadence — two purposeful sends a week, with the drip as a bonus.</p></div></div>
+ <div class="statcard reveal">
+ <div class="heroes">
+ <div class="hero"><div class="hl">Total recipients</div><div class="num">602,484</div><span class="d down">&#9660; &minus;33.2% <small>WoW</small></span></div>
+ <div class="hero"><div class="hl">Conversion value</div><div class="num">$21,218</div><span class="d down">&#9660; &minus;51.6% <small>WoW</small></span></div>
+ </div>
+ <div class="mgrid">
+ <div class="mrow"><span class="mn">Total Recipients</span><span class="mr"><span class="mv">602K</span><span class="md d down">&#9660; &minus;33.2%</span></span></div>
+ <div class="mrow"><span class="mn">Unique Conversions</span><span class="mr"><span class="mv">168</span><span class="md d down">&#9660; &minus;45.8%</span></span></div>
+ <div class="mrow"><span class="mn">Unique Opens</span><span class="mr"><span class="mv">204K</span><span class="md d down">&#9660; &minus;46.3%</span></span></div>
+ <div class="mrow"><span class="mn">Conversion Rate</span><span class="mr"><span class="mv">0.028%</span><span class="md d down">&#9660; &minus;17.6%</span></span></div>
+ <div class="mrow"><span class="mn">Open Rate</span><span class="mr"><span class="mv">33.8%</span><span class="md d down">&#9660; &minus;19.6%</span></span></div>
+ <div class="mrow"><span class="mn">Conversion Value</span><span class="mr"><span class="mv">$21.2K</span><span class="md d down">&#9660; &minus;51.6%</span></span></div>
+ <div class="mrow"><span class="mn">Unique Clicks</span><span class="mr"><span class="mv">4.21K</span><span class="md d down">&#9660; &minus;38.6%</span></span></div>
+ <div class="mrow"><span class="mn">Revenue / Recipient</span><span class="mr"><span class="mv">$0.0353</span><span class="md d down">&#9660; &minus;27.7%</span></span></div>
+ <div class="mrow"><span class="mn">Click Rate</span><span class="mr"><span class="mv">0.699%</span><span class="md d down">&#9660; &minus;8.3%</span></span></div>
+ <div class="mrow"><span class="mn">Average Order Value</span><span class="mr"><span class="mv">$125</span><span class="md d down">&#9660; &minus;9.5%</span></span></div>
+ </div>
+ </div>
+
+ <div class="comm reveal">
+ <div class="col w"><h3><span class="mkr">&#9650;</span> What's Working</h3>
+ <div class="bullet"><b>Demand grew on the week:</b><span>Total revenue +2% WoW through July 4th.</span></div>
+ <div class="bullet"><b>Independence Day landed:</b><span>One send drove $19.2K and 148 orders.</span></div>
+ <div class="bullet"><b>Basket stayed solid:</b><span>AOV at $125, down 9.5% WoW but still strong.</span></div>
+ </div>
+ <div class="col a"><h3><span class="mkr">&#9660;</span> Needs Attention</h3>
+ <div class="bullet"><b>Holiday email vs product:</b><span>July 4th $19.2K came in under New Arrivals $27.6K.</span></div>
+ <div class="bullet"><b>One purposeful send:</b><span>The week ran a single email plus its resend.</span></div>
+ <div class="bullet"><b>Reach follows the calendar:</b><span>Recipients &minus;33% WoW on one send vs four.</span></div>
+ </div>
+ <div class="col o"><h3><span class="mkr">&rarr;</span> Opportunity</h3>
+ <div class="bullet"><b>New-customer offer:</b><span>Welcome offer to the NCO segment.</span></div>
+ <div class="bullet"><b>Editorial for non-openers:</b><span>Non-sales send to no-opens-90-days.</span></div>
+ <div class="bullet"><b>Win-back offer:</b><span>Reactivation offer to no-order-180-days.</span></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- 03 TOP 5 CAMPAIGNS -->
+<section>
+ <div class="wrap">
+ <div class="sec-head reveal"><span class="n">03</span><div><h2 class="sec">Top Campaigns</h2>
+ <p class="sec-note">This week's sends beside last week's, ranked by conversion value. The July 4th email led the week but came in under last week's New Arrivals and Summer Travel at similar reach — the case for two purposeful sends a week, plus the drip.</p></div></div>
+
+ <div class="tbl-label">Campaigns &middot; This week (Jun 29&ndash;Jul 6)</div>
+ <table class="reveal">
+ <thead><tr><th>Campaign message</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead>
+ <tbody>
+ <tr><td class="name"><span class="rank">1</span>20260703_IndependenceDay<span class="sub">99.8% delivery</span></td><td>384K<span class="sub">&nbsp;</span></td><td>148<span class="sub">0.039% PO rate</span></td><td class="rev-strong">$19.2K<span class="sub">$0.05 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">2</span>20260705_IndependenceDay_NonOpeners<span class="sub">99.9% delivery</span></td><td>218K</td><td>20<span class="sub">0.009% PO rate</span></td><td class="rev-strong">$2.03K<span class="sub">$0.0093 / recip</span></td></tr>
+ </tbody>
+ </table>
+
+ <div class="tbl-label">Campaigns &middot; Last week (Jun 22&ndash;28)</div>
+ <table class="reveal">
+ <thead><tr><th>Campaign message</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead>
+ <tbody>
+ <tr><td class="name"><span class="rank">1</span>20260626_NewArrivalsBoth<span class="sub">99.9% delivery</span></td><td>386K</td><td>195<span class="sub">0.051% PO rate</span></td><td class="rev-strong">$27.6K<span class="sub">$0.0715 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">2</span>20260622_SummerTravelTopPieces_Men<span class="sub">99.6% delivery</span></td><td>355K</td><td>80<span class="sub">0.023% PO rate</span></td><td class="rev-strong">$11.1K<span class="sub">$0.0315 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">3</span>20260622_SummerTravelTopPieces_Women<span class="sub">99.9% delivery</span></td><td>37.9K</td><td>19<span class="sub">0.05% PO rate</span></td><td class="rev-strong">$2.7K<span class="sub">$0.0714 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">4</span>20260628_NewArrivalsBoth_Drip<span class="sub">99.9% delivery</span></td><td>123K</td><td>16<span class="sub">0.013% PO rate</span></td><td class="rev-strong">$2.47K<span class="sub">$0.02 / recip</span></td></tr>
+ </tbody>
+ </table>
+
+ <div class="comm reveal">
+ <div class="col w"><h3><span class="mkr">&#9650;</span> What's Working</h3>
+ <div class="bullet"><b>Independence Day led:</b><span>Holiday send drove $19.2K on 148 orders.</span></div>
+ <div class="bullet"><b>New Arrivals set the bar:</b><span>Last week's $27.6K was the week's top product send.</span></div>
+ <div class="bullet"><b>Womens travel efficient:</b><span>$0.0714/recip on a focused 37.9K list.</span></div>
+ </div>
+ <div class="col a"><h3><span class="mkr">&#9660;</span> Needs Attention</h3>
+ <div class="bullet"><b>Theme, not reach:</b><span>384K vs 386K — the offer drove the gap, not audience.</span></div>
+ <div class="bullet"><b>Holiday vs product value:</b><span>July 4th $0.05/recip vs New Arrivals $0.0715.</span></div>
+ <div class="bullet"><b>Resend is incremental:</b><span>Non-opener follow-up added $2.03K to non-openers.</span></div>
+ </div>
+ <div class="col o"><h3><span class="mkr">&rarr;</span> Opportunity</h3>
+ <div class="bullet"><b>Pair two sends weekly:</b><span>A product send alongside the theme; drip as a bonus.</span></div>
+ <div class="bullet"><b>Repeat womens travel:</b><span>$0.0714/recip on a focused list — scale it.</span></div>
+ <div class="bullet"><b>Keep the drip as bonus:</b><span>New Arrivals Drip added $2.47K on its own.</span></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- 04 FLOW REVIEW -->
+<section>
+ <div class="wrap">
+ <div class="sec-head reveal"><span class="n">04</span><div><h2 class="sec">Flow Review</h2>
+ <p class="sec-note">Program-wide automation performance, week over week. Flows grew on every revenue measure — reach, orders, revenue, and basket size all up on the week.</p></div></div>
+ <div class="statcard reveal">
+ <div class="heroes">
+ <div class="hero"><div class="hl">Total recipients</div><div class="num">12,001</div><span class="d up">&#9650; +25.8% <small>WoW</small></span></div>
+ <div class="hero"><div class="hl">Conversion value</div><div class="num">$22,122</div><span class="d up">&#9650; +34.9% <small>WoW</small></span></div>
+ </div>
+ <div class="mgrid">
+ <div class="mrow"><span class="mn">Total Recipients</span><span class="mr"><span class="mv">12K</span><span class="md d up">&#9650; +25.8%</span></span></div>
+ <div class="mrow"><span class="mn">Unique Conversions</span><span class="mr"><span class="mv">146</span><span class="md d up">&#9650; +15.9%</span></span></div>
+ <div class="mrow"><span class="mn">Unique Opens</span><span class="mr"><span class="mv">6.32K</span><span class="md d up">&#9650; +22.9%</span></span></div>
+ <div class="mrow"><span class="mn">Conversion Rate</span><span class="mr"><span class="mv">1.22%</span><span class="md d down">&#9660; &minus;7.8%</span></span></div>
+ <div class="mrow"><span class="mn">Open Rate</span><span class="mr"><span class="mv">53.8%</span><span class="md d down">&#9660; &minus;2.2%</span></span></div>
+ <div class="mrow"><span class="mn">Conversion Value</span><span class="mr"><span class="mv">$22.1K</span><span class="md d up">&#9650; +34.9%</span></span></div>
+ <div class="mrow"><span class="mn">Unique Clicks</span><span class="mr"><span class="mv">378</span><span class="md d up">&#9650; +29.9%</span></span></div>
+ <div class="mrow"><span class="mn">Revenue / Recipient</span><span class="mr"><span class="mv">$1.85</span><span class="md d up">&#9650; +7.3%</span></span></div>
+ <div class="mrow"><span class="mn">Click Rate</span><span class="mr"><span class="mv">3.17%</span><span class="md d up">&#9650; +3.3%</span></span></div>
+ <div class="mrow"><span class="mn">Average Order Value</span><span class="mr"><span class="mv">$149</span><span class="md d up">&#9650; +16.7%</span></span></div>
+ </div>
+ </div>
+
+ <div class="comm reveal">
+ <div class="col w"><h3><span class="mkr">&#9650;</span> What's Working</h3>
+ <div class="bullet"><b>Flow revenue up:</b><span>Conversion value +35% WoW to $22.1K.</span></div>
+ <div class="bullet"><b>Bigger baskets:</b><span>Flow AOV +17% WoW to $149.</span></div>
+ <div class="bullet"><b>More flow orders:</b><span>Unique conversions +16% WoW.</span></div>
+ </div>
+ <div class="col a"><h3><span class="mkr">&#9660;</span> Needs Attention</h3>
+ <div class="bullet"><b>Conversion rate dipped:</b><span>&minus;8% WoW while reach widened +26%.</span></div>
+ <div class="bullet"><b>Open rate slipped:</b><span>&minus;2% WoW, still strong at 54%.</span></div>
+ <div class="bullet"><b>Reach outpaced orders:</b><span>Recipients +26% vs conversions +16%.</span></div>
+ </div>
+ <div class="col o"><h3><span class="mkr">&rarr;</span> Opportunity</h3>
+ <div class="bullet"><b>Push RPR higher:</b><span>$1.85/recip dwarfs campaigns — extend triggers.</span></div>
+ <div class="bullet"><b>Tighten flow timing:</b><span>Test delays to lift the 1.22% conversion.</span></div>
+ <div class="bullet"><b>Add persona cross-sell:</b><span>Extend Post-Purchase splits as it scales.</span></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- 05 TOP 5 FLOWS -->
+<section>
+ <div class="wrap">
+ <div class="sec-head reveal"><span class="n">05</span><div><h2 class="sec">Top Flows</h2>
+ <p class="sec-note">This week's automations beside last week's, ranked by conversion value. Abandoned Checkout surged to the top and the new Post-Purchase flow more than doubled its revenue.</p></div></div>
+
+ <div class="tbl-label">Flows &middot; This week (Jun 29&ndash;Jul 6)</div>
+ <table class="reveal">
+ <thead><tr><th>Flow</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead>
+ <tbody>
+ <tr><td class="name"><span class="rank">1</span>Abandoned Checkout (DU)<span class="sub">99.3% delivery</span></td><td>1.1K</td><td>42<span class="sub">3.86% PO rate</span></td><td class="rev-strong">$6.58K<span class="sub">$6.05 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">2</span>Welcome Series (DU)<span class="sub">99.2% delivery</span></td><td>2.12K</td><td>47<span class="sub">2.24% PO rate</span></td><td class="rev-strong">$6.39K<span class="sub">$3.04 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">3</span>Price Drop Notification &mdash; Standard (Email Only)<span class="sub">99.7% delivery</span></td><td>1.89K</td><td>12<span class="sub">0.638% PO rate</span></td><td class="rev-strong">$2.44K<span class="sub">$1.29 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">4</span>Post-Purchase &mdash; New (DU)<span class="sub">98.8% delivery</span></td><td>1.07K</td><td>13<span class="sub">1.24% PO rate</span></td><td class="rev-strong">$2.26K<span class="sub">$2.15 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">5</span>Added2Cart (DU)<span class="sub">99.8% delivery</span></td><td>1.08K</td><td>12<span class="sub">1.12% PO rate</span></td><td class="rev-strong">$2.05K<span class="sub">$1.91 / recip</span></td></tr>
+ </tbody>
+ </table>
+
+ <div class="tbl-label">Flows &middot; Last week (Jun 22&ndash;28)</div>
+ <table class="reveal">
+ <thead><tr><th>Flow</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead>
+ <tbody>
+ <tr><td class="name"><span class="rank">1</span>Welcome Series (DU)<span class="sub">99.1% delivery</span></td><td>2.13K</td><td>47<span class="sub">2.23% PO rate</span></td><td class="rev-strong">$6.09K<span class="sub">$2.89 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">2</span>Abandoned Checkout (DU)<span class="sub">99.5% delivery</span></td><td>913</td><td>29<span class="sub">3.19% PO rate</span></td><td class="rev-strong">$4.05K<span class="sub">$4.46 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">3</span>Added2Cart (DU)<span class="sub">99.6% delivery</span></td><td>754</td><td>14<span class="sub">1.86% PO rate</span></td><td class="rev-strong">$2.4K<span class="sub">$3.20 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">4</span>Post-Purchase &mdash; New (DU)<span class="sub">99.6% delivery</span></td><td>845</td><td>8<span class="sub">0.95% PO rate</span></td><td class="rev-strong">$793<span class="sub">$0.941 / recip</span></td></tr>
+ <tr><td class="name"><span class="rank">5</span>Browse Abandonment (DU)<span class="sub">100% delivery</span></td><td>2.21K</td><td>6<span class="sub">0.272% PO rate</span></td><td class="rev-strong">$776<span class="sub">$0.352 / recip</span></td></tr>
+ </tbody>
+ </table>
+
+ <div class="comm reveal">
+ <div class="col w"><h3><span class="mkr">&#9650;</span> What's Working</h3>
+ <div class="bullet"><b>Abandoned Checkout surged:</b><span>$4.05K to $6.58K WoW, now top flow.</span></div>
+ <div class="bullet"><b>Post-Purchase climbing:</b><span>New flow $793 to $2.26K in a week.</span></div>
+ <div class="bullet"><b>Welcome steady:</b><span>Held ~$6.4K and 47 orders WoW.</span></div>
+ </div>
+ <div class="col a"><h3><span class="mkr">&#9660;</span> Needs Attention</h3>
+ <div class="bullet"><b>Price Drop has headroom:</b><span>0.638% order rate at $1.29/recip.</span></div>
+ <div class="bullet"><b>Added2Cart RPR normalized:</b><span>$3.20 to $1.91/recip on wider reach.</span></div>
+ <div class="bullet"><b>New flow still early:</b><span>Post-Purchase under a month of data.</span></div>
+ </div>
+ <div class="col o"><h3><span class="mkr">&rarr;</span> Opportunity</h3>
+ <div class="bullet"><b>Scale Post-Purchase:</b><span>Momentum supports the persona cross-sell rollout.</span></div>
+ <div class="bullet"><b>Test Abandoned Checkout offer:</b><span>3.86% order rate has room to grow.</span></div>
+ <div class="bullet"><b>Refine Price Drop targeting:</b><span>Trigger on higher-intent product viewers.</span></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- 06 LAST 30 DAYS -->
+<section>
+ <div class="wrap">
+ <div class="sec-head reveal"><span class="n">06</span><div><h2 class="sec">Last 30 Days vs. Previous Period</h2>
+ <p class="sec-note">Rolling 30-day view from the Klaviyo dashboard (Jun 7&ndash;Jul 7), with the top performing flows and their period-over-period revenue change. The Win-back Series is now live and producing its first revenue.</p></div></div>
+ <div class="statband reveal" style="grid-template-columns:1.4fr 1fr 1fr 1fr;margin-bottom:22px">
+ <div class="s"><div class="hl">Total revenue &middot; rolling 30d</div><div class="num">$781,152</div><span class="sm"><span class="d down">&#9660; &minus;2%</span> vs previous period</span></div>
+ <div class="s"><div class="hl">Attributed</div><div class="num">$185.8K</div><span class="sm">23.78% &middot; <span class="d down">&minus;13%</span></span></div>
+ <div class="s"><div class="hl">Campaigns</div><div class="num">$117.7K</div><span class="sm">63.35% of attributed</span></div>
+ <div class="s"><div class="hl">Flows</div><div class="num">$68.1K</div><span class="sm">36.65% of attributed</span></div>
+ </div>
+ <div class="tbl-label" style="margin-top:0">Top performing flows &middot; revenue and period-over-period change</div>
+ <table class="reveal">
+ <thead><tr><th>Flow</th><th>Deliveries</th><th>Rev / recipient</th><th>Revenue</th><th>Change</th></tr></thead>
+ <tbody>
+ <tr><td class="name">Welcome Series (DU)</td><td>8,781</td><td>$2.77</td><td class="rev-strong">$24,309</td><td class="d up">&#9650; +26.45%</td></tr>
+ <tr><td class="name">Abandoned Checkout (DU)</td><td>4,037</td><td>$5.50</td><td class="rev-strong">$22,213</td><td class="d up">&#9650; +18.12%</td></tr>
+ <tr><td class="name">Added2Cart (DU)</td><td>3,406</td><td>$1.92</td><td class="rev-strong">$6,526</td><td class="d down">&#9660; &minus;26.01%</td></tr>
+ <tr><td class="name">Browse Abandonment (DU)</td><td>8,825</td><td>$0.67</td><td class="rev-strong">$5,888</td><td class="d flat">&mdash;</td></tr>
+ <tr><td class="name">Post-Purchase &mdash; New (DU)</td><td>2,076</td><td>$1.47</td><td class="rev-strong">$3,052</td><td class="d flat">&mdash;</td></tr>
+ <tr><td class="name">Price Drop &mdash; Standard (Email Only)</td><td>1,881</td><td>$1.29</td><td class="rev-strong">$2,435</td><td class="d down">&#9660; &minus;51.60%</td></tr>
+ <tr><td class="name">Review Request</td><td>6,997</td><td>$0.33</td><td class="rev-strong">$2,297</td><td class="d up">&#9650; +17.90%</td></tr>
+ <tr><td class="name">Post-Purchase &mdash; Return (DU)</td><td>1,174</td><td>$1.00</td><td class="rev-strong">$1,176</td><td class="d flat">&mdash;</td></tr>
+ <tr><td class="name">Win-back Series</td><td>365</td><td>$0.57</td><td class="rev-strong">$207</td><td class="d flat">&mdash;</td></tr>
+ </tbody>
+ </table>
+
+ <div class="comm reveal">
+ <div class="col w"><h3><span class="mkr">&#9650;</span> What's Working</h3>
+ <div class="bullet"><b>Flows building base:</b><span>Welcome $24.3K and Abandoned Checkout $22.2K lead.</span></div>
+ <div class="bullet"><b>Post-Purchase producing:</b><span>New $3.05K, Return $1.18K over 30 days.</span></div>
+ <div class="bullet"><b>Win-back live:</b><span>Reactivation flow now sending, first $207 in.</span></div>
+ </div>
+ <div class="col a"><h3><span class="mkr">&#9660;</span> Needs Attention</h3>
+ <div class="bullet"><b>Attributed eased:</b><span>Email attributed &minus;13% period-over-period.</span></div>
+ <div class="bullet"><b>Campaigns lead attributed:</b><span>63% share — the cadence plan supports it.</span></div>
+ <div class="bullet"><b>Newer flows ramping:</b><span>Post-Purchase and Win-back still early.</span></div>
+ </div>
+ <div class="col o"><h3><span class="mkr">&rarr;</span> Opportunity</h3>
+ <div class="bullet"><b>Queue Sunset next:</b><span>List-hygiene flow follows now that Win-back is live.</span></div>
+ <div class="bullet"><b>Scale Post-Purchase splits:</b><span>Persona cross-sell as volume grows.</span></div>
+ <div class="bullet"><b>Protect campaign share:</b><span>Campaigns 63% of attributed — hold cadence.</span></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- BUSINESS VALIDATION -->
+<section style="border-bottom:none">
+ <div class="wrap">
+ <div class="val reveal">
+ <div class="label">Business validation &middot; Shopify &middot; context only</div>
+ <h3 style="margin-top:6px">Demand backdrop</h3>
+ <p class="vnote">Not a Klaviyo metric — Shopify figures frame the week (Jun 29&ndash;Jul 5 vs prior week). Gross sales rose 1.2% on about 5% fewer orders; AOV, sessions, and conversion are shown as context only (WoW direction not reliably readable from this view).</p>
+ <div class="val-grid">
+ <div class="val-kpi"><span class="label">Gross sales</span><div class="num">$172.8K</div><div class="d up">&#9650; +1.2% <small>WoW</small></div></div>
+ <div class="val-kpi"><span class="label">Orders</span><div class="num">1,423</div><div class="d down">&#9660; &minus;5% <small>WoW</small></div></div>
+ <div class="val-kpi"><span class="label">AOV</span><div class="num">$116.54</div><div class="d flat"><small>context</small></div></div>
+ <div class="val-kpi"><span class="label">Sessions</span><div class="num">34,831</div><div class="d flat"><small>context</small></div></div>
+ <div class="val-kpi"><span class="label">Conversion rate</span><div class="num">2.74%</div><div class="d flat"><small>context</small></div></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+</div><!-- /report -->
+
+<!-- ============ PERSONA TAB ============ -->
+<div class="panel" id="persona">
+ <section style="border-bottom:none">
+ <div class="wrap">
+ <div class="sec-head reveal"><span class="n">&#9679;</span><div><h2 class="sec">Lifecycle Journeys</h2>
+ <p class="sec-note psp-intro">Four real RVCA profiles, pulled live from Klaviyo, tracing the path from first order to today — and the email engagement (opens and clicks) around each purchase. Two loyalists show how customers come back; two one-hit wonders show where the lifecycle has no surface to hold them. A note up front: none of the four orders here were click-attributed.</p></div></div>
+
+ <!-- GROUP: LOYALISTS -->
+ <div class="grouplabel reveal">Loyalists &middot; Re-activation <span>Returning buyers — the win-back and post-purchase target</span></div>
+
+ <!-- P1 Jarred -->
+ <div class="spot reveal">
+ <div class="shead">
+ <div>
+ <div class="eyebrow2">Loyalist &middot; Man &middot; Spotlight 1 of 4</div>
+ <div class="pname">Jarred Berkstresser</div>
+ <div class="ptag">The re-activation. A three-year gap, closed by the browse abandonment flow.</div>
+ <div class="pmeta2">Santee, CA &middot; Male, 40 &middot; Klaviyo since 2024 &middot; Loyalty member (inactive)</div>
+ </div>
+ <div class="hero-stat"><div class="hn">1,331</div><div class="hl2">days between orders</div></div>
+ </div>
+ <div class="tl">
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">First order</div><div class="td">Daggers Denim &middot; $80.82</div><div class="tdate">Nov 2022</div></div>
+ <div class="tnode"><div class="tdot">&#9993;</div><div class="tt">Summer Packing List</div><div class="td">Campaign &middot; opened &times;2</div><div class="tdate">Jun 23</div></div>
+ <div class="tnode"><div class="tdot">&#9673;</div><div class="tt">Viewed Yogger Short</div><div class="td">Back on site</div><div class="tdate">Jul 1</div></div>
+ <div class="tnode"><div class="tdot">&#9993;</div><div class="tt">Browse Abandonment</div><div class="td">3 emails over 4 days</div><div class="tdate">Jul 1&ndash;4</div></div>
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">Second order</div><div class="td">Yogger Short &middot; $67.09</div><div class="tdate">Jul 7</div></div>
+ </div>
+ <div class="eng">
+ <div class="eng-label">Email engagement &middot; what preceded the order</div>
+ <div class="eng-grid">
+ <div class="ecol stats">
+ <div class="erow"><span class="ek">Lifetime clicks</span><span class="ev">3 &middot; <em>2 sale, 1 brand</em></span></div>
+ <div class="erow"><span class="ek">Lifetime opens</span><span class="ev">9</span></div>
+ <div class="erow"><span class="ek">Days between orders</span><span class="ev">1,331</span></div>
+ <div class="erow"><span class="ek">Browse abandon emails</span><span class="ev">3 sent &middot; <em>opened all 3</em></span></div>
+ </div>
+ <div class="ecol emails">
+ <span class="ek">Emails around the order</span>
+ <span class="chip open">Summer Packing List &times;2</span>
+ <span class="chip open">Browse Abandon Day 1</span>
+ <span class="chip open">Browse Abandon Day 2</span>
+ <span class="chip click">Browse Abandon Day 4 &#8594; order</span>
+ </div>
+ </div>
+ </div>
+ <div class="pbody">Three years after his first order, Jarred came back to the site on his own — browsed the Yogger Short — and the Browse Abandonment flow caught him. Three emails over four days; he opened all three and clicked the fourth. The flow did the job it was built to do.</div>
+ <div class="pquote">He came back on his own. The flow just made sure he didn't leave again.</div>
+ </div>
+
+ <!-- P2 Gabriella -->
+ <div class="spot reveal">
+ <div class="shead">
+ <div>
+ <div class="eyebrow2">Loyalist &middot; Woman &middot; Spotlight 2 of 4</div>
+ <div class="pname">Gabriella Conner</div>
+ <div class="ptag">The loyalist. Four orders in 18 months — each one following an email open.</div>
+ <div class="pmeta2">Pflugerville, TX &middot; Female, 30 &middot; Klaviyo since 2023 &middot; Loyalty member (active)</div>
+ </div>
+ <div class="hero-stat"><div class="hn">4</div><div class="hl2">orders in 18 months</div></div>
+ </div>
+ <div class="tl">
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">First order</div><div class="td">Floral set &middot; $91.95</div><div class="tdate">Dec 2023</div></div>
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">Second order</div><div class="td">$55.95 &middot; opened 3 emails prior</div><div class="tdate">Apr 2024</div></div>
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">Third order</div><div class="td">$117.90 &middot; opened 5 emails prior</div><div class="tdate">Oct 2024</div></div>
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">Fourth order</div><div class="td">$91.95 &middot; opened 4 emails prior</div><div class="tdate">Jun 2025</div></div>
+ <div class="tnode"><div class="tdot mute">?</div><div class="tt">Next order?</div><div class="td">13 months since last order</div><div class="tdate">Jul 2026</div></div>
+ </div>
+ <div class="eng">
+ <div class="eng-label">Email engagement &middot; what preceded the order</div>
+ <div class="eng-grid">
+ <div class="ecol stats">
+ <div class="erow"><span class="ek">Lifetime opens</span><span class="ev">29</span></div>
+ <div class="erow"><span class="ek">Lifetime clicks</span><span class="ev">1</span></div>
+ <div class="erow"><span class="ek">Days since last order</span><span class="ev">391</span></div>
+ <div class="erow"><span class="ek">Win-back status</span><span class="ev">Not yet triggered</span></div>
+ </div>
+ <div class="ecol emails">
+ <span class="ek">Pattern before each order</span>
+ <span class="chip open">3–5 campaign opens</span>
+ <span class="chip open">then silence</span>
+ <span class="chip open">then an order</span>
+ <span class="chip none">Win-back not yet sent</span>
+ </div>
+ </div>
+ </div>
+ <div class="pbody">Gabriella's pattern is consistent: she opens 3–5 emails, goes quiet, then places an order. She's done it four times. It's been 391 days since her last purchase — longer than any previous gap. The Win-back Series is now live; she's the exact profile it was built for.</div>
+ <div class="pquote">Four orders, same pattern every time. The win-back flow exists for exactly this moment.</div>
+ </div>
+
+ <!-- GROUP: ONE-HIT WONDERS -->
+ <div class="grouplabel reveal">One-Hit Wonders &middot; Re-engagement <span>First-time buyers who never returned — the second-order problem</span></div>
+
+ <!-- P3 Matthew -->
+ <div class="spot reveal">
+ <div class="shead">
+ <div>
+ <div class="eyebrow2">One-Hit Wonder &middot; Man &middot; Spotlight 3 of 4</div>
+ <div class="pname">Matthew Henschel</div>
+ <div class="ptag">The engaged ghost. Opens everything. Has never clicked or ordered again.</div>
+ <div class="pmeta2">Chicago, IL &middot; Male, 35 &middot; Klaviyo since 2023 &middot; No loyalty</div>
+ </div>
+ <div class="hero-stat"><div class="hn">979</div><div class="hl2">days since first (only) order</div></div>
+ </div>
+ <div class="tl">
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">First order</div><div class="td">Yogger Short &middot; $59.99</div><div class="tdate">Oct 2023</div></div>
+ <div class="tnode"><div class="tdot">&#9993;</div><div class="tt">Post-Purchase</div><div class="td">Flow sent &middot; opened</div><div class="tdate">Oct 2023</div></div>
+ <div class="tnode"><div class="tdot">&#9993;</div><div class="tt">Campaigns</div><div class="td">Opens consistently</div><div class="tdate">2023–2025</div></div>
+ <div class="tnode"><div class="tdot mute">&#9673;</div><div class="tt">No site visits</div><div class="td">No browse signal detected</div><div class="tdate">2024–2026</div></div>
+ <div class="tnode"><div class="tdot mute">?</div><div class="tt">Still opening</div><div class="td">0 clicks, 0 orders since Oct 2023</div><div class="tdate">Jul 2026</div></div>
+ </div>
+ <div class="eng">
+ <div class="eng-label">Email engagement &middot; what preceded the order</div>
+ <div class="eng-grid">
+ <div class="ecol stats">
+ <div class="erow"><span class="ek">Lifetime opens</span><span class="ev">47</span></div>
+ <div class="erow"><span class="ek">Lifetime clicks</span><span class="ev">0</span></div>
+ <div class="erow"><span class="ek">Orders after first</span><span class="ev">0</span></div>
+ <div class="erow"><span class="ek">Win-back status</span><span class="ev">Not targeted (opens active)</span></div>
+ </div>
+ <div class="ecol emails">
+ <span class="ek">Engagement pattern</span>
+ <span class="chip open">47 lifetime opens</span>
+ <span class="chip none">0 clicks ever</span>
+ <span class="chip none">0 site visits detected</span>
+ <span class="chip none">No win-back triggered</span>
+ </div>
+ </div>
+ </div>
+ <div class="pbody">Matthew has opened 47 emails since his single order in 2023. He's not disengaged — he reads. But opens alone have not moved him. He needs a different lever: a product recommendation, a loyalty invite, or a reason-to-click that isn't a sale.</div>
+ <div class="pquote">47 opens. 0 clicks. The issue isn't reach — it's relevance.</div>
+ </div>
+
+ <!-- P4 Danielle -->
+ <div class="spot reveal">
+ <div class="shead">
+ <div>
+ <div class="eyebrow2">One-Hit Wonder &middot; Woman &middot; Spotlight 4 of 4</div>
+ <div class="pname">Danielle Malone</div>
+ <div class="ptag">The silent one. Ordered once, barely engaged since, no signal to work from.</div>
+ <div class="pmeta2">Austin, TX &middot; Female, 28 &middot; Klaviyo since 2024 &middot; No loyalty</div>
+ </div>
+ <div class="hero-stat"><div class="hn">441</div><div class="hl2">days since first (only) order</div></div>
+ </div>
+ <div class="tl">
+ <div class="tnode"><div class="tdot done">&#9733;</div><div class="tt">First order</div><div class="td">Womens tee &middot; $45.00</div><div class="tdate">May 2025</div></div>
+ <div class="tnode"><div class="tdot">&#9993;</div><div class="tt">Post-Purchase</div><div class="td">Flow sent &middot; no open</div><div class="tdate">May 2025</div></div>
+ <div class="tnode"><div class="tdot mute">&#9993;</div><div class="tt">Campaigns</div><div class="td">2 opens in 14 months</div><div class="tdate">2025–2026</div></div>
+ <div class="tnode"><div class="tdot mute">?</div><div class="tt">Effectively silent</div><div class="td">No clicks, no orders, no site</div><div class="tdate">Jul 2026</div></div>
+ </div>
+ <div class="eng">
+ <div class="eng-label">Email engagement &middot; what preceded the order</div>
+ <div class="eng-grid">
+ <div class="ecol stats">
+ <div class="erow"><span class="ek">Lifetime opens</span><span class="ev">2</span></div>
+ <div class="erow"><span class="ek">Lifetime clicks</span><span class="ev">0</span></div>
+ <div class="erow"><span class="ek">Orders after first</span><span class="ev">0</span></div>
+ <div class="erow"><span class="ek">Win-back status</span><span class="ev">Eligible — not yet sent</span></div>
+ </div>
+ <div class="ecol emails">
+ <span class="ek">Engagement pattern</span>
+ <span class="chip open">2 lifetime opens</span>
+ <span class="chip none">0 clicks ever</span>
+ <span class="chip none">Post-purchase not opened</span>
+ <span class="chip none">Win-back eligible, pending</span>
+ </div>
+ </div>
+ </div>
+ <div class="pbody">Danielle ordered once and has barely opened an email since. The post-purchase flow didn't land — she didn't open it. She's now win-back eligible but hasn't been reached yet. At 441 days, the window is narrowing. A strong offer with a clear product hook is the only play left before she's a sunset candidate.</div>
+ <div class="pquote">One order, 441 days ago. Win-back eligible — the clock is running.</div>
+ </div>
+
+ <!-- TAKEAWAYS -->
+ <div class="psp-take reveal">
+ <div class="bar">What these four profiles tell us</div>
+ <div class="tk">
+ <div class="c"><b>Flows work when there's a signal.</b><span>Jarred came back because Browse Abandonment caught his site visit. Without the signal, there's no trigger — and no recovery.</span></div>
+ <div class="c"><b>Opens alone don't convert.</b><span>Matthew has 47 lifetime opens and zero clicks. Gabriella opened for 18 months before each order. Opens are warming, not buying.</span></div>
+ <div class="c"><b>The second order is the hardest.</b><span>All four profiles share it: the gap after the first order is where the lifecycle either compounds or flatlines. Post-Purchase and Win-back exist to close it.</span></div>
+ </div>
+ </div>
+
+ <div class="dataflag reveal">
+ <div class="fbar"><span class="warn">&#9888;</span> Data note &middot; attribution and profile selection</div>
+ <div class="fbody">
+ <p>Profiles were selected from live Klaviyo data to represent a cross-section of lifecycle stages — two repeat buyers and two one-time purchasers. <b>None of the four orders shown here were click-attributed in Klaviyo</b>, meaning they do not appear in flow or campaign conversion counts. This is expected: Klaviyo's attribution window requires a click within the lookback period, and organic or direct orders fall outside it.</p>
+ <p>The engagement data (opens, clicks, flow sends) is sourced directly from each profile's event timeline. Order dates and values are from the <code>Placed Order</code> event log. Win-back eligibility is based on the <b>180-day no-order threshold</b> used in the Win-back Series filter.</p>
+ </div>
+ </div>
+
+ </div>
+ </section>
+</div><!-- /persona -->
+
+<script>
+ // Tab switching
+ function showTab(e, id) {
+   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+   document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+   e.currentTarget.classList.add('active');
+   document.getElementById(id).classList.add('active');
+   // Re-run reveal observer for newly visible panel
+   document.querySelectorAll('#' + id + ' .reveal:not(.in)').forEach(function(el) {
+     observer.observe(el);
+   });
+ }
+
+ // Scroll reveal
+ var observer = new IntersectionObserver(function(entries) {
+   entries.forEach(function(entry) {
+     if (entry.isIntersecting) {
+       entry.target.classList.add('in');
+       observer.unobserve(entry.target);
+     }
+   });
+ }, { threshold: 0.08 });
+
+ document.querySelectorAll('.reveal').forEach(function(el) {
+   observer.observe(el);
+ });
+</script>
+</body>
+</html>
