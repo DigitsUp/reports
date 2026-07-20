@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epicure — Weekly Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFFFFF;--paper:#FFFFFF;--ink:#2A2622;--muted:#8A8175;
+    --tomato:#E23B2E;--tomato-deep:#B72A20;--herb:#43713F;--herb-deep:#2F5A2C;
+    --line:#ECE3D3;--line-soft:#F2EBDD;
+    --pos-fg:#356B37;--pos-bg:#E7F0E3;--neg-fg:#B84034;--neg-bg:#F8E7E3;
+    --idle-fg:#9A9184;--idle-bg:#F0EADD;--amber:#D9A441;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:#FFFFFF;color:var(--ink);font-family:"Hanken Grotesk",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:0 24px}
+  h1,h2,h3,h4,.disp{font-family:"Figtree",sans-serif;letter-spacing:-.02em}
+
+  /* masthead */
+  .mast{padding:40px 0 18px}
+  .eyebrow{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--tomato);display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--tomato);display:inline-block}
+  .mast h1{font-size:clamp(32px,5vw,50px);font-weight:800;line-height:1.03;margin:14px 0 8px}
+  .mast .sub{font-size:15.5px;color:var(--muted);font-weight:500}
+  .mast .sub b{color:var(--ink);font-weight:700}
+
+  /* tabs */
+  .tabs{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .tabbar{max-width:940px;margin:0 auto;padding:0 24px;display:flex;gap:28px}
+  .tab{font-family:"Figtree";font-weight:700;font-size:14.5px;padding:15px 2px;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;letter-spacing:-.01em;transition:color .2s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--tomato)}
+  .tab small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:0;margin-top:2px}
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* hero */
+  .hero{background:var(--ink);border-radius:18px;padding:32px 38px;margin:26px 0 18px;color:#fff;box-shadow:0 24px 50px -30px rgba(42,38,34,.55);display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center}
+  .hero .lbl{font-family:"Figtree";font-weight:600;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#C9BFB0}
+  .hero .big{font-family:"Figtree";font-weight:800;font-size:clamp(42px,8vw,66px);line-height:1;margin:10px 0 8px}
+  .hero .wowline{font-size:14.5px;color:#D8D0C3}
+  .hero .wowline b{color:#9FD3A2;font-family:"Figtree";font-weight:700}
+  .split{margin-top:20px}
+  .split-bar{height:11px;border-radius:8px;overflow:hidden;display:flex;background:#3a352f}
+  .split-bar .c{background:var(--tomato)}.split-bar .f{background:var(--herb)}
+  .split-keys{display:flex;gap:18px;margin-top:11px;flex-wrap:wrap;font-size:13px;color:#D8D0C3}
+  .keyitem{display:flex;align-items:baseline;gap:7px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .keyitem b{font-family:"Figtree";font-weight:700;color:#fff}
+  .keyitem .w{color:#9FD3A2;font-weight:600;font-size:12px}
+  .trend{border-left:1px solid #3f3a33;padding-left:26px}
+  .trend .tlbl{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8f877b;margin-bottom:14px}
+  .trow{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .trow .wk{font-size:12px;color:#9a9184;width:92px;flex:none}
+  .tmeter{flex:1;height:9px;border-radius:5px;background:#3a352f;overflow:hidden}
+  .tmeter .fl{height:100%;background:#5f584e;border-radius:5px}
+  .trow.now .tmeter .fl{background:var(--tomato)}
+  .trow .amt{font-family:"Figtree";font-weight:700;font-size:12.5px;width:56px;text-align:right;color:#EDE7DC}
+
+  /* scorecard / tiles */
+  .score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:26px}
+  .store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .stile{background:var(--paper);padding:17px 20px}
+  .stile .k{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .stile .v{font-family:"Figtree";font-weight:800;font-size:22px;margin:6px 0 6px}
+  .stile.share{background:#F3F6F0}.stile.share .v{color:var(--herb-deep)}
+  .minichip{font-family:"Figtree";font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px}
+  .minichip.up{color:var(--pos-fg);background:var(--pos-bg)}
+  .minichip.down{color:var(--neg-fg);background:var(--neg-bg)}
+  .minichip.flat{color:var(--idle-fg);background:var(--idle-bg)}
+  .share-bar{height:8px;border-radius:6px;background:#E4EADF;overflow:hidden;margin-top:2px}
+  .share-bar .fill{height:100%;background:var(--herb);border-radius:6px;width:0;transition:width 1s ease .2s}
+
+  /* summary blocks */
+  .block-title{font-family:"Figtree";font-weight:800;font-size:20px;margin:6px 0 4px}
+  .intro-line{font-size:16px;color:#4A443D;line-height:1.62;max-width:720px;margin:2px 0 6px}
+  .intro-line b{color:var(--ink);font-weight:700}
+  .sum-sec{display:grid;grid-template-columns:148px 1fr;gap:26px;padding:26px 0;border-top:1px solid var(--line)}
+  .sum-eyebrow{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tomato);padding-top:4px}
+  .sum-headline{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+  .sum-headline .fig{font-family:"Figtree";font-weight:800;font-size:30px;line-height:1}
+  .sum-body{font-size:15.5px;color:#4A443D;line-height:1.62;max-width:660px}
+  .sum-body b{color:var(--ink);font-weight:700}
+  .sum-flags{padding:26px 0 4px;border-top:1px solid var(--line)}
+  .ob{display:grid;grid-template-columns:40px 1fr;gap:18px;padding:20px 0;border-top:1px solid var(--line)}
+  .ob:first-child{border-top:none}
+  .ob .num{font-family:"Figtree";font-weight:800;font-size:20px;color:var(--tomato);line-height:1}
+  .ob h3{font-size:18px;font-weight:800;margin-bottom:7px}
+  .ob p{font-size:15px;color:#4A443D;line-height:1.6}
+  .ob p b{color:var(--ink);font-weight:700}
+
+  .flags{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:18px 24px;margin-top:26px}
+  .flags h4{font-family:"Figtree";font-weight:800;font-size:15px;margin-bottom:6px}
+  .fl-item{font-size:14.5px;line-height:1.58;color:#4A443D;padding:10px 0}
+  .fl-item + .fl-item{border-top:1px solid var(--line-soft)}
+  .fl-item b{color:var(--ink);font-weight:700}
+
+  /* sections (full report) */
+  section{padding:32px 0}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:14px;flex-wrap:wrap}
+  .sec-head h2{font-size:27px;font-weight:800}
+  .sec-head .tag{font-family:"Figtree";font-weight:600;font-size:13px;color:var(--muted)}
+  .lede{font-size:15px;color:#4A443D;line-height:1.6;margin-bottom:20px;max-width:720px}
+  .lede b{color:var(--ink);font-weight:700}
+  .storectx{margin-top:6px}
+
+  .cmp-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+  table.cmp{width:100%;border-collapse:collapse;min-width:560px}
+  table.cmp th,table.cmp td{padding:12px 18px;font-size:14.5px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+  table.cmp th:first-child,table.cmp td:first-child{text-align:left}
+  table.cmp thead th{font-family:"Figtree";font-weight:600;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#F7F1E6}
+  table.cmp thead th.now{color:var(--ink)}
+  table.cmp thead th.ctx{color:#B3AA9B;font-weight:500}
+  table.cmp .metric{font-weight:600}
+  table.cmp td.now{font-family:"Figtree";font-weight:700}
+  table.cmp td.prev{color:var(--muted)}
+  table.cmp td.ctx{color:#B3AA9B}
+  table.cmp tbody tr:last-child td{border-bottom:none}
+  table.cmp col.nowcol{background:#FBF4E9}
+  .flow-cell .r{font-family:"Figtree";font-weight:700;font-size:15px}
+  .flow-cell .o,.o{font-size:12px;color:var(--muted)}
+  tr.idle td{color:var(--idle-fg)}
+  .zero-tag{font-family:"Figtree";font-weight:600;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--idle-fg);background:var(--idle-bg);padding:2px 8px;border-radius:6px}
+
+  .wk-block{margin-top:20px}
+  .wk-title{display:flex;align-items:baseline;gap:12px;margin:0 2px 10px}
+  .wk-title h3{font-size:16px;font-weight:800}
+  .wk-title .sum{font-family:"Figtree";font-weight:600;font-size:13px;color:var(--muted)}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+  table.snd{width:100%;border-collapse:collapse;min-width:540px}
+  table.snd th,table.snd td{padding:10px 16px;font-size:13.5px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+  table.snd th:first-child,table.snd td:first-child{text-align:left}
+  table.snd thead th{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#F7F1E6}
+  table.snd td.name{font-weight:600}
+  table.snd td.rev{font-family:"Figtree";font-weight:700}
+  table.snd tbody tr:last-child td{border-bottom:none}
+  .cap{font-size:12.5px;color:var(--muted);margin-top:11px;padding-left:2px;line-height:1.5}
+
+  .grow-top{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+  .gtile{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .gtile .k{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .gtile .v{font-family:"Figtree";font-weight:800;font-size:26px;margin:7px 0 6px}
+  .gtile.region .v{font-size:23px}
+  .gtile .gsub{font-size:12px;color:var(--muted);margin-top:8px}
+  .grow-label{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:2px 0 10px}
+  .flag{background:#FBF3E4;border:1px solid #EAD9B8;border-left:4px solid var(--amber);border-radius:12px;padding:16px 20px;margin-bottom:18px;font-size:14.5px;line-height:1.6;color:#5c4d2f}
+  .flag b{color:#3d3320}
+  .srcs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .srcbox{border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden}
+  .srcbox h4{font-family:"Figtree";font-weight:700;font-size:13px;padding:12px 18px;background:#F7F1E6;color:var(--ink);border-bottom:1px solid var(--line)}
+  .srcrow{display:flex;justify-content:space-between;padding:9px 18px;font-size:13.5px;border-bottom:1px solid var(--line-soft)}
+  .srcrow:last-child{border-bottom:none}
+  .srcrow .n{color:#4A443D}.srcrow .c{font-family:"Figtree";font-weight:700}
+
+  .forms{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .fcard{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:20px 22px}
+  .fcard .name{font-family:"Figtree";font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px}
+  .badge{font-family:"Figtree";font-weight:600;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:5px}
+  .badge.live{background:var(--pos-bg);color:var(--pos-fg)}
+  .badge.edit{background:var(--idle-bg);color:var(--idle-fg)}
+  .fcard .rate{font-family:"Figtree";font-weight:800;font-size:30px;margin:12px 0 2px}
+  .fcard .ratelbl{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .fmeta{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px solid var(--line-soft)}
+  .fmeta .k{color:var(--muted)}.fmeta .v{font-family:"Figtree";font-weight:700}
+
+  .nr-legend{display:flex;gap:20px;margin-bottom:16px;font-size:13px;color:var(--muted)}
+  .nr-legend span{display:inline-flex;align-items:center;gap:7px}
+  .nr-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .nrrow{display:grid;grid-template-columns:186px 1fr 96px;gap:14px;align-items:center;margin:0 0 11px}
+  .nrrow .lab{font-weight:600;font-size:14px}
+  .nrbar{height:26px;border-radius:7px;overflow:hidden;display:flex;background:#EDE6D8}
+  .nrbar .n,.nrbar .r{display:flex;align-items:center;color:#fff;font-family:"Figtree";font-weight:700;font-size:12px}
+  .nrbar .n{background:var(--tomato);padding-left:9px}
+  .nrbar .r{background:var(--herb);justify-content:flex-end;padding-right:9px}
+  .nrrow .cnt{font-family:"Figtree";font-weight:600;font-size:12.5px;text-align:right;color:var(--muted)}
+  .takeaway{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--tomato);border-radius:12px;padding:18px 22px;margin-top:20px;font-size:14.5px;line-height:1.6;color:#4A443D}
+  .takeaway b{color:var(--ink);font-weight:700}
+
+  footer{border-top:2px solid var(--ink);margin-top:16px;padding:26px 0 60px;color:var(--muted);font-size:12.5px}
+  footer .mark{font-family:"Figtree";font-weight:800;color:var(--ink);font-size:15px}
+  footer p{margin-top:8px;max-width:720px;line-height:1.55}
+
+  .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+  @media (max-width:720px){
+    .hero{grid-template-columns:1fr;gap:22px}.trend{border-left:none;border-top:1px solid #3f3a33;padding-left:0;padding-top:20px}
+    .score-grid{grid-template-columns:repeat(2,1fr)}
+    .store-grid,.grow-top,.forms{grid-template-columns:repeat(2,1fr)}
+    .srcs{grid-template-columns:1fr}
+    .mast{padding:30px 0 14px}
+  }
+  @media (max-width:560px){
+    .nrrow{grid-template-columns:120px 1fr;gap:9px}.nrrow .cnt{display:none}
+    .score-grid,.store-grid,.grow-top,.forms{grid-template-columns:1fr}
+    .sum-sec{grid-template-columns:1fr;gap:10px}.sum-eyebrow{padding-top:0}
+    .tabbar{gap:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="mast">
+    <div class="logo-wrap" style="margin-bottom:16px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQICAQECAQEBAgICAgICAgICAQICAgICAgICAgL/2wBDAQEBAQEBAQEBAQECAQEBAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgL/wAARCAD6AuwDAREAAhEBAxEB/8QAHwABAAICAgMBAQAAAAAAAAAAAAoLCAkCBwEDBgUE/8QAVRAAAQMEAQICAgwICgYIBwAAAAIDBAEFBgcICREKEhMhFBoxOUFYWXeYt9bXFRgiNzhReLYWMjNhcXKTl7LSFyh2gaG1GSMmU5GS0fAkNkNIVrHB/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAEC/8QAJREBAAAEBgIDAQEAAAAAAAAAAAERIVFBgaGx0eFhwQIxcTLw/9oADAMBAAIRAxEAPwCfwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACOP12evNeejhlHHPFbDxotm/JO9bDsjIZc677Vl65YxqPgdzxO1MRI0eDg14Vdn5T2SuLWta46WEwkpSl5Ttatv0aCPbxWwfk5sO+k9fPuULS2vSVvp2e3itg/JzYd9J6+fcoKW16K307PbxWwfk5sO+k9fPuUFLa9Fb6dlfHE7B7V7dObDu/avb/WdvtfX2r279tK+53FLa9Fb6dpy3DHkRTlvxM438nqYsrB6790rrrbTmHquyb9/Bh7OsZt9+fsSL0mFG/CzUZ6YtpEmsdhTyG0uKZaUqqKRWTIAAAAARreul1/L50d9laF1zYOMNr309uLBcwzeddrvtiZrtqwNY5klvx2HbYkODgl3VcnHnH5brrq3GKNpbbQhDlVLUkNEXt4rYPyc2HfSevn3KFpbXpK307PbxWwfk5sO+k9fPuUFLa9Fb6dv77X44rLqXCHW89OTHFWr07fs9Ns5QXRFw9jeanpKxFS9Iqao9RPeqaLp5a1p2rWnfvSfi/re505vFA9PDnzmuP6dvsjLuLO8MpnN2rFsO3W5ZK4bml5kKpSHZMO2vYpdba/e31KS1GhXdmyyZshxEaA3MkLQ2oJIdK0rTvT3P8A33pWnwV7geQAAAAAiq9bPxI9/wCknywxDjJYOJdo3l/CDR+L7gnZheNxztf+xHMqy/OcZj2GLZYOvbt6dDLWFLeXJXIRVxVxo2llNGqrcfp+MyuhX1m7r1jdcb9zW9aAgaEn6RzjDcWpbrZsaRsSFkUPMcdud6Yney5eI2hy2ymH7PLbW36J5C0PtLS4lVFoA3wAAAAAAAxG5k87OKnALVcjcXK/cWM6oxD0j0Sys3JUm55TmV3ZQldbDguF2Zh+6ZjevKturjMCK9SM2v08tceOlbyQhucp/G0Y7br3KsvDLh3NySzRpEttrP8AkdmKsbXcENV9FGci601uuW7HjOKopyipORIdq3VKVx2l1r5A162/xqXUnZvvsy5cfOFs6wVeWpVkjYfui3zKR1KV5G273XdT1UPJTVNPSVjKpWqe/o6d+wG4LhL4z3jTsu82nDubmhMp44zLhL9h12rrS6ytt6wh0ddZo3cMmxt22xMlxu3pbW7RxUBjIVUq1RdW0oUr0YTKdZbQ13ujAsV2lqbNcY2LrnOLRHv2IZtht5g5BjOR2eV5qMz7ReLa84zMY86HEL8qvM060tl1KHULQkPuwAAAAA029bjqtT+kPxbwfkNatKxd6XLN92Y7qGPis/OXdfwLc3eMRzTLZN+fvUbGrq6+ttnEPQNx0xU0Wqf6RbyEteVYam+kN4ofJup1zcwbiFfeG1j07GznEdj5BGzu0bvuGbvW6ZgOJzMtTFfx+brS2JkxZUa2ymKrTLStpx1tdEOJotIKpewADHnltvhPFzi5yI5IKxpWZf6B9KbN27TEkXNNlrky9e4hdcnbsX4YVFf/AAUmU5bksqk+gfqyl6rlGXapohSU6QEHvDfG5Znf8txWxXTp3YzEt15yKwWq5SrfyXu0idGhXO6Q4U1+DHlaabbelojyHVNIdcQhS0JStaU1qqlolVgQlXmTRXatO9KV7V7d6d6UrTv2+HtUiuQAAAA4qr5UqV27+VNa9v19qd+wELnqVeLLyzgRzg5A8Q7Lwgx7Zlu0fk9mxhrO7pv254pNyR6fhuNZRLmrx2Hqqc3amkSL+thtukyRVSIlHVrSpyraLTE/GDHt4rYPyc2HfSevn3KCltekrfTs9vFbB+Tmw76T18+5QUtr0Vvp27E1744W1P3NLG0+njcbbZ11/LuWv+R0S8XOOnzU9aLNk+pYLMtXk7+qs5n1/wDCKlAdNDrV8FuqjbLjD48Zzd8f2tjtrTeMr0NtS2wsT2vZbTRTLD9+gW6HdJsDMsZblvNNuz7LPnNxFSWE3FEFyQy2sNtYAAAAAANIfXJ6v1w6PWidQbcs+iYe+bptfbT+t0WG5bBf13b7JDg4desrl3hdziYpd3Z8pS7dEjtR6MNI7SXHVv0q2hpy+cDFGM9vFbB+Tmw76T18+5QUtr0lb6dnt4rYPyc2HfSevn3KClteit9Oz28VsH5ObDvpPXz7lBS2vRW+nbzTxxOwa1pT/o5sO9dfjO3z7lRS2vRW+naZD0redL/Uk4L6T5iy9bt6lm7WRnLU7AmMlVmEWyS8I2HlGBvViZE5aIC7jGk1xykpHpIbC2vZdWVUX6P0i4rYaBgjz15B8hOL+p7nujUWu9NbExPDoUN3NrXsjYmdYLkKpd8y/F8TsLeLUxbXN8jTY1HMgeelrluxlt0iJQyh6riqtj6rF8dvPmTtPinjvGK4b71vrd+Vtnetw11ua9a2z/KLjhmnNZNY7mF5TtqFOyvBYE3JodvetuKfhuK/EgNwoVzuU9qU+3bkpkB9vZuZTmQ9QO/8KrPgbcnHcR49XnaeSbarkC01j7OtOUawZlakg4xS1VTL9i6/2xhV7nXL2dT0K8ogQkxFqW862GdAAAAAAAAAAAAAAAAAAAAAAAABXceOD/O90+Pm25C/vfq4DQh0Ouj7a+sLuXdGqLpvqfoRvU+r7TsRm9wNcRtjrvjtzzKBitbS5b5OZWalvbQ3MU/6ZLr1VKbo36KlK1XQJL3tHPEvlH8i+iza/v0Ae0c8S+UfyL6LNr+/QB7RzxPtXt1H8ipWqVUpWvFm11pStaVpStaU3rTvTv8Az0/poBNO4icebZxL4ucfeMdmySfmNr0Hp/ANSwsrukCNa5+SM4LjkGwUvkq2Q3nGra5KVDU97HQ66lmjtG/Su+X0igyKAAAAACuI8bl+k5wi+YTZv1mwANLXQy6M1p6xewt+4NdeQNw0EnSuE4VlzFyga0i7IVkTmW5JdbEuA7Ek5rZfwWhhFsq7RxLj9XKveSqEUp5qhJE9o54l8o/kX0WbX9+gHx+d+B6uEbGp7+teodDu2XNNrXa7bnPHCRYcbmvUbX6OPcLzju2rjLtjSnfJRT7UGXVtPdVI7taURUIXPM3hxvvgJyKzvjNyLxdOL7KwKVFW45b5S7ljWU4/c2vZmO5phl8oy1S+YncoNEvRJHo2nkKQ5GlMRZ0aTGZCzh8LR1LM658cD7vr3dWQy8r3lxFySx6uyDLbm77Ivea6zv1meuOpMpyKZWtFTsibg2fIrJMkrop+ZXEGZ0t16ZLfdWEm0AAAAAKt3xmfvruuP2J9Q/WrvYDcJ4IL8xHPj53NIfuNm4E54AAAAAMDepTz81T00eIWzeV22W3brExKPFsmDYRClNw7vsvZ2RVei4XgNokOIX7GclzGn35spLb1bfabVcLjVl1MSragpwucvOzkj1EuQOUchOSWcTsuy+/yHoePWKMuTHw7XWJ+y3nrRgGuseU6tGPYpDS95UNp80mY8pydcX5dwkyJLgb/APpveEp5p8xMLxjcXI/NbTw01XlUeJdbBYMqxO6Zhvm/WOSlEiNdXNZ1n2yNhFvlRVVrHre7mxcqUqh1yzUYcbcWG8C9+CR4lv43JjY3zP5GWvMFRFIiXq+YVqu+Y01N9HWiX5OMW+Fb5T0X0vatWkXdtfl9VHe/5QEWnqpeHd5x9Lu0yto32NZd/wDG1iS0xI3pqeBd0x8PrJdTHgp2vhFxQudrz08iqENzaPXGyVdkMx63dMt5uNUMxPCu9RzlxoTmzg/DfBMRz/fHHLkRkKI2wNX2RuZdW9Ly3FsxpfIyxemc9jYfZ7V6WJ/Ctbio8O52tSaO+ku0a1VAtQqd+3r9Vfh+H/j8IAAAAAQ9PGne9paE/bTwn6md1ARWvCee/U8f/m35FfUzlIFtgAA149W73rrqHfsW8lPqmyc18P6gKUrXP5wcH/2vxb/nluMi+/a/iJ/qo/wJA9gAAAA4Ofybn9RX+GoFNx4i336bn1862OfVProDZh0gfDE491SeF2Ncs7hzIvGl5d/zzYmGLwaHoyBnkeK3g15ZtLVxTkL+0rUt5UmjilqarDTRrtRNHHO/egbQvaOeJfKP5F9Fm1/foBhrzK8GNyM0vqbMtmcXOTeO8nL/AIbY5eQr1De9WztVZxlcK1suyrlb8GucbNb7b7zk9YrdVRLfLrb6TFNqYal+yFsMuhEg45cg9wcRN8635A6UySdhG2tQZbEybF7q2hylWLjBWuPcLNd4C6ppPsk+3uTrdc4L1PRyoVwkRX0VSutKBd6cQ+ReL8ueL+guTWGpbZx7eWp8I2VEgNuqfrZZOT2OLOu2OPuqQmqplsvSrlb3u6aVo7bF0rTvSoGRoAAAAAQovG1/oY8Pf2ob/wDVFkhcI5e0xhn6Qsujx04bf1T+Zdn4o3PbczSsa6662FnVc3g4Wxnr7LmDwIExq2fwfkZLaUuIkqm+VT3sulWqN96NuVr2IqWl7RzxL5R/Ivos2v79AHtHPEvlH8i+iza/v0A808DpiVK0r/0j+ReqvxWbX9+gEuLplcF7R03OFOm+HNm2JctrxdTtZmpzPrpj0TE5GQTc1zzJM7nPN43Duk5NoiMycjXHZaVNlOVRFotx5Sl1okM9QMe+U+hmuTWiM70k/k7mHNZs3jra8jZtKL45bvwBmGO5ZSqbY5Pi0lelVYKMV7vo8lJVXPyqoohQjV+TyE4xYnyPma/i51OU7h2LU27b8qxL2DR5nOMa3DpbPNLZBYH7h7MQq0tptGdy5NHUtP1WqIlryI8/pUB0Txh4FO8esu1RsG+bnvm2s/w3WPIPE9lZrkeKW+z5BujYPIXZGmc8yDamQu2+7uM2W4xIGl8etDNvYadYVDSxVLrHsXyPhsQAAAAAAAAAAAAAAAAAAAAAAAAK7jxwf53unx823IX979XAdYeCWrRPMPmNWvf9GbFvcSpVfzvWSnuJpX9YFkl6VP6nP7F3/IA9Kn9Tn9i7/kAelT+pz+xd/wAgHsAAAAAABXEeNy/Sc4RfMJs36zYAH6vgh/0ged3zM6a+sLLALGIABWgeNckYm5z14vR7e7al5jH4mprk6Iqo6ro1an9wZ8vFE3SjVfOhNUpv6o9HPX6NSqp/IrSoHa3gh28kryK51uRKOfwRRpPUSL92or0X8JXNhZEvFfPWlO1HPwS3mPl7179vN2pWlK9gsaQAAAAAq3fGZ++u64/Yn1D9au9gNwnggvzEc+Pnc0h+42bgTngAAAAArS/GecxblsTmLpPhjYru9XDeOeso2xcztTSkNsu7b3L5pkSlwaQqtZD0DV9rxZcRS+1Wk5pMoinZ5Vah1n4Rzpj4fyz5T53zB3Pj9vyXWHD17FVYDjN5iIl2rJd/5Umfc8WvMuO65VubExWx2eRdaMOtVTW63iyyO6kxVoUFn+lNE07Jp2p/41rWvrrWta+7WtfdrX11+EDyB+BlWK43nGNZDhuY2O1ZPieWWO641k+OXyDHudlv+PX2C/bL1ZLvbpbamrha5dukyGJDDiVNutPKQqlaVAwa4GdL3hX02LBnFi4l6ghYG9sa/wAi+Zlk9yulyyzNL2ymXIkWPGpOW3952YnD7SzJWza7YhxMaOmq33Evzn5Et4NggAAAAAQ9PGne9paE/bTwn6md1ARWvCee/U8f/m35FfUzlIFtgAA149W73rrqHfsW8lPqmyc18P6gKUrXP5wcH/2vxb/nluMi+/a/iJ/qo/wJA9gAAAA4Ofybn9RX+GoFNx4i336bn1862OfVProCex4Rz3m/XPz5cgf3xilj9Q/2MRJyIP47hMh26HIn3CVGgwYTS5kyZMfajRIkSImsmVKkyH1pQxHajtOuOLUqiUIbUpVaJpWoFEryqyfDc05S8i8y10mO1r3K9+bgyfBG4vk9is4ZftkZJdsYRH9FWqaR02OXB8nlrVPk7dq9uwFux4eXHr9i/Rh4A2zI4sqHcZGm5+QMNS2VMPKseW7FznKsXkJQqnrjvYzebQ8yr/6jL7blPUqgG54AAAAAIUXja/0MeHv7UN/+qLJC4Ry9pjDP0jz+EQ9XWGxKvataJ4978rXtSte1PwLYfXXtT9fan9NaU92pFWuPpU/qc/sXf8gD0qf1Of2Lv+QB6VP6nP7F3/IB7Kev1/r/AF07f8K+4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAruPHB/ne6fHzbchf3v1cBCT1ztza2o59yueqNmZ/rO5XeE3bbtcNf5tkuETbnbmpLcxuBcJmNXWI5OhpltNOpadUtFHG0uUTRVKVoHbf46nMf41/JL+/3an2xAfjqcx/jX8kv7/dqfbEDm3zU5kUVWtOWHJNNUocUlSd+7U8yVIbUtCk/9sf41FJpWn89KAXfGgbjcLxo3Td2u02Xcrpc9U64uFyuM+Q7Lmz583CrFKmTJkp5SlyZTsl11xxxdaqWtxSlVrWtagdugAAAABXEeNy/Sc4RfMJs36zYAGmDoW9Zix9HTYe/s5vegLrvtG6sJwrEo9ttex4Wul485iWSXa+rnPSpmHXilyQ+i5+io2lDNW6s+aq10V5aBJK9vFYF8nLl30n7J9yYHwWxfHC3CRjk2Nqjp5QrVlb8WS3b7vsPkZJvuO22ZVCaRJU3H8X1RbpV6ipXVVXGG7nb1rpSlEyUVrVVAhW8uuW+++d3ITOuSXIrL3832nsSfHXMfZiogWayWiA0mBjuIYlYovdux4tbbcliLBiNeddUpq6+5JmvyJDwWfvhdOmfnPT94GXLNd2Y7MxLfXLPJrTtPLsRujSot9wbXlktD1q1LhuRw1U7wcipbbnf73MjL8siE7mqbfLbalwnm0BJeAAAAACrd8Zn767rj9ifUP1q72A3CeCC/MRz4+dzSH7jZuBOeAAAAHFX8VXb3fLX/wDQFPb4mmZdpnW85x1u6pClxr7puHAo+mqPJaY3HnVCLalmlfdY9jeWqa09SqK83wgTKPBgW6xR+ltt24QGYqb1cOa2zUX19pLfst2kLUmjkWpqUun5VW0RH3atUV6qenXVNPyq1qEuwAAAAAAAAAAh6eNO97S0J+2nhP1M7qAiteE89+p4/wDzb8ivqZykC2wAAa8erd7111Dv2LeSn1TZOa+H9QFKVrn84OD/AO1+Lf8APLcZF9+1/ET/AFUf4EgewAAAAcHP5Nz+or/DUCm48Rb79Nz6+dbHPqn10B2B0/8AxGXPjpt8cbLxe4/Y1xxueubFlWX5fDmbJ1zl+S5Su6ZrcGrndm5FztGzLZHXDRJap6BKYaFoSuqVuO/k1SGa/tyfqy//AIXw0/ua2D99YGHHMzxL3VS5sapyXSWabNwPU2tM3tj1jznH9B4F/AKbmFhlJW3PsF4y66327XpmxSmFrZmxIVwiMTo61xpiHozjrSw6F6PPSB3/ANVzkPjmJ4rj2R4zx0xjIYLu/t+OWh9OJ4RjMarM25Y3ZbpJ9HHvmzblAqmNa7THcdkNquCblMbYtsZ9+gXJWCYVjOtsJw/XeF2mPYcNwLFsfwvErFD81IlkxjFrRDsVgtEWi1VrSPGtUCIyjvXv5WaVr6wPqgAAAAAhReNr/Qx4e/tQ3/6oskLhHL2mMM/SuYwPYmwNX39GVa0zjL9e5O3DlwG8iwjKL3iF9bgz0UanQkXnH7hGkJivNpSl1qjvkcTSlFpVShFd2fjqcx/jX8kv7/dqfbEB+OpzH+NfyS/v92p9sQPKeafMaqqUryu5JVpWtKVpXfu1O1aV9VaV/wC2Prp2AuKujdlmVZ10ruAGXZtkl+y/K7/xU0/cb7k2UXaffcgvdwdxeKl24Xe8XR92Rcpy0oR53nnFuL7Uqtaq+sRGy0AAAAAAAAAAAAAAAAAAAAAAAAAAAACu48cH+d7p8fNtyF/e/VwGNng2tQam3Byz5b2nbWsNd7QtVr444zcLZbdiYTjObW+3T3Nr2WM5OgQsmtcpqJMVGqptTraUrqhVU1V5fUBYbfiO8LPih8X/AKP+pfsgA/Ed4WfFD4v/AEf9S/ZADzTg9wuTWik8ReMCVJrRSVJ0BqWikqTWlUqTWmIepVK0pWlfgrQDJ9llqO00ww02ywy2hpllpCW2mmm00Q2222ilEttpQlNEppSlKUpSlKdgPYAAAAAFcR43L9JzhF8wmzfrNgAaMui10Z771i883pg1j3/adCPaUw3DsuduN21vO2M3kSctyK5WFMBuNBzOzVtamKW1x2rtVyPSeko3RtHarlAkIe0dtifKMYX9GLIvvsA/YsXgdcorc49Mk6jVhTZ/N3l1snF+6LuXl709Uely3dRnzdvN61fDSnq90Dez03vDBdPXp/5pY9xX5jKOVW8sckNXDGsy3dCx6uF4TeY62nI1+wbVFnh1t8C+susodizrtJvc2C+mj9vfiPJStISQqUpSnanuf++9a1+GvcDyAAAAAFW74zP313XH7E+ofrV3sBuE8EF+Yjnx87mkP3GzcCc8AAAAAFXl4x/ixdNT9R/C+SsSHJViXK7TOOSZFzWzVEWmydKsRNcZPaGXE1qnzIwhGspfatE1VW5u1pRXlVWgZN+DG574prPcm9uAuwLvFs6uQKrZt7SDsyR7Hj3LZeCWKVas/wAPYot3yu3q6YCxabhETRCarTr+W3Va3Fx26hY5UrStKVpXvSvrpWnrpWlfcrSoADxWtKU71r2p/wD2te1Kfz17gfF4JsnXm0bPIyHWmeYZsOwRLzecclXzBsoseXWaNkGOznLZkFifumPzpDDN5gXJp2PMiqco/FfaU0+2hdK0A+1AAAAACI94zTErjfelprTIIVFLi4VzE1hdLulKFK9FBvWuNvY2xJWqlOzbdLpcILfevuqlIp8IENnwye3sY091ouIFwy19MO153P2TqKJMWpNEM5LtDV+V4thrCu6qd6yssk2aEntSv5dyT37U7qoFwNSvelK+53p7lfdp/NX+cDyBqW67G1bBp3pD9QHKchucW1s3jjdnetbS5Jq2qsvJ9uxmdYYvbo7Lnf08h695ZDTRNEq8qaLcrSiG1KoFOxx1wi77K5CaO1xjzKpV+z7cescIsUdHai5N3ynObDYrYymtadqKXLmtUp3p8IF8a36k9qd+1K1TTv7vZFfJ3/3+Xv8A7wOYAAAA4Ofybn9RX+GoFNx4i336bn1862OfVProDfv0GfDr8AepD09sQ5Ocg7vyEhbIvey9q4nNZ11snHsZxr8FYbkDNstCmbVcsAuLrcqsZyvpl1k1otXrolFPUX6wnMzk3N18HF0k+1e2RcvqV+Cv+mnD69q/0f6JPWJ+N0l524QbOvH0s4/Sl5vXLUGDSMmvOgNi4hZdmaGyXLJka6ZBIxuTStkyjGshusCDGYmZFaMyt10acU2w1VyBcLbJW2hUitCKldeDS6iluzbTez+m9nlwjMZhpuVe916LU8ppl2+auy68RU7Kxlmqn6VkzbHnt0iXJunlU85Dz12iezFur5QnIgAAAAAAhReNr/Qx4e/tQ3/6oskLhHL2mMM/SNp4UvXOvtpdWfFsT2bgmG7Exd/Qu85juOZ3i9jy+wuTIdmsiocxdnyGBIjrlMqcXVpyrfnRVavLWneveKtBPxHeFnxQ+L/0f9S/ZAB+I7ws+KHxf+j/AKl+yAD8RzhZX1fih8X+1fVX/V/1L66V9Vaf/KAGSFjsdlxmzWvHcctFssFgsdviWmy2Sy2+JarRaLXAYRGg2212yAy2xb4DMZtttplltDbaG0oQlKaUoB+oAAAAAAAAAAAAAAAAAAAAAAAAAAAABXceOD/O90+Pm25C/vfq4DV94YrqU8R+mpyL5I7E5c57esCxfYWj7DhmJzLLgeZZ4/cMig7GtN+kwnIWG2eY7BQm0x33fSvpbarVvyUXVyqUKCaR7a96KXxi9gfRy3j9jQHtr3opfGL2B9HLeP2NAe2veil6/wDWL2B6qVr+jnvD4Kd/hw0DfhpPcmveQ2odZ711NfFZLrPb2DYzsbA7+u3XG0OXfFMutMa9WSc9arvFZlW15yDLaqtiQ028yvu24hKk1oB2gAAAAAFcR43L9JzhF8wmzfrNgAfq+CH/AEged3zM6a+sLLALGIAAAAAAAAAAq3fGZ++u64/Yn1D9au9gNwnggvzEc+Pnc0h+42bgTngAAAAA1A9bbpf4/wBVPhDmWkof4FtG8MMlf6SOOua3iiI8Ww7MtER6P+ALzc24br8PDsgs7su03SrdFJZ9lRLlVl9y2st1CnzyfGd7cQN9XLHMhg5xozkFoTYKWZLFJEzGs613sHDbo3JhzYFxgupchXKNPjR5MKbFcq082pmXFddjutuLCev0y/GN6ruOD2HWfU2w/J8U2JZYbFuryM1HidcmwrNGIUdhql52Bre1SaXPEcoe8i1ynbDHudtlyHlOs260Ndo6Q3qXrxMXRMs+NO5LTm9jt1QiKmSzZbLqves/JpK1p8yYjdjprFDjcrv3pVLtW0pr/GXSnatQiudYLxbuR8hcFy3jn05cYzbT+B5fbZ+OZxyJzxuJY9uXmx3Bl2DdbTq3G7JdZTeuIcqIt1tV7lS373WPLUmHEsklNJIGCXhUtldQ619QnH9bcRZTtz0DkL1ryDmRjWX1uUjUFq1JCnx4U3M5LTLtEWfcNEVrCxOTE7T5k15USWmRY03SjQWt1O/anf3f93f/AH9vhA8gAAADAnqd8K7N1CuCnIziXc5ES33PaOCPpwW+TfPSJju0MVnRMv1jfpq2U1cpbI+cWOy+zUt/luQXZLVP44FK5muGbh4tbuveGZhaMo1LvDR2wXLfdLdI9PZsqwXYGD3pt5p+LIaV5o0+Jd4MaTDlMrUhxKWJUdxbTja1BYgdNPxg3F7OtZ4rgfUdhZNpTdlht0O137cuGYPdcy09sRyOpMVOTTLDh9Jd7wDJJLdW3Z8Nu2TbT6dD8iJLiMutW5gNr+xPE89FPAcbeyCLzAY2DKo0t2Hi2utS7kvmTXJaWlOJjMsXTBIESA+uqaJTWdMit0UunpHEJopVAggdePr/AOddWm94/qLV+K3zUHD3XOSryrG8Qv8ANYXn2z8vahP2y35xtBu0Tn7fbPYNvmXJu0WWE9LZg1u0qTJnz5LrNYYd5eFD6aGX8ruduO8vcrsTjXHrhlfGcvevM5nyQsu3wq2Puayw2yreiqTNl2iVKZyW5KaV3hJs9raeqhdzj1qFqNSnalKd617UpTvX11r/AD1r8NQPIAAAA4Ofybn9RX+GoFNx4i336bn1862OfVProCex4Rz3m/XPz5cgf3xilj9Q/wBjESciCNf4o7p4fjt9N/KdlYVjtbxvLh4/ct4YNWBCVKvl5wCPAQxurCodWWHHnmZGIRGL03HaTVb8/AYbaKVU52qFZB0/uY2ecAuYeieWOvVPP3bUWbQ7veLI288wzl+DXNl6x7AwyZRuUz54t2wu5XqHTzrolt2Sy/8Axmk1oF3NpzbWBb51TrndOrb/ABco1ztXCsa2BhOQQ1oWzdcYyu0xb1Z5VaIcV6KRWHLbS80qvnZfbcZcolxtSaB2SAAAAAEKLxtf6GPD39qG/wD1RZIXCOXtMYZ+kTTw8PNzjt0/uozj/IblBl1zwnVtv0/tzE5F7tOJZLmktN+ym1WqPY4lLLidtlS1NuvxHk1dozVtutKelUhNfNSKn0e2veil8YvYH0ct4/Y0B7a96KXxi9gfRy3j9jQFPFedFKtaU/GL2B6/V+jnvH7GgbseJfLDR/N3QWCcmOOeVScz1Dsdu+qxa/zbBe8XmyV41kd2xO9x5lhyOFHmW6QxfbJcWapeaTRdGaOt1W0tC6hkeAAAAAAAAAAAAAAAAAAAAAAAAAAAABDz8UL0gucvU2z7iDkvEHXmL59btS4fuGxZyi+bJwrApVrm5bfsDudiWw1mN0iJuUZ2PZLlRSo6nFNrZpRxKKLRVQRVvan/AFrvi66++kXpH7XllC+/CTjbbk9qf9a74uuvvpF6R+14lC+/BONtuT2p/wBa74uuvvpF6R+14lC+/BONtuT2qB1rqd60466/rXtXtSnIvSPete1e1Kd8wp66/wBIlC+5Pxtys3+m/pHPeNfAbhxoDaUO32/ZGnON2odc51b7VdI16t0DK8Uwy12m+QYl3h/9Tc2WbhHebo+zVTTvo/O0pSKpVWKzWAAAAACGh4nro5c7+pfuzi7nXETXGLZ9YNa6rzzEcxXetmYPgcu1Xi75rbr7a0ojZjd4lbhGegUf7Lj1d8i4yku0b7t1caGT9HwwPR3509M7avK7M+XmvMVwG0bP17rHFsKbsmysLz2bdrlj+V5Lerw44zhtzlpt0RmJLh080lbSnHJNEsocolxSGcxMeAAAAAAAAAAIK/iTuhr1Euoxz1wXfvFDV2H55ri18ZcC1pc7hd9sYBg1xgZbjWfbRvlwgu2nMLxEeeYrbMrtDjT7NHWl+dxFVIW3VNWchsU8L/0veYXTK1Lywxrl7g2O4HfNsbI1pfMLt9iz7Es8XNtGK4lkFuuk6XJxC4ymLej2deGG2kOupeXVl1VWkt0QtxnMSlAAAAAAAaV+q70KuGfVfsiL7sy13DVnIixWWlmwzkbruNCTmEOBHqp2Bj+dWOZVMLZmHNSFd0RJ1WZ0NC3UWm622j7/AKQIGPK/wlHVY0BcLtM1Di2vuW2DxHqLt961DmFsx3MnLatakNu3XWuyZVslMXKlEpq7Gtc28oR6SlG5D1KKVQNe7HQV6xUqbW3I6fPJCj1FVR55GLW+LB7prSnf8JSr4iNVPrp2V6Xy19favqqBt44TeDx6gO6L9j975d5HgPEjWanoUu/2dN+tG191S7ep9Lj0CzY1hst+w2aa7DQ4j2Rcr7WsNx9ta7bM8jjAFhNwG6ePFvpr6PhaH4tYH/BbHVy03nLcovMtN82DsnKasJjPZZsHK1x2l3y8VZT6NlptuPb7ex/8LbIUOLT0QGcAAAAAAANAXWJ8PnxY6r7LmzVXGToXljarExZrLvTFrSzdoGW2+1sONWXHtwYWqTHRmlrjNr9FFuEeRCvkJlLTCJ0iAw3bwIHvJbwrnV/4/XeS3iuksa5K4sia9Hi5dx/zyxXurrNKJXFek4Zmr1jv0JakK7Lom3vttrbVT06k+RawxKsvQJ6yGR3Bq1wen5yEZkvPNsocv1lsWMW2i3F+jSp68ZJkcWJHZoqn5Ti3qIQn8pSqJ9YG+vgD4NLkfnGUWHMOoTs/FtJa2iSI0y66k1Bf4Wf7jyFpuiVv2SdmTMFzGsBaUqqUqmRXcjf7IcQ3GZXVuQkLBTjZxq0jxE0vg3H3jxr+za01Pru1UtWM4tZUvLQ1RbipE+6XS4zHXJV+yGbOcelXC4zXn5s6VIcfkvOLV3oHeoAAAAAcV0rVC6U92qVUp/TWlaUArg+sl4dHqpcvephyy5I6I0vg+Wal2xnViyHC7/N3bq3GJc63xte4ZY5VJViyTIY023yG7paJ7akvMppX0VFtqW2pK1XMSw/D5cI+QXT96b2Dcd+TWOWXE9rW3Zm3csudgseU2XMYtvtWWZTSZY6PXzHZL8J+U5Bj0dUhh92jaX0JcUl3ztok55Dd2B/PLix50WRDmR2JcSUy7HkxZLTb8aTHfQpp+NIZdQpLrDjSloWlSapUldU1pWla0ArBedPhMOojA5bb1c4Y6ownN+L93zy6ZLpi6T9ya1w642bEMmXS/R8In2LKr7EmMybBKnyrQl9TVUTI9oYloXX0ykoUvJMkwLw6HFzqC8J+El54tc8MRx3GEax2ZeJGgPwRsPGtgT0azzGOjJr5YJ0nFbrMjwbfBz+ZkDsBLjyX6t395n0DceNHU4zmqQAAAAAAEZ3xOPTR5ZdTDjHx519xHw/Hc4zDW++J+aZNZb9nGM4IpvGrhrvIMfTcYdyy2dGiS6tXSREQ4zR70/llpW22tCXKouEjFCs9qf8AWu+Lrr76RekfteJQvvwk4225Pan/AFrvi66++kXpH7XiUL78E4225Pan/Wu+Lrr76RekfteJQvvwTjbbl5p4T/rW96f6uuvvdp/9xekfteJed+CfjblYgdC3iNu3gz0weN/GbkTY7TjW3tf12nIyyw2XI7VlcG1qy7bub5haI1L9YnnYc2R+Bb3b1u+xnnm21uVb9IpSFdorboAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8VpRVOyqUrT9VaUrT/wAKgcPQtf8AdN/+RP8A6AeylKUp2pTtSnuUp6qAAAAAAAAAAHFSUqp2UlKqfqVSlaf8QOPomv8Au2//ACJ/9APYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/9k=" alt="Epicure" style="height:36px;width:auto;display:block;background:#fff"></div>
+  <div class="eyebrow">Weekly Report · Week over week</div>
+    <h1>Week of Jul 6–12, 2026</h1>
+    <div class="sub">This week vs last week <b>(Jun 29–Jul 5)</b> · Epicure email &amp; store</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabbar">
+    <button class="tab active" data-tab="summary">Summary<small>the quick read</small></button>
+    <button class="tab" data-tab="full">Full report<small>all the detail</small></button>
+  </div>
+</div>
+
+<!-- ================= SUMMARY ================= -->
+<div class="panel active" id="summary">
+<div class="wrap">
+
+  <div class="hero rv">
+    <div>
+      <div class="lbl">Email attributed revenue · this week</div>
+      <div class="big" id="heroNum">CA$0</div>
+      <div class="wowline"><b>+40.2%</b> vs last week (CA$39,336)</div>
+      <div class="split">
+        <div class="split-bar"><div class="c" style="width:75.8%"></div><div class="f" style="width:24.2%"></div></div>
+        <div class="split-keys">
+          <div class="keyitem"><span class="dot" style="background:var(--tomato)"></span>Campaigns <b>CA$41,774</b> <span class="w">+44%</span></div>
+          <div class="keyitem"><span class="dot" style="background:var(--herb)"></span>Flows <b>CA$13,366</b> <span class="w">+30%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="trend">
+      <div class="tlbl">Last 3 weeks · attributed</div>
+      <div class="trow"><span class="wk">Jun 22–28</span><div class="tmeter"><div class="fl" style="width:94%"></div></div><span class="amt">$52.0K</span></div>
+      <div class="trow"><span class="wk">Jun 29–Jul 5</span><div class="tmeter"><div class="fl" style="width:71%"></div></div><span class="amt">$39.3K</span></div>
+      <div class="trow now"><span class="wk">Jul 6–12</span><div class="tmeter"><div class="fl" style="width:100%"></div></div><span class="amt">$55.1K</span></div>
+    </div>
+  </div>
+
+  <p class="intro-line rv">Good week. Email brought in <b>CA$55.1K</b> attributed (+40% on last week), and the store did <b>CA$100.6K</b> across all channels (+47%), with email behind about 55% of it. Campaigns and flows both bounced back from a slow prior week. Here's how it broke down.</p>
+
+  <div class="sum-sec rv">
+    <div class="sum-eyebrow">Campaigns</div>
+    <div class="right">
+      <div class="sum-headline"><span class="fig">CA$41,774</span><span class="minichip up">+44% WoW</span></div>
+      <p class="sum-body">Fewer emails, more sales. Sends went to <b>696K</b> people — the fewest of the last three weeks — and landed <b>473 orders</b>, the most. Revenue per email was up 48%. The two Back in Stock CA sends alone did about half the week's campaign revenue.</p>
+    </div>
+  </div>
+
+  <div class="sum-sec rv">
+    <div class="sum-eyebrow">Automation</div>
+    <div class="right">
+      <div class="sum-headline"><span class="fig">CA$13,366</span><span class="minichip up">+30% WoW</span></div>
+      <p class="sum-body"><b>Three flows</b> — Added to Cart, Welcome Series and Abandoned Checkout — brought in CA$12.4K of the CA$13.4K total, and Abandoned Checkout more than doubled off last week. The next lift sits in the automations we haven't leaned on yet — <b>Post-Purchase and Winback</b> are where it comes from.</p>
+    </div>
+  </div>
+
+  <div class="sum-sec rv">
+    <div class="sum-eyebrow">List growth</div>
+    <div class="right">
+      <div class="sum-headline"><span class="fig">228K active</span><span class="minichip down">−3% WoW</span></div>
+      <p class="sum-body"><b>The active list is sliding:</b> all three 30-day segments shrank — CA 135K (−3%), US 77.8K (−3.1%), FR 15.2K (−3.5%). About 9,400 aged out of the active window this week and only ~2,200 came in. Total subscribers rose 0.19% to 386K, but that's the Gleam import — the active audience is the one shrinking.</p>
+      <p class="sum-body" style="margin-top:9px"><b>In and out:</b> organic signups still run through the forms — the EN_CA "free Marry Me Chicken" form led (114 new, ~1,300 submits a month) with Shopify checkout adding 167. Opt-outs are almost all unsubscribes (~900 one-click, ~850 via an email link) — worth testing a "pause" option in the footer so people can take a break instead of leaving for good.</p>
+    </div>
+  </div>
+
+  <div class="sum-flags rv">
+    <div class="sum-eyebrow" style="margin-bottom:12px">Worth flagging</div>
+    <div class="flags" style="margin-top:0">
+      <div class="fl-item"><b>The giveaway drove volume, not orders.</b> 1,823 net-new subscribers from Gleam, 1 order between them so far. Good for list size, nothing on the board yet — worth a follow-up to convert them.</div>
+      <div class="fl-item"><b>Post-Purchase and Winback are the next big lever.</b> A manual Back in Stock campaign did CA$12.2K this week, so the demand is clearly there — building out those automations captures it on autopilot, week after week.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ================= FULL REPORT ================= -->
+<div class="panel" id="full">
+<div class="wrap">
+
+  <section>
+    <div class="sec-head rv"><h2>Store context</h2><div class="tag">Shopify · all channels · WoW</div></div>
+    <div class="storectx rv">
+      <div class="store-grid">
+        <div class="stile"><div class="k">Total store sales</div><div class="v">CA$100,641</div><span class="minichip up">+47%</span></div>
+        <div class="stile"><div class="k">Orders</div><div class="v">1,112</div><span class="minichip up">+45%</span></div>
+        <div class="stile"><div class="k">Average order value</div><div class="v">CA$88.21</div><span class="minichip up">+1.5%</span></div>
+        <div class="stile"><div class="k">Conversion rate</div><div class="v">4.72%</div><span class="minichip up">+79%</span></div>
+        <div class="stile"><div class="k">Returning customer rate</div><div class="v">52.52%</div><span class="minichip up">+10%</span></div>
+        <div class="stile share"><div class="k">Email share of demand</div><div class="v">54.8%</div><div class="share-bar"><div class="fill" id="shareFill"></div></div></div>
+      </div>
+      <div class="cap">Shopify, all channels, this week vs last week. Email share = CA$55,140 Klaviyo-attributed of CA$100,641 total. Shopify counts orders differently than Klaviyo, so store totals won't line up exactly with the email numbers below.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>Campaigns</h2><div class="tag">Email · CA / US / FR</div></div>
+    <p class="lede rv">Campaigns did <b>CA$41,774</b> this week, up 44% on last week — off fewer recipients. Last week was the slow one of the last three; this week is back in line with two weeks ago.</p>
+    <div class="cmp-wrap rv">
+      <table class="cmp">
+        <colgroup><col><col><col><col class="nowcol"><col></colgroup>
+        <thead><tr><th>Metric</th><th class="ctx">Jun 22–28</th><th>Last week</th><th class="now">This week</th><th>WoW</th></tr></thead>
+        <tbody>
+          <tr><td class="metric">Recipients</td><td class="ctx">776,335</td><td class="prev">715,341</td><td class="now">696,359</td><td><span class="minichip down">−2.7%</span></td></tr>
+          <tr><td class="metric">Placed orders</td><td class="ctx">418</td><td class="prev">306</td><td class="now">473</td><td><span class="minichip up">+54.6%</span></td></tr>
+          <tr><td class="metric">Revenue</td><td class="ctx">CA$38,562</td><td class="prev">CA$29,025</td><td class="now">CA$41,774</td><td><span class="minichip up">+43.9%</span></td></tr>
+          <tr><td class="metric">Open rate</td><td class="ctx">69.8%</td><td class="prev">74.5%</td><td class="now">74.7%</td><td><span class="minichip flat">+0.2%</span></td></tr>
+          <tr><td class="metric">Click rate</td><td class="ctx">1.06%</td><td class="prev">1.30%</td><td class="now">1.07%</td><td><span class="minichip down">−17.2%</span></td></tr>
+          <tr><td class="metric">Placed order rate</td><td class="ctx">0.054%</td><td class="prev">0.043%</td><td class="now">0.068%</td><td><span class="minichip up">+58.8%</span></td></tr>
+          <tr><td class="metric">Revenue per recipient</td><td class="ctx">CA$0.050</td><td class="prev">CA$0.041</td><td class="now">CA$0.060</td><td><span class="minichip up">+47.8%</span></td></tr>
+          <tr><td class="metric">Average order value</td><td class="ctx">CA$92.25</td><td class="prev">CA$94.85</td><td class="now">CA$88.32</td><td><span class="minichip down">−6.9%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>This week · Jul 6–12</h3><span class="sum">12 sends · 696,359 recipients · CA$41,774</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Send</th><th>Recipients</th><th>Orders</th><th>RPR</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Back in Stock (CA)</td><td>137,890</td><td>135</td><td>CA$0.088</td><td class="rev">CA$12,201.50</td></tr>
+          <tr><td class="name">No-Cook Desserts (CA)</td><td>135,732</td><td>83</td><td>CA$0.057</td><td class="rev">CA$7,712.46</td></tr>
+          <tr><td class="name">Back in Stock Recipes (CA)</td><td>137,067</td><td>90</td><td>CA$0.054</td><td class="rev">CA$7,375.89</td></tr>
+          <tr><td class="name">Free Shipping (US)</td><td>79,750</td><td>48</td><td>CA$0.055</td><td class="rev">CA$4,353.76</td></tr>
+          <tr><td class="name">Free Shipping — Last Chance (US)</td><td>77,601</td><td>27</td><td>CA$0.034</td><td class="rev">CA$2,621.52</td></tr>
+          <tr><td class="name">Gleam Winner (CA)</td><td>1,080</td><td>24</td><td>CA$1.478</td><td class="rev">CA$1,596.34</td></tr>
+          <tr><td class="name">No-Cook Desserts (US)</td><td>78,316</td><td>19</td><td>CA$0.020</td><td class="rev">CA$1,590.87</td></tr>
+          <tr><td class="name">Back in Stock (FR)</td><td>15,600</td><td>15</td><td>CA$0.101</td><td class="rev">CA$1,574.36</td></tr>
+          <tr><td class="name">No-Cook Desserts (FR)</td><td>15,295</td><td>9</td><td>CA$0.068</td><td class="rev">CA$1,033.55</td></tr>
+          <tr><td class="name">Back in Stock Recipes (FR)</td><td>15,365</td><td>12</td><td>CA$0.065</td><td class="rev">CA$1,000.70</td></tr>
+          <tr><td class="name">Gleam Winner (US)</td><td>2,549</td><td>10</td><td>CA$0.265</td><td class="rev">CA$675.16</td></tr>
+          <tr><td class="name">Gleam Winner (FR)</td><td>114</td><td>1</td><td>CA$0.329</td><td class="rev">CA$37.45</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">The two Back in Stock CA sends alone did CA$19,577 — close to half the week's campaign revenue.</div>
+    </div>
+
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>Last week · Jun 29–Jul 5</h3><span class="sum">9 sends · 715,341 recipients · CA$29,025</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Send</th><th>Recipients</th><th>Orders</th><th>RPR</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Giveaway Launch (CA)</td><td>143,922</td><td>93</td><td>CA$0.058</td><td class="rev">CA$8,407.42</td></tr>
+          <tr><td class="name">Gleam Last Chance (CA)</td><td>139,206</td><td>61</td><td>CA$0.050</td><td class="rev">CA$6,891.69</td></tr>
+          <tr><td class="name">Summer Drinks (CA)</td><td>140,488</td><td>85</td><td>CA$0.048</td><td class="rev">CA$6,750.14</td></tr>
+          <tr><td class="name">Summer Drinks (FR)</td><td>15,959</td><td>14</td><td>CA$0.113</td><td class="rev">CA$1,798.99</td></tr>
+          <tr><td class="name">Giveaway Launch (US)</td><td>82,487</td><td>15</td><td>CA$0.015</td><td class="rev">CA$1,262.03</td></tr>
+          <tr><td class="name">Gleam Last Chance (FR)</td><td>15,796</td><td>7</td><td>CA$0.074</td><td class="rev">CA$1,168.98</td></tr>
+          <tr><td class="name">Gleam Last Chance (US)</td><td>80,183</td><td>12</td><td>CA$0.013</td><td class="rev">CA$1,045.42</td></tr>
+          <tr><td class="name">Giveaway Launch (FR)</td><td>16,406</td><td>9</td><td>CA$0.057</td><td class="rev">CA$936.75</td></tr>
+          <tr><td class="name">Summer Drinks (US)</td><td>80,894</td><td>10</td><td>CA$0.009</td><td class="rev">CA$763.08</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>Two weeks ago · Jun 22–28</h3><span class="sum">9 sends · 776,335 recipients · CA$38,562</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Send</th><th>Recipients</th><th>Orders</th><th>RPR</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Launch (CA)</td><td>165,158</td><td>115</td><td>CA$0.062</td><td class="rev">CA$10,256.23</td></tr>
+          <tr><td class="name">Teaser (CA)</td><td>147,200</td><td>93</td><td>CA$0.058</td><td class="rev">CA$8,560.55</td></tr>
+          <tr><td class="name">Uses &amp; Reviews (CA)</td><td>145,510</td><td>87</td><td>CA$0.050</td><td class="rev">CA$7,333.39</td></tr>
+          <tr><td class="name">Launch (US)</td><td>98,222</td><td>31</td><td>CA$0.028</td><td class="rev">CA$2,779.87</td></tr>
+          <tr><td class="name">Launch (FR)</td><td>18,804</td><td>23</td><td>CA$0.133</td><td class="rev">CA$2,509.21</td></tr>
+          <tr><td class="name">Teaser (US)</td><td>84,631</td><td>24</td><td>CA$0.026</td><td class="rev">CA$2,238.00</td></tr>
+          <tr><td class="name">Uses &amp; Reviews (US)</td><td>83,479</td><td>22</td><td>CA$0.025</td><td class="rev">CA$2,101.74</td></tr>
+          <tr><td class="name">Uses &amp; Reviews (FR)</td><td>16,558</td><td>13</td><td>CA$0.094</td><td class="rev">CA$1,551.93</td></tr>
+          <tr><td class="name">Teaser (FR)</td><td>16,773</td><td>10</td><td>CA$0.073</td><td class="rev">CA$1,230.95</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>Flows</h2><div class="tag">Live automations · email</div></div>
+    <p class="lede rv">Flows did <b>CA$13,366</b>, up 30% on last week. Three flows do nearly all the work today — and <b>Post-Purchase and Winback</b> are the automations with the most room to grow.</p>
+    <div class="cmp-wrap rv">
+      <table class="cmp">
+        <colgroup><col><col><col><col class="nowcol"><col></colgroup>
+        <thead><tr><th>Metric</th><th class="ctx">Jun 22–28</th><th>Last week</th><th class="now">This week</th><th>WoW</th></tr></thead>
+        <tbody>
+          <tr><td class="metric">Deliveries</td><td class="ctx">7,125</td><td class="prev">4,787</td><td class="now">6,558</td><td><span class="minichip up">+37.0%</span></td></tr>
+          <tr><td class="metric">Placed orders</td><td class="ctx">144</td><td class="prev">106</td><td class="now">133</td><td><span class="minichip up">+25.5%</span></td></tr>
+          <tr><td class="metric">Revenue</td><td class="ctx">CA$13,473</td><td class="prev">CA$10,311</td><td class="now">CA$13,366</td><td><span class="minichip up">+29.6%</span></td></tr>
+          <tr><td class="metric">Open rate</td><td class="ctx">54.6%</td><td class="prev">55.5%</td><td class="now">55.1%</td><td><span class="minichip flat">−0.7%</span></td></tr>
+          <tr><td class="metric">Click rate</td><td class="ctx">5.32%</td><td class="prev">6.25%</td><td class="now">4.35%</td><td><span class="minichip down">−30.4%</span></td></tr>
+          <tr><td class="metric">Revenue per recipient</td><td class="ctx">CA$1.89</td><td class="prev">CA$2.15</td><td class="now">CA$2.04</td><td><span class="minichip down">−5.4%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>Revenue by flow</h3><span class="sum">revenue (orders) per week</span></div>
+      <div class="cmp-wrap"><table class="cmp">
+        <colgroup><col><col><col><col class="nowcol"></colgroup>
+        <thead><tr><th>Flow</th><th class="ctx">Jun 22–28</th><th>Last week</th><th class="now">This week</th></tr></thead>
+        <tbody>
+          <tr><td class="metric">Added to Cart</td><td class="ctx">CA$5,278 <span class="o">(57)</span></td><td class="prev">CA$3,165 <span class="o">(32)</span></td><td class="flow-cell now"><span class="r">CA$4,757</span> <span class="o">(49)</span></td></tr>
+          <tr><td class="metric">Welcome Series <span class="o" style="font-weight:500">· Free Marry Me Chicken</span></td><td class="ctx">CA$3,349 <span class="o">(41)</span></td><td class="prev">CA$3,196 <span class="o">(41)</span></td><td class="flow-cell now"><span class="r">CA$4,058</span> <span class="o">(42)</span></td></tr>
+          <tr><td class="metric">Abandoned Checkout</td><td class="ctx">CA$3,368 <span class="o">(28)</span></td><td class="prev">CA$1,711 <span class="o">(18)</span></td><td class="flow-cell now"><span class="r">CA$3,629</span> <span class="o">(31)</span></td></tr>
+          <tr><td class="metric">Post-Purchase</td><td class="ctx">CA$624 <span class="o">(10)</span></td><td class="prev">CA$690 <span class="o">(4)</span></td><td class="flow-cell now"><span class="r">CA$452</span> <span class="o">(5)</span></td></tr>
+          <tr><td class="metric">Browse Abandonment</td><td class="ctx">CA$854 <span class="o">(7)</span></td><td class="prev">CA$793 <span class="o">(7)</span></td><td class="flow-cell now"><span class="r">CA$239</span> <span class="o">(3)</span></td></tr>
+          <tr><td class="metric">NPS Flow</td><td class="ctx">CA$0 <span class="o">(1)</span></td><td class="prev">CA$756 <span class="o">(4)</span></td><td class="flow-cell now"><span class="r">CA$230</span> <span class="o">(3)</span></td></tr>
+          <tr class="idle"><td class="metric">Back in Stock · Winback (CA/US/FR) · Review request</td><td class="ctx">CA$0</td><td>CA$0</td><td class="now"><span class="zero-tag">CA$0 all 3 weeks</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">Added to Cart, Welcome Series and Abandoned Checkout made up CA$12,444 of the CA$13,366 flow total. Back in Stock, the Winback flows and Review request haven't generated revenue in the last three weeks — the clearest room to grow, especially with the manual Back in Stock campaign pulling CA$12.2K this week.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>List growth</h2><div class="tag">Gains &amp; losses · this week</div></div>
+    <p class="lede rv">Total subscribers barely moved — but the number that matters, the <b>30-day active audience</b>, is down about 3% in every region. Signups still come through the forms; opt-outs are almost all unsubscribes.</p>
+    <div class="grow-label rv">Active audience · 30-day — the real list size</div>
+    <div class="grow-top rv">
+      <div class="gtile region"><div class="k">Canada</div><div class="v">135K</div><span class="minichip down">−3%</span><div class="gsub">1,570 in · 5,740 out</div></div>
+      <div class="gtile region"><div class="k">United States</div><div class="v">77.8K</div><span class="minichip down">−3.1%</span><div class="gsub">425 in · 2,880 out</div></div>
+      <div class="gtile region"><div class="k">French (FR)</div><div class="v">15.2K</div><span class="minichip down">−3.5%</span><div class="gsub">201 in · 755 out</div></div>
+    </div>
+    <div class="grow-label rv" style="margin-top:22px">Total list · includes inactive</div>
+    <div class="grow-top rv">
+      <div class="gtile"><div class="k">Email subscribers</div><div class="v">386,315</div><span class="minichip flat">+0.19%</span></div>
+      <div class="gtile"><div class="k">New subscribers</div><div class="v">2,434</div><span class="minichip up">+406%</span><div class="gsub">Gleam import — see below</div></div>
+      <div class="gtile"><div class="k">Exclusions</div><div class="v">1,715</div><span class="minichip down">+13.7%</span></div>
+    </div>
+    <div class="flag rv">
+      This week's <b>+406% new-subscriber jump is the Gleam giveaway</b>, imported in bulk — not organic signups. Across US and CA, <b>3,566 people entered and 1,823 were net new</b> to the list. So far those net-new subscribers have placed <b>1 order</b>. It's real list volume, but no conversion behind it yet.
+    </div>
+    <div class="wk-block rv" style="margin-top:2px">
+      <div class="wk-title"><h3>Gleam giveaway</h3><span class="sum">source of this week's import</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Region</th><th>Signups</th><th>Net new</th><th>Orders from net-new</th></tr></thead>
+        <tbody>
+          <tr><td class="name">United States</td><td>2,481</td><td>1,634</td><td>1</td></tr>
+          <tr><td class="name">Canada</td><td>1,085</td><td>189</td><td>0</td></tr>
+          <tr style="background:#F7F1E6"><td class="name" style="font-weight:800">Total</td><td style="font-family:Figtree;font-weight:800">3,566</td><td style="font-family:Figtree;font-weight:800">1,823</td><td style="font-family:Figtree;font-weight:800">1</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">1,823 net-new subscribers from the giveaway, 1 order between them. The US drove most of the net-new (1,634); Canada added 189 with no orders yet.</div>
+    </div>
+    <div class="srcs rv">
+      <div class="srcbox">
+        <h4>Where opt-ins came from</h4>
+        <div class="srcrow"><span class="n">Bulk manual subscribe · Gleam import</span><span class="c">2,172</span></div>
+        <div class="srcrow"><span class="n">Shopify integration</span><span class="c">167</span></div>
+        <div class="srcrow"><span class="n">Email Signup — EN_CA</span><span class="c">114</span></div>
+        <div class="srcrow"><span class="n">API subscribe</span><span class="c">50</span></div>
+        <div class="srcrow"><span class="n">Email Signup — FR_CA</span><span class="c">33</span></div>
+      </div>
+      <div class="srcbox">
+        <h4>Where exclusions came from</h4>
+        <div class="srcrow"><span class="n">One-click unsubscribe</span><span class="c">896</span></div>
+        <div class="srcrow"><span class="n">Unsubscribe via email link</span><span class="c">848</span></div>
+        <div class="srcrow"><span class="n">Manual suppression</span><span class="c">90</span></div>
+        <div class="srcrow"><span class="n">Spam complaint</span><span class="c">41</span></div>
+        <div class="srcrow"><span class="n">Hard bounce</span><span class="c">41</span></div>
+      </div>
+    </div>
+    <div class="cap">Active-audience change is net members entering vs leaving the 30-day segment. Top 5 opt-in and exclusion sources shown for each.</div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>Sign-up forms</h2><div class="tag">Last 30 days</div></div>
+    <p class="lede rv">EN_CA is doing the heavy lifting. FR_CA has the best submit rate but is still in editing, not fully live.</p>
+    <div class="forms rv">
+      <div class="fcard">
+        <div class="name">EN_CA <span class="badge live">Live</span></div>
+        <div class="rate">5.38%</div><div class="ratelbl">submit rate · rated Good</div>
+        <div class="fmeta"><span class="k">Submits</span><span class="v">1,300</span></div>
+        <div class="fmeta"><span class="k">Viewed</span><span class="v">24,000</span></div>
+        <div class="fmeta"><span class="k">Revenue</span><span class="v">CA$23,000</span></div>
+      </div>
+      <div class="fcard">
+        <div class="name">EN_US <span class="badge live">Live</span></div>
+        <div class="rate">4.71%</div><div class="ratelbl">submit rate · rated Good</div>
+        <div class="fmeta"><span class="k">Submits</span><span class="v">454</span></div>
+        <div class="fmeta"><span class="k">Viewed</span><span class="v">9,600</span></div>
+        <div class="fmeta"><span class="k">Revenue</span><span class="v">CA$5,800</span></div>
+      </div>
+      <div class="fcard">
+        <div class="name">FR_CA <span class="badge edit">Editing</span></div>
+        <div class="rate">7.64%</div><div class="ratelbl">submit rate · rated Excellent</div>
+        <div class="fmeta"><span class="k">Submits</span><span class="v">302</span></div>
+        <div class="fmeta"><span class="k">Viewed</span><span class="v">4,000</span></div>
+        <div class="fmeta"><span class="k">Revenue</span><span class="v">CA$5,700</span></div>
+      </div>
+    </div>
+    <div class="cap">Klaviyo sign-up forms, last 30 days. FR_CA's rate is the strongest of the three but it's still in editing — worth pushing live if the numbers hold.</div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>New vs returning</h2><div class="tag">This week's sends</div></div>
+    <p class="lede rv">Splits are from Shopify's new/returning tag (sorted by new-customer orders, so these are the top sends). Order counts use Shopify attribution and won't match the Klaviyo revenue above.</p>
+    <div class="nr-legend rv"><span><i style="background:var(--tomato)"></i>New</span><span><i style="background:var(--herb)"></i>Returning</span></div>
+    <div class="rv">
+      <div class="nrrow"><div class="lab">Free Shipping (US)</div><div class="nrbar"><div class="n" style="width:59.5%">25</div><div class="r" style="width:40.5%">17</div></div><div class="cnt">25 new / 17 ret</div></div>
+      <div class="nrrow"><div class="lab">Free Shipping — LC (US)</div><div class="nrbar"><div class="n" style="width:50%">12</div><div class="r" style="width:50%">12</div></div><div class="cnt">12 new / 12 ret</div></div>
+      <div class="nrrow"><div class="lab">Back in Stock (CA)</div><div class="nrbar"><div class="n" style="width:49.4%">42</div><div class="r" style="width:50.6%">43</div></div><div class="cnt">42 new / 43 ret</div></div>
+      <div class="nrrow"><div class="lab">Back in Stock Recipes (CA)</div><div class="nrbar"><div class="n" style="width:47.4%">27</div><div class="r" style="width:52.6%">30</div></div><div class="cnt">27 new / 30 ret</div></div>
+      <div class="nrrow"><div class="lab">No-Cook Desserts (CA)</div><div class="nrbar"><div class="n" style="width:44%">11</div><div class="r" style="width:56%">14</div></div><div class="cnt">11 new / 14 ret</div></div>
+      <div class="nrrow"><div class="lab">Gleam Winner (CA)</div><div class="nrbar"><div class="n" style="width:40.9%">9</div><div class="r" style="width:59.1%">13</div></div><div class="cnt">9 new / 13 ret</div></div>
+    </div>
+    <div class="takeaway rv">
+      The <b>Welcome Series</b> is almost all new customers — <b>39 new orders to 1 returning</b>. <b>US Free Shipping</b> skews new too (25 vs 17). The <b>Added to Cart</b> flow ran 30 new / 37 returning, <b>Abandoned Checkout</b> 8 / 6. No-Cook Desserts and the Gleam winner lean returning; Back in Stock lands about even.
+    </div>
+  </section>
+
+</div>
+</div>
+
+<div class="wrap">
+  <footer>
+    <div class="mark">DigitsUp</div>
+    <p>Epicure weekly · this week (Jul 6–12, 2026) vs last week (Jun 29–Jul 5); Jun 22–28 shown for context. Email = Klaviyo campaigns and flows, Placed Order attribution. Store totals = Shopify, all channels, this week vs last week. Sign-up forms are last 30 days. New-vs-returning counts use Shopify's new/returning tag. Confidential — internal use only.</p>
+  </footer>
+</div>
+
+<script>
+  var heroDone=false;
+  function runHero(){
+    if(heroDone)return;heroDone=true;
+    var el=document.getElementById('heroNum'),target=55139.55,s=null,dur=1100;
+    function fmt(n){return 'CA$'+Math.round(n).toLocaleString('en-CA')}
+    function step(t){if(!s)s=t;var p=Math.min((t-s)/dur,1);var e=1-Math.pow(1-p,3);
+      el.textContent=fmt(target*e);if(p<1)requestAnimationFrame(step);else el.textContent='CA$55,140';}
+    requestAnimationFrame(step);
+  }
+  function revealIn(panel){panel.querySelectorAll('.rv').forEach(function(n){n.classList.add('in')});}
+  function fillShare(){var sf=document.getElementById('shareFill');if(sf)sf.style.width='54.8%';}
+
+  // tab switching
+  var tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('active')});
+    panels.forEach(function(x){x.classList.remove('active')});
+    t.classList.add('active');
+    var p=document.getElementById(t.dataset.tab);p.classList.add('active');
+    window.scrollTo({top:0,behavior:'instant' in window?'instant':'auto'});
+    revealIn(p);
+    if(t.dataset.tab==='summary')runHero();
+    if(t.dataset.tab==='full')fillShare();
+  });});
+
+  // initial load: summary active
+  runHero();
+  var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.1});
+  document.querySelectorAll('#summary .rv').forEach(function(n){io.observe(n)});
+</script>
+</body>
+</html>
