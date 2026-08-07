@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epicure Weekly Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF7EF;--paper:#FFFDF8;--ink:#2A2622;--muted:#8A8175;
+    --tomato:#E23B2E;--tomato-deep:#B72A20;--herb:#43713F;--herb-deep:#2F5A2C;
+    --line:#ECE3D3;--line-soft:#F2EBDD;
+    --pos-fg:#356B37;--pos-bg:#E7F0E3;--neg-fg:#B84034;--neg-bg:#F8E7E3;
+    --idle-fg:#9A9184;--idle-bg:#F0EADD;--amber:#D9A441;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:"Hanken Grotesk",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:0 24px}
+  h1,h2,h3,h4,.disp{font-family:"Figtree",sans-serif;letter-spacing:-.02em}
+  .mast{padding:40px 0 18px}
+  .eyebrow{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--tomato);display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--tomato);display:inline-block}
+  .mast h1{font-size:clamp(32px,5vw,50px);font-weight:800;line-height:1.03;margin:14px 0 8px}
+  .mast .sub{font-size:15.5px;color:var(--muted);font-weight:500}
+  .mast .sub b{color:var(--ink);font-weight:700}
+  .tabs{position:sticky;top:0;z-index:30;background:rgba(251,247,239,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .tabbar{max-width:940px;margin:0 auto;padding:0 24px;display:flex;gap:28px}
+  .tab{font-family:"Figtree";font-weight:700;font-size:14.5px;padding:15px 2px;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;letter-spacing:-.01em;transition:color .2s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--tomato)}
+  .tab small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:0;margin-top:2px}
+  .panel{display:none}.panel.active{display:block}
+  .hero{background:var(--ink);border-radius:18px;padding:32px 38px;margin:26px 0 18px;color:#fff;box-shadow:0 24px 50px -30px rgba(42,38,34,.55);display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center}
+  .hero .lbl{font-family:"Figtree";font-weight:600;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#C9BFB0}
+  .hero .big{font-family:"Figtree";font-weight:800;font-size:clamp(42px,8vw,66px);line-height:1;margin:10px 0 8px}
+  .hero .wowline{font-size:14.5px;color:#D8D0C3}
+  .hero .wowline b{color:#9FD3A2;font-family:"Figtree";font-weight:700}
+  .split{margin-top:20px}
+  .split-bar{height:11px;border-radius:8px;overflow:hidden;display:flex;background:#3a352f}
+  .split-bar .c{background:var(--tomato)}.split-bar .f{background:var(--herb)}
+  .split-keys{display:flex;gap:18px;margin-top:11px;flex-wrap:wrap;font-size:13px;color:#D8D0C3}
+  .keyitem{display:flex;align-items:baseline;gap:7px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .keyitem b{font-family:"Figtree";font-weight:700;color:#fff}
+  .keyitem .w{color:#9FD3A2;font-weight:600;font-size:12px}
+  .trend{border-left:1px solid #3f3a33;padding-left:26px}
+  .trend .tlbl{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8f877b;margin-bottom:14px}
+  .trow{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .trow .wk{font-size:12px;color:#9a9184;width:92px;flex:none}
+  .tmeter{flex:1;height:9px;border-radius:5px;background:#3a352f;overflow:hidden}
+  .tmeter .fl{height:100%;background:#5f584e;border-radius:5px}
+  .trow.now .tmeter .fl{background:var(--tomato)}
+  .trow .amt{font-family:"Figtree";font-weight:700;font-size:12.5px;width:56px;text-align:right;color:#EDE7DC}
+  .store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px}
+  .stile{background:var(--paper);padding:17px 20px}
+  .stile .k{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .stile .v{font-family:"Figtree";font-weight:800;font-size:22px;margin:6px 0 6px}
+  .stile.share{background:#F3F6F0}.stile.share .v{color:var(--herb-deep)}
+  .minichip{font-family:"Figtree";font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px}
+  .minichip.up{color:var(--pos-fg);background:var(--pos-bg)}
+  .minichip.down{color:var(--neg-fg);background:var(--neg-bg)}
+  .minichip.flat{color:var(--idle-fg);background:var(--idle-bg)}
+  .share-bar{height:8px;border-radius:6px;background:#E4EADF;overflow:hidden;margin-top:2px}
+  .share-bar .fill{height:100%;background:var(--herb);border-radius:6px;width:0;transition:width 1s ease .2s}
+  .intro-line{font-size:16px;color:#4A443D;line-height:1.62;max-width:720px;margin:2px 0 6px}
+  .intro-line b{color:var(--ink);font-weight:700}
+  .sum-sec{display:grid;grid-template-columns:148px 1fr;gap:26px;padding:26px 0;border-top:1px solid var(--line)}
+  .sum-eyebrow{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tomato);padding-top:4px}
+  .sum-headline{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+  .sum-headline .fig{font-family:"Figtree";font-weight:800;font-size:30px;line-height:1}
+  .sum-body{font-size:15.5px;color:#4A443D;line-height:1.62;max-width:660px}
+  .sum-body b{color:var(--ink);font-weight:700}
+  .sum-flags{padding:26px 0 4px;border-top:1px solid var(--line)}
+  .flags{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:18px 24px}
+  .fl-item{font-size:14.5px;line-height:1.58;color:#4A443D;padding:10px 0}
+  .fl-item + .fl-item{border-top:1px solid var(--line-soft)}
+  .fl-item b{color:var(--ink);font-weight:700}
+  section{padding:32px 0}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:14px;flex-wrap:wrap}
+  .sec-head h2{font-size:27px;font-weight:800}
+  .sec-head .tag{font-family:"Figtree";font-weight:600;font-size:13px;color:var(--muted)}
+  .lede{font-size:15px;color:#4A443D;line-height:1.6;margin-bottom:20px;max-width:720px}
+  .lede b{color:var(--ink);font-weight:700}
+  .storectx{margin-top:6px}
+  .cmp-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+  table.cmp{width:100%;border-collapse:collapse;min-width:560px}
+  table.cmp th,table.cmp td{padding:12px 18px;font-size:14.5px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+  table.cmp th:first-child,table.cmp td:first-child{text-align:left}
+  table.cmp thead th{font-family:"Figtree";font-weight:600;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#F7F1E6}
+  table.cmp thead th.now{color:var(--ink)}
+  table.cmp thead th.ctx{color:#B3AA9B;font-weight:500}
+  table.cmp .metric{font-weight:600}
+  table.cmp td.now{font-family:"Figtree";font-weight:700}
+  table.cmp td.prev{color:var(--muted)}
+  table.cmp td.ctx{color:#B3AA9B}
+  table.cmp tbody tr:last-child td{border-bottom:none}
+  table.cmp col.nowcol{background:#FBF4E9}
+  table.cmp tr.grp td{background:#F5EFE3;font-family:"Figtree";font-weight:700;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:8px 18px;text-align:left}
+  .flow-cell .r{font-family:"Figtree";font-weight:700;font-size:15px}
+  .flow-cell .o,.o{font-size:12px;color:var(--muted)}
+  tr.idle td{color:var(--idle-fg)}
+  .zero-tag{font-family:"Figtree";font-weight:600;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--idle-fg);background:var(--idle-bg);padding:2px 8px;border-radius:6px}
+  .wk-block{margin-top:20px}
+  .wk-title{display:flex;align-items:baseline;gap:12px;margin:0 2px 10px}
+  .wk-title h3{font-size:16px;font-weight:800}
+  .wk-title .sum{font-family:"Figtree";font-weight:600;font-size:13px;color:var(--muted)}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+  table.snd{width:100%;border-collapse:collapse;min-width:540px}
+  table.snd th,table.snd td{padding:10px 16px;font-size:13.5px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+  table.snd th:first-child,table.snd td:first-child{text-align:left}
+  table.snd thead th{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#F7F1E6}
+  table.snd td.name{font-weight:600}
+  table.snd td.rev{font-family:"Figtree";font-weight:700}
+  table.snd td.hb{background:var(--pos-bg);color:var(--pos-fg);font-weight:700}
+  table.snd td.hw{background:var(--neg-bg);color:var(--neg-fg);font-weight:700}
+  table.snd td.mut{color:var(--idle-fg)}
+  .legend-cap{font-size:12.5px;color:var(--muted);margin:4px 2px 0;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  .legend-cap b{font-family:"Figtree"}
+  .lg-sw{display:inline-flex;align-items:center;gap:6px}
+  .lg-sw i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .cap{font-size:12.5px;color:var(--muted);margin-top:11px;padding-left:2px;line-height:1.5}
+  .grow-top{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:6px}
+  .gtile{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .gtile .k{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .gtile .v{font-family:"Figtree";font-weight:800;font-size:26px;margin:7px 0 6px}
+  .gtile.region .v{font-size:23px}
+  .gtile .gsub{font-size:12px;color:var(--muted);margin-top:8px}
+  .grow-label{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:2px 0 10px}
+  .forms{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .fcard{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:20px 22px}
+  .fcard .name{font-family:"Figtree";font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px}
+  .badge{font-family:"Figtree";font-weight:600;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:5px}
+  .badge.exc{background:var(--pos-bg);color:var(--pos-fg)}
+  .badge.good{background:#E7EEF4;color:#3A6079}
+  .badge.fair{background:#FBF3E4;color:#8a6d1f}
+  .badge.poor{background:var(--neg-bg);color:var(--neg-fg)}
+  .fcard .rate{font-family:"Figtree";font-weight:800;font-size:30px;margin:12px 0 2px}
+  .fcard .ratelbl{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .fmeta{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px solid var(--line-soft)}
+  .fmeta .k{color:var(--muted)}.fmeta .v{font-family:"Figtree";font-weight:700}
+  .nr-legend{display:flex;gap:20px;margin-bottom:14px;font-size:13px;color:var(--muted)}
+  .nr-legend span{display:inline-flex;align-items:center;gap:7px}
+  .nr-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .nrbar{height:34px;border-radius:9px;overflow:hidden;display:flex;background:#EDE6D8;max-width:620px}
+  .nrbar .n,.nrbar .r{display:flex;align-items:center;color:#fff;font-family:"Figtree";font-weight:700;font-size:14px}
+  .nrbar .n{background:var(--tomato);padding-left:14px}
+  .nrbar .r{background:var(--herb);justify-content:flex-end;padding-right:14px}
+  footer{border-top:2px solid var(--ink);margin-top:16px;padding:26px 0 60px;color:var(--muted);font-size:12.5px}
+  footer .mark{font-family:"Figtree";font-weight:800;color:var(--ink);font-size:15px}
+  footer p{margin-top:8px;max-width:720px;line-height:1.55}
+  .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+  @media (max-width:720px){
+    .hero{grid-template-columns:1fr;gap:22px}.trend{border-left:none;border-top:1px solid #3f3a33;padding-left:0;padding-top:20px}
+    .store-grid,.grow-top,.forms{grid-template-columns:repeat(2,1fr)}
+    .grid4{grid-template-columns:repeat(2,1fr)}
+    .mast{padding:30px 0 14px}
+  }
+  @media (max-width:560px){
+    .store-grid,.grow-top,.forms{grid-template-columns:1fr}
+    .grid4{grid-template-columns:1fr}
+    .sum-sec{grid-template-columns:1fr;gap:10px}.sum-eyebrow{padding-top:0}
+    .tabbar{gap:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="mast">
+    <div class="eyebrow">Weekly Report · Week over week</div>
+    <h1>Week of Jul 27&ndash;Aug 2, 2026</h1>
+    <div class="sub">This week vs last week <b>(Jul 20&ndash;26)</b> · Epicure email &amp; store</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabbar">
+    <button class="tab active" data-tab="summary">Summary<small>the quick read</small></button>
+    <button class="tab" data-tab="full">Full report<small>all the detail</small></button>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="panel active" id="summary">
+<div class="wrap">
+  <div class="hero rv">
+    <div>
+      <div class="lbl">Email attributed revenue · this week</div>
+      <div class="big" id="heroNum">CA$0</div>
+      <div class="wowline"><b>+10.9%</b> vs last week (CA$53,487)</div>
+      <div class="split">
+        <div class="split-bar"><div class="c" style="width:78.1%"></div><div class="f" style="width:21.9%"></div></div>
+        <div class="split-keys">
+          <div class="keyitem"><span class="dot" style="background:var(--tomato)"></span>Campaigns <b>CA$46,319</b> <span class="w">+11%</span></div>
+          <div class="keyitem"><span class="dot" style="background:var(--herb)"></span>Flows <b>CA$13,016</b> <span class="w">+12%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="trend">
+      <div class="tlbl">Last 3 weeks · attributed</div>
+      <div class="trow"><span class="wk">Jul 13&ndash;19</span><div class="tmeter"><div class="fl" style="width:71%"></div></div><span class="amt">$42.3K</span></div>
+      <div class="trow"><span class="wk">Jul 20&ndash;26</span><div class="tmeter"><div class="fl" style="width:90%"></div></div><span class="amt">$53.5K</span></div>
+      <div class="trow now"><span class="wk">Jul 27&ndash;Aug 2</span><div class="tmeter"><div class="fl" style="width:100%"></div></div><span class="amt">$59.3K</span></div>
+    </div>
+  </div>
+
+  <p class="intro-line rv">Third week up in a row. Email brought in <b>CA$59.3K</b> attributed (+11% on last week), and the store did <b>CA$100.1K</b> across all channels (+15%). Campaigns included a winback across CA/US/FR alongside the regular promos; regular promo revenue eased off last week's big GWP push. Email's share of demand was about 59%.</p>
+
+  <div class="sum-sec rv">
+    <div class="sum-eyebrow">Campaigns</div>
+    <div class="right">
+      <div class="sum-headline"><span class="fig">CA$46,319</span><span class="minichip up">+11% WoW</span></div>
+      <p class="sum-body">Regular promo (Teaser, Launch, Cheesecake 3 Ways) was <b>CA$24.3K</b>, down off last week's heavy GWP week. The <b>winback</b> across CA/US/FR added <b>CA$22.1K</b>. Combined, campaigns were up 11%. CA Launch led the promos at CA$6.5K.</p>
+    </div>
+  </div>
+
+  <div class="sum-sec rv">
+    <div class="sum-eyebrow">Automation</div>
+    <div class="right">
+      <div class="sum-headline"><span class="fig">CA$13,016</span><span class="minichip up">+12% WoW</span></div>
+      <p class="sum-body">Retention flows had a good week: <b>Abandoned Checkout +45%</b>, Added to Cart held. <b>Browse Abandonment recovered to CA$809</b> after last week's zero. Soft spots: Post-Purchase eased (&minus;27%) and NPS went to CA$0.</p>
+    </div>
+  </div>
+
+  <div class="sum-sec rv">
+    <div class="sum-eyebrow">List growth</div>
+    <div class="right">
+      <div class="sum-headline"><span class="fig">~220K active</span><span class="minichip up">+2.8% · 30d</span></div>
+      <p class="sum-body">The active list reversed to growth this month. <b>CA 131K (+2.8%), US 74.9K (+2.9%), FR 14.7K (+2.6%)</b>. First gain after several weeks of ~3% declines.</p>
+      <p class="sum-body" style="margin-top:9px"><b>Forms:</b> Canada 4.42% (244 submits, CA$4,400), French 5.34% (44 submits), USA 1.57% (Poor). Canada and French rated Good.</p>
+    </div>
+  </div>
+
+  <div class="sum-flags rv">
+    <div class="sum-eyebrow" style="margin-bottom:12px">Worth flagging</div>
+    <div class="flags">
+      <div class="fl-item"><b>Browse Abandonment is back.</b> It earned CA$0 last week and we flagged it. This week it's back to CA$809 across 7 orders. Resolved for now, worth keeping an eye on it week to week.</div>
+      <div class="fl-item"><b>The active list turned positive.</b> After several weeks of ~3% weekly declines, the 30-day active audience grew ~2.8%. Adds and removes for the period: CA 6,040 in / 2,470 out, US 3,530 / 1,430, FR 669 / 302.</div>
+      <div class="fl-item"><b>Regular promo down, total up.</b> Regular promo revenue fell 42% off last week's GWP week. The winback added CA$22.1K, so total campaign revenue was up 11%.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- FULL REPORT -->
+<div class="panel" id="full">
+<div class="wrap">
+
+  <section>
+    <div class="sec-head rv"><h2>Store context</h2><div class="tag">Shopify · all channels · WoW</div></div>
+    <div class="storectx rv">
+      <div class="store-grid">
+        <div class="stile"><div class="k">Total store sales</div><div class="v">CA$100,137</div><span class="minichip up">+15%</span></div>
+        <div class="stile"><div class="k">Orders</div><div class="v">1,167</div><span class="minichip up">+13%</span></div>
+        <div class="stile"><div class="k">Average order value</div><div class="v">CA$82.73</div><span class="minichip up">+1.4%</span></div>
+        <div class="stile"><div class="k">Conversion rate</div><div class="v">4.73%</div><span class="minichip down">&minus;7%</span></div>
+        <div class="stile"><div class="k">Returning customer rate</div><div class="v">44.6%</div><span class="minichip down">&minus;19%</span></div>
+        <div class="stile share"><div class="k">Email share of demand</div><div class="v">59.3%</div><div class="share-bar"><div class="fill" id="shareFill"></div></div></div>
+      </div>
+      <div class="cap">Shopify, all channels, this week vs last week. Email share = CA$59,335 Klaviyo-attributed of CA$100,137 total store sales. Sessions rose 26% to 23,714; gross sales were CA$103,185 (+7%). Discounts eased to &minus;CA$6,621 after last week's heavy GWP promo, and AOV edged up to CA$82.73. New customers drove the order growth this week (see New vs returning). Shopify counts orders differently than Klaviyo, so store totals won't line up exactly with the email numbers below.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>Campaigns</h2><div class="tag">Email · CA / US / FR</div></div>
+    <p class="lede rv">Campaigns did <b>CA$46,319</b>, up 11% on last week. The split below is the read this week: <b>unique counts</b> all rose as the winback added reach, opens, clicks and conversions, while the <b>rates</b> fell because its lapsed audience opens and converts lower. The week breaks into CA$24,265 regular promo and CA$22,053 winback, detailed under the table.</p>
+    <div class="cmp-wrap rv">
+      <table class="cmp">
+        <colgroup><col><col><col><col class="nowcol"><col></colgroup>
+        <thead><tr><th>Metric</th><th class="ctx">Jul 13&ndash;19</th><th>Last week</th><th class="now">This week</th><th>WoW</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="5">Unique counts</td></tr>
+          <tr><td class="metric">Total recipients</td><td class="ctx">673,088</td><td class="prev">651,733</td><td class="now">1,292,258</td><td><span class="minichip up">+98.3%</span></td></tr>
+          <tr><td class="metric">Unique opens</td><td class="ctx">524,927</td><td class="prev">519,061</td><td class="now">844,176</td><td><span class="minichip up">+62.8%</span></td></tr>
+          <tr><td class="metric">Unique clicks</td><td class="ctx">6,919</td><td class="prev">5,797</td><td class="now">9,946</td><td><span class="minichip up">+71.6%</span></td></tr>
+          <tr><td class="metric">Unique conversions</td><td class="ctx">343</td><td class="prev">477</td><td class="now">573</td><td><span class="minichip up">+20.1%</span></td></tr>
+          <tr><td class="metric">Conversion value</td><td class="ctx">CA$31,448</td><td class="prev">CA$41,882</td><td class="now">CA$46,319</td><td><span class="minichip up">+10.6%</span></td></tr>
+          <tr class="grp"><td colspan="5">Rates</td></tr>
+          <tr><td class="metric">Open rate</td><td class="ctx">78.0%</td><td class="prev">79.8%</td><td class="now">65.6%</td><td><span class="minichip down">&minus;17.8%</span></td></tr>
+          <tr><td class="metric">Click rate</td><td class="ctx">1.03%</td><td class="prev">0.89%</td><td class="now">0.77%</td><td><span class="minichip down">&minus;13.4%</span></td></tr>
+          <tr><td class="metric">Conversion rate</td><td class="ctx">0.051%</td><td class="prev">0.073%</td><td class="now">0.044%</td><td><span class="minichip down">&minus;39.7%</span></td></tr>
+          <tr><td class="metric">Revenue per recipient</td><td class="ctx">CA$0.047</td><td class="prev">CA$0.064</td><td class="now">CA$0.036</td><td><span class="minichip down">&minus;44.2%</span></td></tr>
+          <tr><td class="metric">Average order value</td><td class="ctx">CA$92</td><td class="prev">CA$86</td><td class="now">CA$80</td><td><span class="minichip down">&minus;6.4%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cap">This week and the WoW change are from Klaviyo's campaign summary; prior weeks from the same export. Every unique count rose (winback added volume) while every rate fell (its lapsed audience opens and converts lower). Net, conversions were up 20% and revenue up 11%. The regular promo (CA$24,265) and the winback (CA$22,053, with per-region unique-audience return) are broken out below.</div>
+
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>This week · Jul 27&ndash;Aug 2 · regular promo</h3><span class="sum">11 sends · 560,043 recipients · CA$24,265</span></div>
+      <div class="legend-cap"><span class="lg-sw"><i style="background:var(--pos-bg)"></i><b>strongest</b></span><span class="lg-sw"><i style="background:var(--neg-bg)"></i><b>weakest</b></span><span>open &amp; click, marked among standard sends · small sends muted</span></div>
+      <div class="tbl-wrap" style="margin-top:8px"><table class="snd">
+        <thead><tr><th>Send</th><th>Recipients</th><th>Open&nbsp;%</th><th>Click&nbsp;%</th><th>Orders</th><th>RPR</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Launch (CA)</td><td>129,192</td><td>77.2%</td><td>0.84%</td><td>67</td><td>CA$0.050</td><td class="rev">CA$6,464.44</td></tr>
+          <tr><td class="name">Cheesecake 3 Ways (CA)</td><td>129,744</td><td>76.3%</td><td>0.91%</td><td>63</td><td>CA$0.041</td><td class="rev">CA$5,259.02</td></tr>
+          <tr><td class="name">Back in Stock (CA)</td><td class="mut">1,680</td><td class="mut">52.1%</td><td class="mut">8.76%</td><td class="mut">41</td><td class="mut">CA$2.172</td><td class="rev mut">CA$3,648.20</td></tr>
+          <tr><td class="name">Teaser (CA)</td><td>73,777</td><td>76.9%</td><td>1.21%</td><td>44</td><td>CA$0.047</td><td class="rev">CA$3,475.15</td></tr>
+          <tr><td class="name">Teaser (FR)</td><td>8,299</td><td class="hw">73.9%</td><td class="hb">1.22%</td><td>10</td><td>CA$0.143</td><td class="rev">CA$1,187.60</td></tr>
+          <tr><td class="name">Launch (US)</td><td>73,722</td><td class="hb">80.4%</td><td>0.69%</td><td>10</td><td>CA$0.014</td><td class="rev">CA$1,004.43</td></tr>
+          <tr><td class="name">Cheesecake 3 Ways (US)</td><td>73,995</td><td>80.2%</td><td class="hw">0.66%</td><td>13</td><td>CA$0.013</td><td class="rev">CA$931.74</td></tr>
+          <tr><td class="name">Cheesecake 3 Ways (FR)</td><td>14,549</td><td>74.9%</td><td>0.80%</td><td>9</td><td>CA$0.059</td><td class="rev">CA$860.17</td></tr>
+          <tr><td class="name">Back in Stock (FR)</td><td class="mut">249</td><td class="mut">29.7%</td><td class="mut">1.61%</td><td class="mut">1</td><td class="mut">CA$2.294</td><td class="rev mut">CA$571.34</td></tr>
+          <tr><td class="name">Launch (FR)</td><td>14,503</td><td>74.6%</td><td>0.87%</td><td>5</td><td>CA$0.030</td><td class="rev">CA$432.36</td></tr>
+          <tr><td class="name">Teaser (US)</td><td>40,333</td><td>80.1%</td><td>0.87%</td><td>5</td><td>CA$0.011</td><td class="rev">CA$431.04</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">Launch and Cheesecake led the CA promos. The CA Back in Stock send earned CA$3.6K off just 1,680 recipients (CA$2.17 per recipient); it's muted because its size makes the rates non-comparable. Teaser (FR) was the weakest open but the strongest click; Cheesecake (US) the weakest click.</div>
+    </div>
+
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>This week · Winback</h3><span class="sum">3 waves · CA/US/FR · 732,215 sends · 305 orders · CA$22,053</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Send</th><th>Recipients</th><th>Open&nbsp;%</th><th>Orders</th><th>RPR</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Winback 1 (CA)</td><td>160,985</td><td>60.6%</td><td>123</td><td>CA$0.053</td><td class="rev">CA$8,455.55</td></tr>
+          <tr><td class="name">Winback 3 (CA)</td><td>159,088</td><td>59.7%</td><td>97</td><td>CA$0.046</td><td class="rev">CA$7,377.21</td></tr>
+          <tr><td class="name">Winback 2 (CA)</td><td>96,368</td><td>47.2%</td><td>31</td><td>CA$0.024</td><td class="rev">CA$2,312.56</td></tr>
+          <tr><td class="name">Winback 1 (US)</td><td>103,313</td><td>58.2%</td><td>21</td><td>CA$0.015</td><td class="rev">CA$1,586.22</td></tr>
+          <tr><td class="name">Winback 3 (US)</td><td>102,369</td><td>57.7%</td><td>15</td><td>CA$0.008</td><td class="rev">CA$812.95</td></tr>
+          <tr><td class="name">Winback 1 (FR)</td><td>17,492</td><td>60.9%</td><td>8</td><td>CA$0.044</td><td class="rev">CA$764.18</td></tr>
+          <tr><td class="name">Winback 2 (US)</td><td>64,582</td><td>43.6%</td><td>4</td><td>CA$0.006</td><td class="rev">CA$392.48</td></tr>
+          <tr><td class="name">Winback 3 (FR)</td><td>17,346</td><td>59.2%</td><td>3</td><td>CA$0.014</td><td class="rev">CA$249.88</td></tr>
+          <tr><td class="name">Winback 2 (FR)</td><td>10,672</td><td>47.0%</td><td>3</td><td>CA$0.010</td><td class="rev">CA$102.28</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">Opens run 44&ndash;61%, below the standard list, since the sends target lapsed people. RPR shown is per send; don't sum recipients for a blended rate, since waves 1&ndash;3 hit the same people. Per <b>unique</b> audience the return was CA$0.113 (CA), CA$0.027 (US), CA$0.064 (FR). By revenue: CA CA$18.1K, US CA$2.8K, FR CA$1.1K. Orders fell across waves 1 to 3 in each region.</div>
+    </div>
+
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>Last week · Jul 20&ndash;26</h3><span class="sum">9 sends · 651,733 recipients · CA$41,882</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Send</th><th>Recipients</th><th>Open&nbsp;%</th><th>Click&nbsp;%</th><th>Orders</th><th>RPR</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td class="name">GWP Last Chance (CA)</td><td>127,572</td><td>79.3%</td><td>0.82%</td><td>136</td><td>CA$0.091</td><td class="rev">CA$11,599.92</td></tr>
+          <tr><td class="name">GWP (CA)</td><td>130,290</td><td>79.5%</td><td>1.01%</td><td>119</td><td>CA$0.078</td><td class="rev">CA$10,184.48</td></tr>
+          <tr><td class="name">5 Burgers (CA)</td><td>129,510</td><td>78.3%</td><td>1.12%</td><td>95</td><td>CA$0.064</td><td class="rev">CA$8,296.29</td></tr>
+          <tr><td class="name">GWP (FR)</td><td>14,654</td><td>77.7%</td><td>1.06%</td><td>23</td><td>CA$0.149</td><td class="rev">CA$2,178.81</td></tr>
+          <tr><td class="name">GWP Last Chance (FR)</td><td>14,320</td><td>78.0%</td><td>0.75%</td><td>23</td><td>CA$0.151</td><td class="rev">CA$2,156.82</td></tr>
+          <tr><td class="name">5 Burgers (FR)</td><td>14,556</td><td>77.2%</td><td class="hb">1.31%</td><td>20</td><td>CA$0.145</td><td class="rev">CA$2,106.66</td></tr>
+          <tr><td class="name">5 Burgers (US)</td><td>73,749</td><td>80.6%</td><td>0.70%</td><td>21</td><td>CA$0.025</td><td class="rev">CA$1,828.66</td></tr>
+          <tr><td class="name">GWP Last Chance (US)</td><td>72,660</td><td class="hb">82.7%</td><td>0.71%</td><td>19</td><td>CA$0.025</td><td class="rev">CA$1,826.47</td></tr>
+          <tr><td class="name">GWP (US)</td><td>74,422</td><td>81.1%</td><td class="hw">0.69%</td><td>21</td><td>CA$0.023</td><td class="rev">CA$1,703.82</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">The heavy GWP week. Three big CA sends did CA$30.1K, about 72% of the week. Numbers read higher than last week's report showed for this same week, as late conversions kept attributing (this pull is 10 days more mature).</div>
+    </div>
+
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>Two weeks ago · Jul 13&ndash;19</h3><span class="sum">9 sends · 673,088 recipients · CA$31,448</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Send</th><th>Recipients</th><th>Orders</th><th>RPR</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Launch (CA)</td><td>133,288</td><td>87</td><td>CA$0.070</td><td class="rev">CA$9,281.03</td></tr>
+          <tr><td class="name">Reviews + How-To-Use (CA)</td><td>132,054</td><td>98</td><td>CA$0.061</td><td class="rev">CA$8,093.24</td></tr>
+          <tr><td class="name">Teaser (CA)</td><td>133,757</td><td>80</td><td>CA$0.052</td><td class="rev">CA$6,990.96</td></tr>
+          <tr><td class="name">Launch (US)</td><td>76,503</td><td>22</td><td>CA$0.023</td><td class="rev">CA$1,772.74</td></tr>
+          <tr><td class="name">Reviews + How-To-Use (US)</td><td>75,693</td><td>11</td><td>CA$0.016</td><td class="rev">CA$1,233.77</td></tr>
+          <tr><td class="name">Launch (FR)</td><td>15,020</td><td>12</td><td>CA$0.077</td><td class="rev">CA$1,153.42</td></tr>
+          <tr><td class="name">Reviews + How-To-Use (FR)</td><td>14,874</td><td>11</td><td>CA$0.076</td><td class="rev">CA$1,133.20</td></tr>
+          <tr><td class="name">Teaser (FR)</td><td>15,066</td><td>12</td><td>CA$0.075</td><td class="rev">CA$1,123.95</td></tr>
+          <tr><td class="name">Teaser (US)</td><td>76,833</td><td>10</td><td>CA$0.009</td><td class="rev">CA$665.25</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">Engagement columns are shown for this week and last week only. Two-weeks-ago is here for the revenue trend.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>Flows</h2><div class="tag">Live automations · email</div></div>
+    <p class="lede rv">Flows did <b>CA$13,016</b>, up 12% on last week. Same split as campaigns: <b>unique counts</b> rose (deliveries up 48% as the winback pushed reactivated people back into carts and browsing) while the <b>rates</b> eased on the added volume. AOV was the exception, up 4.9%.</p>
+    <div class="cmp-wrap rv">
+      <table class="cmp">
+        <colgroup><col><col><col><col class="nowcol"><col></colgroup>
+        <thead><tr><th>Metric</th><th class="ctx">Jul 13&ndash;19</th><th>Last week</th><th class="now">This week</th><th>WoW</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="5">Unique counts</td></tr>
+          <tr><td class="metric">Total recipients</td><td class="ctx">5,420</td><td class="prev">5,721</td><td class="now">8,508</td><td><span class="minichip up">+48.1%</span></td></tr>
+          <tr><td class="metric">Unique opens</td><td class="ctx">3,085</td><td class="prev">3,250</td><td class="now">4,510</td><td><span class="minichip up">+38.7%</span></td></tr>
+          <tr><td class="metric">Unique clicks</td><td class="ctx">296</td><td class="prev">289</td><td class="now">392</td><td><span class="minichip up">+35.6%</span></td></tr>
+          <tr><td class="metric">Unique conversions</td><td class="ctx">119</td><td class="prev">122</td><td class="now">137</td><td><span class="minichip up">+12.3%</span></td></tr>
+          <tr><td class="metric">Conversion value</td><td class="ctx">CA$10,806</td><td class="prev">CA$11,605</td><td class="now">CA$13,016</td><td><span class="minichip up">+12.2%</span></td></tr>
+          <tr class="grp"><td colspan="5">Rates</td></tr>
+          <tr><td class="metric">Open rate</td><td class="ctx">56.9%</td><td class="prev">56.8%</td><td class="now">53.2%</td><td><span class="minichip down">&minus;6.3%</span></td></tr>
+          <tr><td class="metric">Click rate</td><td class="ctx">5.46%</td><td class="prev">5.05%</td><td class="now">4.63%</td><td><span class="minichip down">&minus;8.4%</span></td></tr>
+          <tr><td class="metric">Conversion rate</td><td class="ctx">2.20%</td><td class="prev">2.14%</td><td class="now">1.62%</td><td><span class="minichip down">&minus;24.2%</span></td></tr>
+          <tr><td class="metric">Revenue per recipient</td><td class="ctx">CA$1.99</td><td class="prev">CA$2.03</td><td class="now">CA$1.54</td><td><span class="minichip down">&minus;24.3%</span></td></tr>
+          <tr><td class="metric">Average order value</td><td class="ctx">CA$91</td><td class="prev">CA$89</td><td class="now">CA$94</td><td><span class="minichip up">+4.9%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>Revenue by flow</h3><span class="sum">revenue (orders) per week</span></div>
+      <div class="cmp-wrap"><table class="cmp">
+        <colgroup><col><col><col><col class="nowcol"><col></colgroup>
+        <thead><tr><th>Flow</th><th class="ctx">Jul 13&ndash;19</th><th>Last week</th><th class="now">This week</th><th>WoW</th></tr></thead>
+        <tbody>
+          <tr><td class="metric">Added to Cart</td><td class="ctx">CA$4,461 <span class="o">(41)</span></td><td class="prev">CA$5,209 <span class="o">(50)</span></td><td class="flow-cell now"><span class="r">CA$5,274</span> <span class="o">(55)</span></td><td><span class="minichip flat">+1.2%</span></td></tr>
+          <tr><td class="metric">Abandoned Checkout</td><td class="ctx">CA$2,027 <span class="o">(22)</span></td><td class="prev">CA$2,601 <span class="o">(31)</span></td><td class="flow-cell now"><span class="r">CA$3,761</span> <span class="o">(36)</span></td><td><span class="minichip up">+44.6%</span></td></tr>
+          <tr><td class="metric">Welcome Series <span class="o" style="font-weight:500">· Free Marry Me Chicken</span></td><td class="ctx">CA$3,376 <span class="o">(44)</span></td><td class="prev">CA$2,358 <span class="o">(27)</span></td><td class="flow-cell now"><span class="r">CA$2,279</span> <span class="o">(29)</span></td><td><span class="minichip flat">&minus;3.4%</span></td></tr>
+          <tr><td class="metric">Post-Purchase</td><td class="ctx">CA$552 <span class="o">(8)</span></td><td class="prev">CA$1,219 <span class="o">(11)</span></td><td class="flow-cell now"><span class="r">CA$894</span> <span class="o">(10)</span></td><td><span class="minichip down">&minus;26.7%</span></td></tr>
+          <tr><td class="metric">Browse Abandonment</td><td class="ctx">CA$274 <span class="o">(3)</span></td><td class="prev">CA$0 <span class="o">(0)</span></td><td class="flow-cell now"><span class="r">CA$809</span> <span class="o">(7)</span></td><td><span class="minichip up">recovered</span></td></tr>
+          <tr><td class="metric">NPS Flow</td><td class="ctx">CA$116 <span class="o">(1)</span></td><td class="prev">CA$216 <span class="o">(3)</span></td><td class="flow-cell now"><span class="r">CA$0</span> <span class="o">(0)</span></td><td><span class="minichip down">&minus;100%</span></td></tr>
+          <tr class="idle"><td class="metric">Back in Stock · Winback flows (CA/US/FR) · Review request</td><td class="ctx">CA$0</td><td>CA$0</td><td class="now"><span class="zero-tag">CA$0 all 3 weeks</span></td><td class="ctx">no change</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">WoW is this week vs last week. Added to Cart, Abandoned Checkout and Welcome Series made up CA$11.3K of the CA$13.0K. <b>Abandoned Checkout +45%</b> was the standout. <b>Browse Abandonment recovered</b> to CA$809 after last week's CA$0 flag; NPS went to CA$0. The winback <b>flows</b> earned CA$0 across all three weeks; the winback ran as a campaign this period, not through the flow. Back in Stock and Review request flows were also idle.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>List growth</h2><div class="tag">Active audience · 30-day</div></div>
+    <p class="lede rv">The weekly audience export wasn't in this pull, so this is the 30-day segment view. It tells the more important story right now: <b>the active list reversed to growth</b> after weeks of steady decline.</p>
+    <div class="grow-label rv">Active audience · 30-day, the real list size</div>
+    <div class="grow-top rv">
+      <div class="gtile region"><div class="k">Canada</div><div class="v">131K</div><span class="minichip up">+2.8%</span><div class="gsub">6,040 in · 2,470 out</div></div>
+      <div class="gtile region"><div class="k">United States</div><div class="v">74.9K</div><span class="minichip up">+2.9%</span><div class="gsub">3,530 in · 1,430 out</div></div>
+      <div class="gtile region"><div class="k">French (FR)</div><div class="v">14.7K</div><span class="minichip up">+2.6%</span><div class="gsub">669 in · 302 out</div></div>
+    </div>
+    <div class="cap">Segment growth over the last 30 days: combined ~220K active, net +6,040. This is the first gain after several weeks of ~3% weekly declines. Send the weekly audience export and I'll add the WoW view here next time.</div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>Sign-up forms</h2><div class="tag">By region</div></div>
+    <p class="lede rv">Submit rate by region. Canada drives the volume (244 submits, CA$4,400); French converts at the highest rate (5.34%); the USA form is lowest at 1.57%.</p>
+    <div class="forms rv">
+      <div class="fcard">
+        <div class="name">French <span class="badge good">Good</span></div>
+        <div class="rate">5.34%</div><div class="ratelbl">submit rate</div>
+        <div class="fmeta"><span class="k">Submits</span><span class="v">44</span></div>
+        <div class="fmeta"><span class="k">Viewed</span><span class="v">824</span></div>
+        <div class="fmeta"><span class="k">Revenue</span><span class="v">CA$728</span></div>
+      </div>
+      <div class="fcard">
+        <div class="name">Canada <span class="badge good">Good</span></div>
+        <div class="rate">4.42%</div><div class="ratelbl">submit rate</div>
+        <div class="fmeta"><span class="k">Submits</span><span class="v">244</span></div>
+        <div class="fmeta"><span class="k">Viewed</span><span class="v">5,500</span></div>
+        <div class="fmeta"><span class="k">Revenue</span><span class="v">CA$4,400</span></div>
+      </div>
+      <div class="fcard">
+        <div class="name">USA <span class="badge poor">Poor</span></div>
+        <div class="rate">1.57%</div><div class="ratelbl">submit rate</div>
+        <div class="fmeta"><span class="k">Submits</span><span class="v">41</span></div>
+        <div class="fmeta"><span class="k">Viewed</span><span class="v">2,600</span></div>
+        <div class="fmeta"><span class="k">Revenue</span><span class="v">CA$372</span></div>
+      </div>
+    </div>
+    <div class="cap">Placed Order revenue attributed to each form this week. Ratings are Klaviyo's benchmark tiers: French and Canada Good, USA Poor. Canada came from 5,500 form views, USA 2,600, French 824.</div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>New vs returning</h2><div class="tag">Store-wide · this week</div></div>
+    <p class="lede rv">New customers drove the store this week: 638 new (+43%) to 509 returning (&minus;6%), 1,147 total (+16%). A flip from last week, when returning led.</p>
+    <div class="nr-legend rv"><span><i style="background:var(--tomato)"></i>New · 638</span><span><i style="background:var(--herb)"></i>Returning · 509</span></div>
+    <div class="rv"><div class="nrbar"><div class="n" style="width:55.6%">638 new</div><div class="r" style="width:44.4%">509 returning</div></div></div>
+    <div class="cap">Shopify store-wide new-vs-returning customers (all channels). New up 43% is why the returning-customer rate slipped to 44.6% even though returning volume only dipped 6%. Strong acquisition week on the back of the Launch and Cheesecake sends.</div>
+  </section>
+
+  <section>
+    <div class="sec-head rv"><h2>Last 30 days</h2><div class="tag">Jul 7 – Aug 6 vs prior 30 days</div></div>
+    <p class="lede rv">Zooming out: attributed email revenue was <b>CA$206.9K</b> over the last 30 days; the store did <b>CA$390.4K</b> across all channels (+1.6%). Email held about 53% of store demand.</p>
+    <div class="grid4 rv">
+      <div class="stile"><div class="k">Store total sales</div><div class="v">CA$390,380</div><span class="minichip up">+1.6%</span></div>
+      <div class="stile"><div class="k">Attributed revenue</div><div class="v">CA$206,874</div><span class="minichip flat">53.0% of store</span></div>
+      <div class="stile"><div class="k">Campaigns</div><div class="v">CA$155,021</div><span class="minichip flat">74.9% of attr.</span></div>
+      <div class="stile"><div class="k">Flows</div><div class="v">CA$51,853</div><span class="minichip flat">25.1% of attr.</span></div>
+    </div>
+    <div class="wk-block rv">
+      <div class="wk-title"><h3>Top flows · last 30 days</h3><span class="sum">Jul 7 &ndash; Aug 6</span></div>
+      <div class="tbl-wrap"><table class="snd">
+        <thead><tr><th>Flow</th><th>Deliveries</th><th>Revenue</th><th>Per recipient</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Added to Cart</td><td>9,720</td><td class="rev">CA$20,918.44</td><td>CA$2.15</td></tr>
+          <tr><td class="name">Abandoned Checkout</td><td>3,575</td><td class="rev">CA$12,883.01</td><td>CA$3.60</td></tr>
+          <tr><td class="name">Welcome Series · Free Marry Me Chicken</td><td>2,037</td><td class="rev">CA$12,420.94</td><td>CA$6.10</td></tr>
+          <tr><td class="name">Post-Purchase</td><td>6,469</td><td class="rev">CA$3,504.26</td><td>CA$0.54</td></tr>
+          <tr><td class="name">Browse Abandonment</td><td>3,427</td><td class="rev">CA$1,517.66</td><td>CA$0.44</td></tr>
+          <tr><td class="name">NPS Flow</td><td>3,039</td><td class="rev">CA$608.38</td><td>CA$0.20</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cap">Welcome Series earns the most per recipient by far (CA$6.10). The 30-day vs prior-30 change column isn't shown this build: the pull covers only the last 30 days, so there's no prior window to compare against. Send a 60-day flow export for the monthly-trend column.</div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<div class="wrap">
+  <footer>
+    <div class="mark">DigitsUp</div>
+    <p>Epicure weekly · this week (Jul 27&ndash;Aug 2, 2026) vs last week (Jul 20&ndash;26); Jul 13&ndash;19 shown for context. Email = Klaviyo campaigns and flows, Placed Order attribution. Figures reflect attribution as of the pull date (Aug 6); a recent week reads higher than in an earlier report as late conversions attribute, which is why Jul 20&ndash;26 is above the CA$37.1K shown last week. Campaign and flow summaries are the full week from Klaviyo, split into unique counts and rates. The winback's summed waves triple-count people, so its return is read off unique audience; the regular promo and winback are broken out under the campaign table. Store totals = Shopify, all channels, and are never added to the email numbers (different attribution). Four "DU Winback Test" sends (3 recipients each, CA$0) are excluded. The weekly audience export wasn't provided this build, so list growth shows the 30-day view. Confidential, internal use only.</p>
+  </footer>
+</div>
+
+<script>
+  var heroDone=false;
+  function runHero(){
+    if(heroDone)return;heroDone=true;
+    var el=document.getElementById('heroNum'),target=59334.68,s=null,dur=1100;
+    function fmt(n){return 'CA$'+Math.round(n).toLocaleString('en-CA')}
+    function step(t){if(!s)s=t;var p=Math.min((t-s)/dur,1);var e=1-Math.pow(1-p,3);
+      el.textContent=fmt(target*e);if(p<1)requestAnimationFrame(step);else el.textContent='CA$59,335';}
+    requestAnimationFrame(step);
+  }
+  function revealIn(panel){panel.querySelectorAll('.rv').forEach(function(n){n.classList.add('in')});}
+  function fillShare(){var sf=document.getElementById('shareFill');if(sf)sf.style.width='59.3%';}
+  var tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('active')});
+    panels.forEach(function(x){x.classList.remove('active')});
+    t.classList.add('active');
+    var p=document.getElementById(t.dataset.tab);p.classList.add('active');
+    window.scrollTo({top:0});
+    revealIn(p);
+    if(t.dataset.tab==='summary')runHero();
+    if(t.dataset.tab==='full')fillShare();
+  });});
+  runHero();
+  var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.1});
+  document.querySelectorAll('#summary .rv').forEach(function(n){io.observe(n)});
+</script>
+</body>
+</html>
