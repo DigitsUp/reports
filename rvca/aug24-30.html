@@ -1,0 +1,461 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RVCA — Weekly Email Performance · Aug 24–30 2026</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+:root{
+  --paper:#ffffff; --soft:#f5f5f3; --soft2:#fafaf8; --card:#f7f7f5;
+  --ink:#1c1c1a; --ink2:#54544f; --ink3:#8a8a84; --line:#ececea;
+  --green:#1f7a46; --green-bg:#e7f3ec; --red:#b8463b; --red-bg:#fbeceb;
+  --disp:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --r:18px; --r-sm:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);
+     line-height:1.5;-webkit-font-smoothing:antialiased;font-size:15px}
+body.locked{overflow:hidden}
+.wrap{max-width:940px;margin:0 auto;padding:0 28px}
+small{font-size:.72em;color:var(--ink3);font-weight:500}
+
+/* delta pill */
+.d{display:inline-flex;align-items:center;gap:4px;font-family:var(--body);
+   font-weight:600;font-size:12px;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.d.up{background:var(--green-bg);color:var(--green)}
+.d.down{background:var(--red-bg);color:var(--red)}
+.d.flat{background:var(--soft);color:var(--ink3)}
+.d small{color:inherit;opacity:.7}
+
+/* header */
+header{background:var(--paper);padding:34px 0 0}
+.balance{font-family:var(--body);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+         color:var(--ink3);font-weight:600;text-align:center;margin-bottom:26px}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.mark{display:flex;align-items:center;gap:16px}
+.mark img{height:30px}
+.mark .divider{width:1px;height:34px;background:var(--line)}
+.mark .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.mark .sub b{display:block;font-size:14px;font-weight:600;margin-top:3px}
+.period{text-align:right}
+.period .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.period .big{font-family:var(--disp);font-weight:800;font-size:clamp(26px,4vw,38px);
+             letter-spacing:-.02em;line-height:1;margin-top:4px}
+
+/* segmented pill tabs */
+.tabs{display:inline-flex;background:var(--soft);border-radius:999px;padding:4px;margin:30px auto 0;
+      gap:2px}
+.tabwrap{display:flex;justify-content:center;border-bottom:1px solid var(--line);padding-bottom:22px;margin-top:8px}
+.tab{font-family:var(--body);font-weight:600;font-size:13.5px;color:var(--ink2);
+     padding:9px 22px;border:none;background:transparent;border-radius:999px;cursor:pointer;transition:.15s}
+.tab.active{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+.panel{display:none}
+.panel.active{display:block}
+section{padding:40px 0}
+section+section{border-top:1px solid var(--line)}
+
+/* section heading */
+.sec-head{display:flex;gap:16px;align-items:baseline;margin-bottom:26px}
+.sec-head .n{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--ink3);
+             letter-spacing:.04em;flex-shrink:0}
+h2.sec{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:-.015em;line-height:1.1}
+.sec-note{color:var(--ink2);font-size:14px;margin-top:8px;line-height:1.55;max-width:660px}
+
+/* hero card (summary top) */
+.hero{background:var(--card);border-radius:var(--r);padding:34px 34px 30px;margin-bottom:22px}
+.hero .lead{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.hero .big{font-family:var(--disp);font-weight:800;font-size:clamp(42px,7vw,60px);
+           letter-spacing:-.03em;line-height:.96;margin:10px 0 8px}
+.hero .split{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.hero .cell{background:var(--paper);border-radius:var(--r-sm);padding:16px 18px}
+.hero .cell .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.hero .cell .v{font-family:var(--disp);font-weight:800;font-size:26px;line-height:1;margin:8px 0 8px}
+.hero .cell .sub{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.narr{font-size:15px;line-height:1.6;color:var(--ink2);margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+.narr b{color:var(--ink);font-weight:600}
+
+/* kpi row */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:var(--r-sm);padding:20px 20px 18px}
+.kpi .kl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.kpi .kv{font-family:var(--disp);font-weight:800;font-size:30px;line-height:1;margin:10px 0 10px}
+
+/* block */
+.block{margin-bottom:34px}
+.block h3{font-family:var(--disp);font-weight:800;font-size:19px;margin-bottom:16px}
+
+/* soft list rows (summary tables) */
+.rows{background:var(--card);border-radius:var(--r);overflow:hidden}
+.row{display:grid;grid-template-columns:1.8fr .7fr .7fr .8fr;gap:12px;align-items:center;
+     padding:14px 22px;font-size:14px}
+.row+.row{border-top:1px solid var(--line)}
+.row.head{background:var(--soft);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+          color:var(--ink3);font-weight:600}
+.row .n{font-weight:600}
+.row .m{font-family:var(--disp);font-weight:700;font-size:15px;text-align:right}
+.row.head .n{font-weight:600}.row.head .m{font-family:var(--body);font-weight:600;font-size:11px}
+.note{font-size:14px;color:var(--ink2);line-height:1.6;margin-top:16px;padding-left:2px}
+.note b{color:var(--ink);font-weight:600}
+
+/* stat card (detail metric grids) */
+.statcard{background:var(--card);border-radius:var(--r);padding:26px}
+.heroes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+.heroes .h{background:var(--paper);border-radius:var(--r-sm);padding:20px 22px}
+.heroes .hl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.heroes .num{font-family:var(--disp);font-weight:800;font-size:34px;line-height:1;margin:10px 0 10px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:12px 8px;
+      border-bottom:1px solid var(--line)}
+.mn{font-size:13.5px;color:var(--ink2)}
+.mr{display:flex;align-items:center;gap:10px}
+.mv{font-family:var(--disp);font-weight:700;font-size:15px}
+
+/* clean tables (detail) */
+.tbl-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);
+           font-weight:600;margin:26px 0 10px}
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);
+      border-radius:var(--r);overflow:hidden;font-size:14px}
+thead th{background:var(--soft);font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+         color:var(--ink3);font-weight:600;text-align:right;padding:13px 18px}
+thead th:first-child{text-align:left}
+tbody td{padding:14px 18px;text-align:right;border-top:1px solid var(--line);
+         font-family:var(--disp);font-weight:700}
+tbody td:first-child{text-align:left;font-family:var(--body);font-weight:600;color:var(--ink)}
+tbody td.name{font-family:var(--body);font-weight:600}
+td .rank{display:inline-block;width:22px;color:var(--ink3);font-family:var(--disp)}
+td .sub{display:block;font-family:var(--body);font-weight:500;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.rev-strong{color:var(--ink)}
+
+/* commentary */
+.comm{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.col{background:var(--card);border-radius:var(--r);padding:20px}
+.col.w{background:var(--green-bg)}
+.col.a{background:var(--red-bg)}
+.col h3{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.04em;
+        text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.col.w h3{color:var(--green)}.col.a h3{color:var(--red)}.col.o h3{color:var(--ink2)}
+.bullet{margin-bottom:12px;font-size:13px;line-height:1.45}
+.bullet:last-child{margin-bottom:0}
+.bullet b{display:block;font-weight:600;color:var(--ink);margin-bottom:1px}
+.bullet span{color:var(--ink2)}
+
+/* callout */
+.callout{background:var(--ink);color:var(--paper);border-radius:var(--r);overflow:hidden;margin:6px 0 22px}
+.callout .bar{padding:12px 24px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+              color:rgba(255,255,255,.7);border-bottom:1px solid rgba(255,255,255,.12)}
+.callout .cb{padding:24px}
+.callout h4{font-family:var(--disp);font-weight:800;font-size:22px;line-height:1.15;margin-bottom:18px}
+.callout .proofs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:20px}
+.callout .pn{font-family:var(--disp);font-weight:800;font-size:26px;margin-bottom:6px}
+.callout .pl{font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.75)}
+.callout .take{font-size:14px;line-height:1.6;color:rgba(255,255,255,.9);
+               padding-top:18px;border-top:1px solid rgba(255,255,255,.12)}
+.callout .take b{color:#fff;font-weight:600}
+
+/* list-health block (summary) */
+.lh{background:var(--soft2);border:1px solid var(--line);border-radius:var(--r);padding:26px 28px}
+.lh .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.lh h4{font-family:var(--disp);font-weight:800;font-size:20px;margin:8px 0 18px}
+.lh .item{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.lh .item .dot{width:8px;height:8px;border-radius:999px;background:var(--green);margin-top:7px;flex-shrink:0}
+.lh .item .t{font-weight:600;font-size:14.5px;margin-bottom:2px}
+.lh .item .s{font-size:13.5px;color:var(--ink2);line-height:1.5}
+
+/* validation */
+.val{background:var(--card);border-radius:var(--r);padding:26px}
+.val .label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.val h3{font-family:var(--disp);font-weight:800;font-size:19px;margin-top:6px}
+.vnote{font-size:13.5px;color:var(--ink2);line-height:1.55;margin-top:8px;max-width:680px}
+.val-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:20px}
+.val-kpi{background:var(--paper);border-radius:var(--r-sm);padding:16px}
+.val-kpi .label{font-size:10.5px;color:var(--ink3)}
+.val-kpi .num{font-family:var(--disp);font-weight:800;font-size:22px;line-height:1;margin:8px 0 8px}
+
+/* footer + statband */
+.statband{display:grid;gap:14px;margin-bottom:22px}
+.statband .s{background:var(--card);border-radius:var(--r-sm);padding:18px 20px}
+.statband .hl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.statband .num{font-family:var(--disp);font-weight:800;font-size:26px;line-height:1;margin:9px 0 8px}
+.statband .sm{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:7px}
+
+/* gate */
+#gate{position:fixed;inset:0;z-index:9999;background:var(--paper);display:flex;
+      align-items:center;justify-content:center;padding:24px}
+#gate .card2{width:100%;max-width:360px;text-align:center;background:var(--card);
+             border-radius:24px;padding:40px 34px}
+#gate img{height:28px;margin-bottom:22px}
+#gate .eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+#gate h1{font-family:var(--disp);font-weight:800;font-size:22px;margin:10px 0 22px}
+#gate .field{display:flex;gap:8px}
+#gate input{flex:1;font-family:var(--body);font-size:14px;padding:13px 16px;
+            border:1px solid var(--line);border-radius:999px;background:var(--paper);color:var(--ink)}
+#gate input:focus{outline:none;border-color:var(--ink3)}
+#gate button{font-family:var(--body);font-weight:600;font-size:13px;padding:0 22px;border:none;
+             background:var(--ink);color:var(--paper);border-radius:999px;cursor:pointer}
+#gate .err{font-size:12px;color:var(--red);margin-top:14px;min-height:16px;font-weight:500}
+
+@media (max-width:820px){
+  .hero .split,.kpis,.comm,.callout .proofs,.val-grid{grid-template-columns:1fr 1fr}
+  .heroes,.mgrid{grid-template-columns:1fr}
+  .row{grid-template-columns:1.5fr .8fr .8fr}
+  .row .m:last-child{display:none}
+  .val-grid{grid-template-columns:1fr 1fr}
+}
+</style></head><body><div id="gate"><div class="card2"><img src="data:image/png;base64,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" alt="RVCA"><div class="eyebrow">Retention Performance</div><h1>Protected Report</h1><div class="field"><input id="pw" type="password" placeholder="Password" autocomplete="off" onkeydown="if(event.key==='Enter')unlock()"><button onclick="unlock()">Enter</button></div><div class="err" id="err"></div></div></div><header>
+  <div class="wrap">
+    <div class="balance">Art / Sport &middot; Heritage / Progression &middot; Nature / Industry</div>
+    <div class="mast">
+      <div class="mark"><img src="data:image/png;base64,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" alt="RVCA"><div class="divider"></div>
+        <div class="sub"><span class="eyebrow">Retention Performance</span><b>Email &amp; SMS &middot; US</b></div></div>
+      <div class="period"><div class="eyebrow">Weekly Report</div><div class="big">Aug 24 &ndash; 30</div>
+        <div class="eyebrow" style="margin-top:5px">WoW vs Aug 17&ndash;23</div></div>
+    </div>
+    <div class="tabwrap"><div class="tabs">
+      <button class="tab active" onclick="showTab(event,'summary')">Summary</button>
+      <button class="tab" onclick="showTab(event,'detail')">Detail</button>
+    </div></div>
+  </div>
+</header><div class="panel active" id="summary">
+<section style="border-top:none">
+  <div class="wrap">
+    <div class="hero">
+      <div class="lead">The week &middot; Klaviyo-tracked revenue</div>
+      <div class="big">$115,512</div>
+      <div><span class="d down">&#9660; &minus;4.2% vs Aug 17&ndash;23</span></div>
+      <div class="split">
+        <div class="cell"><div class="k">Attributed to email</div><div class="v">$32.8K</div><div class="sub">28.39% of total <span class="d up">&#9650; +3.9%</span></div></div>
+        <div class="cell"><div class="k">Campaigns</div><div class="v">$18.6K</div><div class="sub">56.67% <span class="d up">&#9650; +4.0%</span></div></div>
+        <div class="cell"><div class="k">Automations</div><div class="v">$14.2K</div><div class="sub">43.33% <span class="d up">&#9650; +3.6%</span></div></div>
+      </div>
+      <div class="narr">The two-week slide steadied. Total Klaviyo revenue eased slightly, but <b>the email program itself grew &mdash; campaigns +4%, automations +3.6%, attributed +3.9%</b> &mdash; the first WoW gain in three weeks. Shopify pointed the same way: total sales +10%, orders roughly flat, and returning customers back up (+5%). A recovery off the soft stretch rather than a new high.</div>
+    </div>
+
+    <div class="block">
+      <h3>Campaigns</h3>
+      <div class="kpis">
+        <div class="kpi"><div class="kl">Recipients</div><div class="kv">516K</div><span class="d up">&#9650; +9.4%</span></div>
+        <div class="kpi"><div class="kl">Orders</div><div class="kv">150</div><span class="d up">&#9650; +4.2%</span></div>
+        <div class="kpi"><div class="kl">Revenue</div><div class="kv">$18.6K</div><span class="d up">&#9650; +4.0%</span></div>
+        <div class="kpi"><div class="kl">Avg order value</div><div class="kv">$123</div><span class="d down">&#9660; &minus;0.1%</span></div>
+      </div>
+      <div class="rows">
+        <div class="row head"><span class="n">Three sends</span><span class="m">Recipients</span><span class="m">Orders</span><span class="m">Revenue</span></div>
+        <div class="row"><span class="n">Sports &middot; Men &middot; Aug 26</span><span class="m">220K</span><span class="m">68</span><span class="m">$8.69K</span></div>
+        <div class="row"><span class="n">Your Picks &middot; Aug 30</span><span class="m">258K</span><span class="m">64</span><span class="m">$7.17K</span></div>
+        <div class="row"><span class="n">Sports &middot; Women &middot; Aug 26</span><span class="m">38K</span><span class="m">18</span><span class="m">$2.72K</span></div>
+      </div>
+      <div class="note">Campaigns turned back up &mdash; revenue +4% and orders +4.2% on a wider audience (+9.4%). Order value held at $123. The gender-split Sports sends led, with Your Picks close behind. <b>Engagement improved too</b>: click rate +27.6% WoW as the sends reconnected after two softer weeks.</div>
+    </div>
+
+    <div class="block">
+      <h3>Automations</h3>
+      <div class="kpis">
+        <div class="kpi"><div class="kl">Recipients</div><div class="kv">23,865</div><span class="d up">&#9650; +99.9%</span></div>
+        <div class="kpi"><div class="kl">Orders</div><div class="kv">117</div><span class="d up">&#9650; +6.4%</span></div>
+        <div class="kpi"><div class="kl">Revenue</div><div class="kv">$14.2K</div><span class="d up">&#9650; +3.6%</span></div>
+        <div class="kpi"><div class="kl">Avg order value</div><div class="kv">$117</div><span class="d down">&#9660; &minus;0.7%</span></div>
+      </div>
+      <div class="rows">
+        <div class="row head"><span class="n">Top automations</span><span class="m">Recipients</span><span class="m">Orders</span><span class="m">Revenue</span></div>
+        <div class="row"><span class="n">Welcome Series</span><span class="m">1.71K</span><span class="m">21</span><span class="m">$3.36K</span></div>
+        <div class="row"><span class="n">Price Drop Notification</span><span class="m">13.3K</span><span class="m">36</span><span class="m">$3.18K</span></div>
+        <div class="row"><span class="n">Post-Purchase &mdash; Return</span><span class="m">1.37K</span><span class="m">14</span><span class="m">$1.67K</span></div>
+      </div>
+      <div class="note">Automation revenue rose +3.6% with orders +6.4%. The recipient count nearly doubled, but that's <b>almost entirely a Price Drop event</b> &mdash; a price-drop send reached 13.3K and added $3.18K. Underlying flows held, and <b>Post-Purchase New (+$1,033) and Win-back (+$615)</b> were the biggest gainers. Order value steady at $117.</div>
+    </div>
+  </div>
+</section>
+</div><div class="panel" id="detail"><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">01</span><div><h2 class="sec">Klaviyo Performance Overview</h2>
+      <p class="sec-note">Total Klaviyo-tracked revenue for Aug 24&ndash;30, with attributed email demand split into campaigns and automations, week over week. After two softer weeks, the email program returned to growth.</p></div></div>
+    <div class="hero" style="margin-bottom:22px">
+      <div class="lead">This week &middot; WoW vs Aug 17&ndash;23</div>
+      <div class="big">$115,512</div>
+      <div><span class="d down">&#9660; &minus;4.2% total revenue</span></div>
+      <div class="split">
+        <div class="cell"><div class="k">Attributed</div><div class="v">$32.8K</div><div class="sub">28.39% of total <span class="d up">&#9650; +3.9%</span></div></div>
+        <div class="cell"><div class="k">Campaigns</div><div class="v">$18.6K</div><div class="sub">56.67% of attr. <span class="d up">&#9650; +4.0%</span></div></div>
+        <div class="cell"><div class="k">Automations</div><div class="v">$14.2K</div><div class="sub">43.33% of attr. <span class="d up">&#9650; +3.6%</span></div></div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="bar">In context &middot; a recovery week</div>
+      <div class="cb">
+        <h4>The email program returned to growth after two soft weeks</h4>
+        <div class="proofs">
+          <div><div class="pn">+3.9%</div><div class="pl">Attributed email revenue WoW &mdash; campaigns +4% and automations +3.6% both turned back up.</div></div>
+          <div><div class="pn">+10%</div><div class="pl">Shopify total sales WoW, with returning customers +5% &mdash; demand steadied store-wide.</div></div>
+          <div><div class="pn">+9.4%</div><div class="pl">Campaign reach expanded, and orders and revenue grew with it rather than lagging.</div></div>
+        </div>
+        <div class="take">The read: the two-week softening steadied. Total Klaviyo revenue eased 4.2%, but the email program &mdash; campaigns and flows both &mdash; grew for the first time in three weeks, and Shopify moved the same way with total sales up 10% and returning customers back up. This is a recovery off the soft stretch, not a return to the early-August peak.</div>
+      </div>
+    </div>
+    <div class="comm"><div class="col w"><h3>What's Working</h3><div class="bullet"><b>Email program grew</b><span>Campaigns +4%, automations +3.6%, attributed +3.9%.</span></div><div class="bullet"><b>Reach and orders rose together</b><span>Campaign recipients +9.4%, orders +4.2%.</span></div><div class="bullet"><b>Shopify steadied</b><span>Total sales +10%, returning customers +5% WoW.</span></div></div><div class="col a"><h3>Needs Attention</h3><div class="bullet"><b>Total Klaviyo revenue eased</b><span>&minus;4.2% on the all-channels number.</span></div><div class="bullet"><b>Order value flat-to-lower</b><span>Campaign AOV $123, flow AOV $117.</span></div><div class="bullet"><b>Recovery, not a new peak</b><span>Still below the early-August high.</span></div></div><div class="col o"><h3>Opportunity</h3><div class="bullet"><b>Build on the rebound</b><span>Reach and engagement both improved this week.</span></div><div class="bullet"><b>Sustain the flow gainers</b><span>Post-Purchase New and Win-back both up.</span></div><div class="bullet"><b>Hold campaign cadence</b><span>The wider send converted &mdash; keep it going.</span></div></div></div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">02</span><div><h2 class="sec">Campaign Review</h2>
+      <p class="sec-note">Program-wide campaign performance, week over week. Three sends to a wider audience (+9.4%), and revenue, orders, and engagement all turned back up after two softer weeks.</p></div></div>
+    <div class="statcard">
+      <div class="heroes">
+        <div class="h"><div class="hl">Total recipients</div><div class="num">516,247</div><span class="d up">&#9650; +9.4% WoW</span></div>
+        <div class="h"><div class="hl">Conversion value</div><div class="num">$18,586</div><span class="d up">&#9650; +4.0% WoW</span></div>
+      </div>
+      <div class="mgrid">
+        <div class="mrow"><span class="mn">Total Recipients</span><span class="mr"><span class="mv">516K</span><span class="d up">&#9650; +9.4%</span></span></div>
+        <div class="mrow"><span class="mn">Unique Conversions</span><span class="mr"><span class="mv">150</span><span class="d up">&#9650; +4.2%</span></span></div>
+        <div class="mrow"><span class="mn">Unique Opens</span><span class="mr"><span class="mv">346K</span><span class="d up">&#9650; +2.3%</span></span></div>
+        <div class="mrow"><span class="mn">Conversion Rate</span><span class="mr"><span class="mv">0.029%</span><span class="d down">&#9660; &minus;6.5%</span></span></div>
+        <div class="mrow"><span class="mn">Open Rate</span><span class="mr"><span class="mv">67.0%</span><span class="d down">&#9660; &minus;6.5%</span></span></div>
+        <div class="mrow"><span class="mn">Conversion Value</span><span class="mr"><span class="mv">$18.6K</span><span class="d up">&#9650; +4.0%</span></span></div>
+        <div class="mrow"><span class="mn">Unique Clicks</span><span class="mr"><span class="mv">3.13K</span><span class="d up">&#9650; +39.6%</span></span></div>
+        <div class="mrow"><span class="mn">Average Order Value</span><span class="mr"><span class="mv">$123</span><span class="d down">&#9660; &minus;0.1%</span></span></div>
+      </div>
+    </div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">03</span><div><h2 class="sec">Top Campaigns</h2>
+      <p class="sec-note">This week's three sends beside last week's, ranked by conversion value. Sports ran as one send split by gender. All figures sliced by send time.</p></div></div>
+    <div class="tbl-label">Campaigns &middot; This week (Aug 24&ndash;30)</div>
+    <table><thead><tr><th>Campaign message</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead><tbody>
+      <tr><td class="name"><span class="rank">1</span>Sports &mdash; Men<span class="sub">sent Aug 26</span></td><td>220K</td><td>68<span class="sub">0.031% PO rate</span></td><td class="rev-strong">$8.69K</td></tr>
+      <tr><td class="name"><span class="rank">2</span>Your Picks<span class="sub">sent Aug 30</span></td><td>258K</td><td>64<span class="sub">0.025% PO rate</span></td><td class="rev-strong">$7.17K</td></tr>
+      <tr><td class="name"><span class="rank">3</span>Sports &mdash; Women<span class="sub">sent Aug 26</span></td><td>38K</td><td>18<span class="sub">0.047% PO rate</span></td><td class="rev-strong">$2.72K</td></tr>
+    </tbody></table>
+    <div class="tbl-label">Campaigns &middot; Last week (Aug 17&ndash;23)</div>
+    <table><thead><tr><th>Campaign message</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead><tbody>
+      <tr><td class="name"><span class="rank">1</span>Wovens Button-Ups<span class="sub">sent Aug 17</span></td><td>213K</td><td>70<span class="sub">0.033% PO rate</span></td><td class="rev-strong">$8.33K</td></tr>
+      <tr><td class="name"><span class="rank">2</span>Outfit of the Week &mdash; Men<span class="sub">sent Aug 22</span></td><td>221K</td><td>59<span class="sub">0.027% PO rate</span></td><td class="rev-strong">$7.77K</td></tr>
+      <tr><td class="name"><span class="rank">3</span>Outfit of the Week &mdash; Women<span class="sub">sent Aug 22</span></td><td>38K</td><td>15<span class="sub">0.039% PO rate</span></td><td class="rev-strong">$1.77K</td></tr>
+    </tbody></table>
+    <div class="comm"><div class="col w"><h3>What's Working</h3><div class="bullet"><b>Sports Men led</b><span>$8.69K on 68 orders &mdash; the week's top send.</span></div><div class="bullet"><b>Clicks rebounded</b><span>Unique clicks +39.6% WoW.</span></div><div class="bullet"><b>Reach expanded</b><span>Recipients +9.4% and orders grew with it.</span></div></div><div class="col a"><h3>Needs Attention</h3><div class="bullet"><b>Placed-order rate eased</b><span>0.029%, &minus;6.5% on the wider send.</span></div><div class="bullet"><b>Open rate dipped</b><span>67.0%, &minus;6.5% WoW on the larger audience.</span></div><div class="bullet"><b>Your Picks lower efficiency</b><span>258K recipients at 0.025% PO rate.</span></div></div><div class="col o"><h3>Opportunity</h3><div class="bullet"><b>Keep the wider cadence</b><span>The bigger send converted this week.</span></div><div class="bullet"><b>Refine Your Picks targeting</b><span>Largest send, lowest order rate.</span></div><div class="bullet"><b>Sustain the gender-split format</b><span>Sports Women over-indexed on order rate.</span></div></div></div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">04</span><div><h2 class="sec">Automation Review</h2>
+      <p class="sec-note">Program-wide automation performance, week over week. Revenue rose +3.6% and orders +6.4%. Recipients nearly doubled, but that is almost entirely a one-time Price Drop event &mdash; the underlying flows held and revenue-per-recipient reflects that large, low-converting audience.</p></div></div>
+    <div class="statcard">
+      <div class="heroes">
+        <div class="h"><div class="hl">Total recipients</div><div class="num">23,865</div><span class="d up">&#9650; +99.9% WoW</span></div>
+        <div class="h"><div class="hl">Conversion value</div><div class="num">$14,212</div><span class="d up">&#9650; +3.6% WoW</span></div>
+      </div>
+      <div class="mgrid">
+        <div class="mrow"><span class="mn">Total Recipients</span><span class="mr"><span class="mv">23.9K</span><span class="d up">&#9650; +99.9%</span></span></div>
+        <div class="mrow"><span class="mn">Unique Conversions</span><span class="mr"><span class="mv">117</span><span class="d up">&#9650; +6.4%</span></span></div>
+        <div class="mrow"><span class="mn">Unique Opens</span><span class="mr"><span class="mv">12.2K</span><span class="d up">&#9650; +102.6%</span></span></div>
+        <div class="mrow"><span class="mn">Conversion Rate</span><span class="mr"><span class="mv">0.492%</span><span class="d down">&#9660; &minus;46.9%</span></span></div>
+        <div class="mrow"><span class="mn">Open Rate</span><span class="mr"><span class="mv">51.1%</span><span class="d up">&#9650; +1.0%</span></span></div>
+        <div class="mrow"><span class="mn">Conversion Value</span><span class="mr"><span class="mv">$14.2K</span><span class="d up">&#9650; +3.6%</span></span></div>
+        <div class="mrow"><span class="mn">Unique Clicks</span><span class="mr"><span class="mv">615</span><span class="d up">&#9650; +160.6%</span></span></div>
+        <div class="mrow"><span class="mn">Average Order Value</span><span class="mr"><span class="mv">$117</span><span class="d down">&#9660; &minus;0.7%</span></span></div>
+      </div>
+    </div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">05</span><div><h2 class="sec">Top Automations</h2>
+      <p class="sec-note">This week's automations beside last week's, ranked by conversion value, with the week-over-week movement by flow beneath. The Price Drop event is a one-time send, not a recurring flow level.</p></div></div>
+    <div class="tbl-label">Automations &middot; This week (Aug 24&ndash;30)</div>
+    <table><thead><tr><th>Flow</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead><tbody>
+      <tr><td class="name"><span class="rank">1</span>Welcome Series (DU)</td><td>1.71K</td><td>21<span class="sub">1.24% PO rate</span></td><td class="rev-strong">$3.36K</td></tr>
+      <tr><td class="name"><span class="rank">2</span>Price Drop Notification (Email Only)</td><td>13.3K</td><td>36<span class="sub">0.272% PO rate</span></td><td class="rev-strong">$3.18K</td></tr>
+      <tr><td class="name"><span class="rank">3</span>Post-Purchase &mdash; Return (DU)</td><td>1.37K</td><td>13<span class="sub">0.954% PO rate</span></td><td class="rev-strong">$1.67K</td></tr>
+      <tr><td class="name"><span class="rank">4</span>Post-Purchase &mdash; New (DU)</td><td>1.86K</td><td>13<span class="sub">0.699% PO rate</span></td><td class="rev-strong">$1.57K</td></tr>
+      <tr><td class="name"><span class="rank">5</span>Added2Cart (DU)</td><td>502</td><td>8<span class="sub">1.61% PO rate</span></td><td class="rev-strong">$1.50K</td></tr>
+    </tbody></table>
+    <div class="tbl-label">Automations &middot; Last week (Aug 17&ndash;23)</div>
+    <table><thead><tr><th>Flow</th><th>Recipients</th><th>Placed orders</th><th>Conversion value</th></tr></thead><tbody>
+      <tr><td class="name"><span class="rank">1</span>Abandoned Checkout (DU)</td><td>762</td><td>34<span class="sub">4.78% PO rate</span></td><td class="rev-strong">$4.71K</td></tr>
+      <tr><td class="name"><span class="rank">2</span>Welcome Series (DU)</td><td>1.9K</td><td>28<span class="sub">1.48% PO rate</span></td><td class="rev-strong">$3.34K</td></tr>
+      <tr><td class="name"><span class="rank">3</span>Post-Purchase &mdash; Return (DU)</td><td>1.36K</td><td>17<span class="sub">1.25% PO rate</span></td><td class="rev-strong">$2.62K</td></tr>
+      <tr><td class="name"><span class="rank">4</span>Added2Cart (DU)</td><td>588</td><td>14<span class="sub">2.39% PO rate</span></td><td class="rev-strong">$1.35K</td></tr>
+      <tr><td class="name"><span class="rank">5</span>Browse Abandonment (DU)</td><td>2.38K</td><td>6<span class="sub">0.252% PO rate</span></td><td class="rev-strong">$712</td></tr>
+    </tbody></table>
+    <div class="tbl-label">Week-over-week movement by flow</div>
+    <table><thead><tr><th>Flow</th><th>Aug 17&ndash;23</th><th>Aug 24&ndash;30</th><th>Change</th></tr></thead><tbody>
+      <tr><td class="name">Price Drop Notification</td><td>$0</td><td>$3,183</td><td><span class="d up">&#9650; +$3,183</span></td></tr>
+      <tr><td class="name">Post-Purchase &mdash; New</td><td>$533</td><td>$1,566</td><td><span class="d up">&#9650; +$1,033</span></td></tr>
+      <tr><td class="name">Win-back Series</td><td>$439</td><td>$1,055</td><td><span class="d up">&#9650; +$615</span></td></tr>
+      <tr><td class="name">Added2Cart</td><td>$1,352</td><td>$1,501</td><td><span class="d up">&#9650; +$149</span></td></tr>
+      <tr><td class="name">Welcome Series</td><td>$3,345</td><td>$3,361</td><td><span class="d up">&#9650; +$17</span></td></tr>
+      <tr><td class="name">Browse Abandonment</td><td>$712</td><td>$432</td><td><span class="d down">&#9660; &minus;$279</span></td></tr>
+      <tr><td class="name">Post-Purchase &mdash; Return</td><td>$2,624</td><td>$1,666</td><td><span class="d down">&#9660; &minus;$958</span></td></tr>
+      <tr><td class="name">Abandoned Checkout</td><td>$4,711</td><td>$1,447</td><td><span class="d down">&#9660; &minus;$3,264</span></td></tr>
+    </tbody></table>
+    <div class="comm"><div class="col w"><h3>What's Working</h3><div class="bullet"><b>Post-Purchase New surged</b><span>+$1,033 WoW &mdash; the biggest recurring-flow gain.</span></div><div class="bullet"><b>Win-back climbing</b><span>$439 &rarr; $1,055, up 140% and compounding.</span></div><div class="bullet"><b>Welcome steady</b><span>$3.36K, holding the top recurring spot.</span></div></div><div class="col a"><h3>Needs Attention</h3><div class="bullet"><b>Abandoned Checkout eased</b><span>&minus;$3,264 &mdash; softer cart entries this week.</span></div><div class="bullet"><b>Return normalized</b><span>&minus;$958 after prior strength.</span></div><div class="bullet"><b>Price Drop is one-time</b><span>$3,183 from a single event, not a new level.</span></div></div><div class="col o"><h3>Opportunity</h3><div class="bullet"><b>Sustain Post-Purchase New &amp; Win-back</b><span>Both compounding week over week.</span></div><div class="bullet"><b>Watch Abandoned Checkout entries</b><span>Tracks upstream cart activity.</span></div><div class="bullet"><b>Time Price Drop deliberately</b><span>One-time events lift the week &mdash; plan them.</span></div></div></div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">06</span><div><h2 class="sec">Last 30 Days vs. Previous Period</h2>
+      <p class="sec-note">Rolling 30-day view from the Klaviyo dashboard (Aug 3 &ndash; Sep 2), period over period, with top automations and their period-over-period revenue change.</p></div></div>
+    <div class="statband" style="grid-template-columns:1.4fr 1fr 1fr 1fr">
+      <div class="s"><div class="hl">Total revenue &middot; 30d</div><div class="num">$583,280</div><span class="sm"><span class="d down">&#9660; &minus;18%</span> vs prev period</span></div>
+      <div class="s"><div class="hl">Attributed</div><div class="num">$170.2K</div><span class="sm">29.19% <span class="d down">&#9660; &minus;14%</span></span></div>
+      <div class="s"><div class="hl">Campaigns</div><div class="num">$106.5K</div><span class="sm">62.56%</span></div>
+      <div class="s"><div class="hl">Automations</div><div class="num">$63.7K</div><span class="sm">37.44%</span></div>
+    </div>
+    <div class="tbl-label" style="margin-top:0">Top performing automations &middot; period-over-period change</div>
+    <table><thead><tr><th>Flow</th><th>Deliveries</th><th>Revenue</th><th>Change</th></tr></thead><tbody>
+      <tr><td class="name">Abandoned Checkout (DU)</td><td>3,102</td><td class="rev-strong">$15,494</td><td><span class="d down">&#9660; &minus;33.65%</span></td></tr>
+      <tr><td class="name">Welcome Series (DU)</td><td>7,704</td><td class="rev-strong">$14,992</td><td><span class="d down">&#9660; &minus;23.88%</span></td></tr>
+      <tr><td class="name">Post-Purchase &mdash; Return (DU)</td><td>6,406</td><td class="rev-strong">$10,013</td><td><span class="d up">&#9650; +21.82%</span></td></tr>
+      <tr><td class="name">Added2Cart (DU)</td><td>2,756</td><td class="rev-strong">$8,158</td><td><span class="d up">&#9650; +4.46%</span></td></tr>
+      <tr><td class="name">Post-Purchase &mdash; New (DU)</td><td>7,913</td><td class="rev-strong">$4,553</td><td><span class="d down">&#9660; &minus;27.52%</span></td></tr>
+      <tr><td class="name">Browse Abandonment (DU)</td><td>10,610</td><td class="rev-strong">$4,420</td><td><span class="d up">&#9650; +12.92%</span></td></tr>
+      <tr><td class="name">Price Drop &mdash; Standard (Email Only)</td><td>13,259</td><td class="rev-strong">$3,183</td><td><span class="d up">&#9650; +356.45%</span></td></tr>
+      <tr><td class="name">Win-back Series</td><td>12,468</td><td class="rev-strong">$2,932</td><td><span class="d up">&#9650; +54.06%</span></td></tr>
+    </tbody></table>
+    <div class="comm"><div class="col w"><h3>What's Working</h3><div class="bullet"><b>Post-Purchase Return climbing</b><span>$10.0K over 30 days, +21.82%.</span></div><div class="bullet"><b>Win-back sustained</b><span>$2.93K, +54.06% as it matures.</span></div><div class="bullet"><b>Price Drop spiked</b><span>$3.18K, +356.45% on the recent event.</span></div></div><div class="col a"><h3>Needs Attention</h3><div class="bullet"><b>Attributed eased</b><span>$170.2K, &minus;14% period-over-period.</span></div><div class="bullet"><b>Welcome &amp; Abandoned Checkout down</b><span>&minus;23.88% and &minus;33.65%.</span></div><div class="bullet"><b>Post-Purchase New softer</b><span>$4.55K, &minus;27.52% over the window.</span></div></div><div class="col o"><h3>Opportunity</h3><div class="bullet"><b>Grow the Win-back list</b><span>Compounding on an expanding base.</span></div><div class="bullet"><b>Lean on Return &amp; Added2Cart</b><span>Both up over the window.</span></div><div class="bullet"><b>Hold campaign share</b><span>Campaigns 62.56% of attributed.</span></div></div></div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">07</span><div><h2 class="sec">Sign-Up Units &middot; Attentive</h2>
+      <p class="sec-note">Form performance for Aug 24&ndash;30 vs Aug 17&ndash;23, with the desktop and mobile split.</p></div></div>
+    <div class="statband" style="grid-template-columns:repeat(5,1fr)">
+      <div class="s"><div class="hl">Impressions</div><div class="num">48,410</div><span class="sm"><span class="d down">&#9660; &minus;14.2%</span> WoW</span></div>
+      <div class="s"><div class="hl">Email subs</div><div class="num">546</div><span class="sm"><span class="d down">&#9660; &minus;5.9%</span> WoW</span></div>
+      <div class="s"><div class="hl">Email rate</div><div class="num">1.14%</div><span class="sm"><span class="d up">&#9650; +9.8%</span> WoW</span></div>
+      <div class="s"><div class="hl">SMS subs</div><div class="num">326</div><span class="sm"><span class="d down">&#9660; &minus;1.5%</span> WoW</span></div>
+      <div class="s"><div class="hl">Total revenue</div><div class="num">$12,593</div><span class="sm"><span class="d up">&#9650; +20.3%</span> WoW</span></div>
+    </div>
+    <div class="tbl-label" style="margin-top:0">By unit &middot; this week (Aug 24&ndash;30)</div>
+    <table><thead><tr><th>Sign-up unit</th><th>Impressions</th><th>CTR</th><th>Email subs</th><th>Email rate</th><th>SMS subs</th></tr></thead><tbody>
+      <tr><td class="name">RVCA Welcome SMS &mdash; Interest Based Minimal<span class="sub">MOBILE</span></td><td>32,642</td><td>1.30%</td><td>437</td><td>1.35%</td><td>273</td></tr>
+      <tr><td class="name">RVCA Welcome Desktop &mdash; Interest Based Minimal<span class="sub">DESKTOP</span></td><td>15,768</td><td>0.50%</td><td>109</td><td>0.70%</td><td>53</td></tr>
+    </tbody></table>
+    <div class="comm"><div class="col w"><h3>What's Working</h3><div class="bullet"><b>Sign-up rate improved</b><span>Email rate 1.14%, +9.8% WoW &mdash; better conversion of traffic.</span></div><div class="bullet"><b>Sign-up revenue rose</b><span>$12,593, +20.3% WoW.</span></div><div class="bullet"><b>Mobile leads sign-ups</b><span>1.35% email rate vs 0.70% desktop.</span></div></div><div class="col a"><h3>Needs Attention</h3><div class="bullet"><b>Impressions eased</b><span>48,410, &minus;14.2% WoW on lighter traffic.</span></div><div class="bullet"><b>Email subs down</b><span>546, &minus;5.9% on fewer impressions.</span></div><div class="bullet"><b>SMS subs flat-to-lower</b><span>326, &minus;1.5% WoW.</span></div></div><div class="col o"><h3>Opportunity</h3><div class="bullet"><b>Convert on lower traffic</b><span>Rate is up &mdash; sustain it as impressions vary.</span></div><div class="bullet"><b>Keep desktop &amp; mobile aligned</b><span>Same configuration on both.</span></div><div class="bullet"><b>Rebuild impression volume</b><span>Traffic softer this week.</span></div></div></div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="sec-head"><span class="n">08</span><div><h2 class="sec">SMS Overview &middot; Attentive</h2>
+      <p class="sec-note">Rolling 30-day SMS program view (Aug 3 &ndash; Sep 1 vs prior period) &mdash; list growth, sends, and revenue. A 30-day window, distinct from the week-over-week sign-up units above.</p></div></div>
+    <div class="statband" style="grid-template-columns:repeat(3,1fr)">
+      <div class="s"><div class="hl">Total text subscribers</div><div class="num">37,940</div><span class="sm"><span class="d up">&#9650; +1%</span> vs prev 30d</span></div>
+      <div class="s"><div class="hl">Text message sends</div><div class="num">120,414</div><span class="sm"><span class="d down">&#9660; &minus;4%</span> vs prev 30d</span></div>
+      <div class="s"><div class="hl">Text revenue</div><div class="num">$75,955</div><span class="sm"><span class="d up">&#9650; +1%</span> vs prev 30d</span></div>
+    </div>
+    <div class="tbl-label" style="margin-top:0">Key metrics &middot; last 30 days vs previous period</div>
+    <table><thead><tr><th>Metric</th><th>Previous 30d</th><th>Last 30d</th><th>Change</th></tr></thead><tbody>
+      <tr><td class="name">Total text subscribers</td><td>37,500</td><td class="rev-strong">37,940</td><td><span class="d up">&#9650; +1%</span></td></tr>
+      <tr><td class="name">Text opt-ins</td><td>1,308</td><td class="rev-strong">1,421</td><td><span class="d up">&#9650; +9%</span></td></tr>
+      <tr><td class="name">Email subscribers collected</td><td>2,223</td><td class="rev-strong">2,425</td><td><span class="d up">&#9650; +9%</span></td></tr>
+      <tr><td class="name">Text message sends</td><td>125,757</td><td class="rev-strong">120,414</td><td><span class="d down">&#9660; &minus;4%</span></td></tr>
+      <tr><td class="name">Text revenue</td><td>$74,866</td><td class="rev-strong">$75,955</td><td><span class="d up">&#9650; +1%</span></td></tr>
+      <tr><td class="name">Total revenue</td><td>$75,883</td><td class="rev-strong">$76,912</td><td><span class="d up">&#9650; +1%</span></td></tr>
+    </tbody></table>
+    <div class="comm"><div class="col w"><h3>What's Working</h3><div class="bullet"><b>Revenue up on fewer sends</b><span>Text revenue +1% while sends fell 4% &mdash; efficiency improved.</span></div><div class="bullet"><b>Opt-ins climbing</b><span>1,421 text opt-ins, +9% period-over-period.</span></div><div class="bullet"><b>Email collection up</b><span>2,425 collected via SMS units, +9%.</span></div></div><div class="col a"><h3>Needs Attention</h3><div class="bullet"><b>List growth modest</b><span>37,940 subscribers, +1% over 30 days.</span></div><div class="bullet"><b>Send volume trimmed</b><span>120,414 sends, &minus;4% &mdash; a lighter calendar.</span></div><div class="bullet"><b>Other revenue eased</b><span>Slightly lower non-text revenue this window.</span></div></div><div class="col o"><h3>Opportunity</h3><div class="bullet"><b>Hold the efficiency gain</b><span>Revenue up on fewer sends &mdash; sustain it.</span></div><div class="bullet"><b>Grow opt-ins further</b><span>Opt-ins and email collection both up 9%.</span></div><div class="bullet"><b>Protect revenue-per-send</b><span>Fewer sends returning more &mdash; keep tuning.</span></div></div></div>
+  </div>
+</section><section>
+  <div class="wrap">
+    <div class="val">
+      <div class="label">Business validation &middot; Shopify &middot; all channels &middot; context only</div>
+      <h3>Demand backdrop</h3>
+      <p class="vnote">Not a Klaviyo metric &mdash; Shopify figures frame the week across all channels (Aug 24&ndash;30 vs Aug 17&ndash;23) and validate the narrative only. Demand steadied: total sales +10% and returning customers +5%, on 4% more sessions.</p>
+      <div class="val-grid">
+        <div class="val-kpi"><div class="label">Total sales</div><div class="num">$100.9K</div><span class="d up">&#9650; +10% WoW</span></div>
+        <div class="val-kpi"><div class="label">Orders</div><div class="num">1,037</div><span class="d up">&#9650; +1% WoW</span></div>
+        <div class="val-kpi"><div class="label">AOV</div><div class="num">$103.42</div><span class="d down">&#9660; &minus;5% WoW</span></div>
+        <div class="val-kpi"><div class="label">Sessions</div><div class="num">27,675</div><span class="d up">&#9650; +4% WoW</span></div>
+        <div class="val-kpi"><div class="label">Returning rate</div><div class="num">45.76%</div><span class="d up">&#9650; +4% WoW</span></div>
+      </div>
+    </div>
+  </div>
+</section></div><script>function showTab(e,id){document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active")});document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active")});document.getElementById(id).classList.add("active");e.currentTarget.classList.add("active");window.scrollTo(0,0);}</script><script>document.body.classList.add("locked");function unlock(){var v=document.getElementById("pw").value.trim().toUpperCase();if(v==="SURFSUP"){document.getElementById("gate").style.display="none";document.body.classList.remove("locked");}else{document.getElementById("err").textContent="Incorrect password";document.getElementById("pw").value="";document.getElementById("pw").focus();}}window.addEventListener("load",function(){document.getElementById("pw").focus();});</script></body></html>
