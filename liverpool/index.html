@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liverpool LA — YoY Retention Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+ :root{
+ --cream:#FBF7EF;--paper:#FFFDF8;--ink:#2A2622;--muted:#8A8175;
+ --wine:#7A2E3A;--wine-deep:#5E212B;--herb:#43713F;--herb-deep:#2F5A2C;
+ --line:#ECE3D3;--line-soft:#F2EBDD;
+ --pos-fg:#356B37;--pos-bg:#E7F0E3;--neg-fg:#B84034;--neg-bg:#F8E7E3;
+ --idle-fg:#9A9184;--idle-bg:#F0EADD;--amber:#D9A441;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ html{scroll-behavior:smooth}
+ body{background:var(--cream);color:var(--ink);font-family:"Hanken Grotesk",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+ .wrap{max-width:940px;margin:0 auto;padding:0 24px}
+ h1,h2,h3,h4,.disp{font-family:"Figtree",sans-serif;letter-spacing:-.02em}
+ .mast{padding:40px 0 18px}
+ .eyebrow{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--wine);display:flex;align-items:center;gap:10px}
+ .eyebrow::before{content:"";width:26px;height:2px;background:var(--wine);display:inline-block}
+ .mast h1{font-size:clamp(30px,4.6vw,46px);font-weight:800;line-height:1.05;margin:14px 0 8px}
+ .mast .sub{font-size:15.5px;color:var(--muted);font-weight:500}
+ .mast .sub b{color:var(--ink);font-weight:700}
+ .tabs{position:sticky;top:0;z-index:30;background:rgba(251,247,239,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+ .tabbar{max-width:940px;margin:0 auto;padding:0 24px;display:flex;gap:28px}
+ .tab{font-family:"Figtree";font-weight:700;font-size:14.5px;padding:15px 2px;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;letter-spacing:-.01em;transition:color .2s}
+ .tab:hover{color:var(--ink)}
+ .tab.active{color:var(--ink);border-bottom-color:var(--wine)}
+ .tab small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:0;margin-top:2px}
+ .panel{display:none}.panel.active{display:block}
+ .hero{background:var(--ink);border-radius:18px;padding:32px 38px;margin:26px 0 18px;color:#fff;box-shadow:0 24px 50px -30px rgba(42,38,34,.55);display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center}
+ .hero .lbl{font-family:"Figtree";font-weight:600;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#C9BFB0}
+ .hero .big{font-family:"Figtree";font-weight:800;font-size:clamp(40px,7.4vw,60px);line-height:1;margin:10px 0 8px}
+ .hero .wowline{font-size:14.5px;color:#D8D0C3}
+ .hero .wowline b{color:#E3A6A0;font-family:"Figtree";font-weight:700}
+ .split{margin-top:20px}
+ .split-bar{height:11px;border-radius:8px;overflow:hidden;display:flex;background:#3a352f}
+ .split-bar .c{background:var(--wine)}.split-bar .f{background:var(--herb)}
+ .split-keys{display:flex;gap:18px;margin-top:11px;flex-wrap:wrap;font-size:13px;color:#D8D0C3}
+ .keyitem{display:flex;align-items:baseline;gap:7px}
+ .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+ .keyitem b{font-family:"Figtree";font-weight:700;color:#fff}
+ .keyitem .w{color:#E3A6A0;font-weight:600;font-size:12px}
+ .trend{border-left:1px solid #3f3a33;padding-left:26px}
+ .trend .tlbl{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8f877b;margin-bottom:14px}
+ .trow{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+ .trow .wk{font-size:12px;color:#9a9184;width:64px;flex:none}
+ .tmeter{flex:1;height:9px;border-radius:5px;background:#3a352f;overflow:hidden;display:flex;gap:2px}
+ .tmeter .fl{height:100%;background:#5f584e;border-radius:5px}
+ .tmeter .fl.now{background:var(--wine)}
+ .trow .amt{font-family:"Figtree";font-weight:700;font-size:12px;width:60px;text-align:right;color:#EDE7DC}
+ .store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+ .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px}
+ .stile{background:var(--paper);padding:17px 20px}
+ .stile .k{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+ .stile .v{font-family:"Figtree";font-weight:800;font-size:21px;margin:6px 0 6px}
+ .minichip{font-family:"Figtree";font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px}
+ .minichip.up{color:var(--pos-fg);background:var(--pos-bg)}
+ .minichip.down{color:var(--neg-fg);background:var(--neg-bg)}
+ .minichip.flat{color:var(--idle-fg);background:var(--idle-bg)}
+ .intro-line{font-size:16px;color:#4A443D;line-height:1.62;max-width:740px;margin:2px 0 6px}
+ .intro-line b{color:var(--ink);font-weight:700}
+ .sum-sec{display:grid;grid-template-columns:148px 1fr;gap:26px;padding:26px 0;border-top:1px solid var(--line)}
+ .sum-eyebrow{font-family:"Figtree";font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--wine);padding-top:4px}
+ .sum-headline{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+ .sum-headline .fig{font-family:"Figtree";font-weight:800;font-size:28px;line-height:1}
+ .sum-body{font-size:15px;color:#4A443D;line-height:1.62;max-width:660px}
+ .sum-body b{color:var(--ink);font-weight:700}
+ .sum-flags{padding:26px 0 4px;border-top:1px solid var(--line)}
+ .flags{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:18px 24px}
+ .fl-item{font-size:14.5px;line-height:1.58;color:#4A443D;padding:10px 0}
+ .fl-item + .fl-item{border-top:1px solid var(--line-soft)}
+ .fl-item b{color:var(--ink);font-weight:700}
+ section{padding:32px 0}
+ .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:14px;flex-wrap:wrap}
+ .sec-head h2{font-size:26px;font-weight:800}
+ .sec-head .tag{font-family:"Figtree";font-weight:600;font-size:13px;color:var(--muted)}
+ .lede{font-size:15px;color:#4A443D;line-height:1.6;margin-bottom:20px;max-width:740px}
+ .lede b{color:var(--ink);font-weight:700}
+ .cmp-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+ table.cmp{width:100%;border-collapse:collapse;min-width:520px}
+ table.cmp th,table.cmp td{padding:12px 18px;font-size:14.5px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+ table.cmp th:first-child,table.cmp td:first-child{text-align:left}
+ table.cmp thead th{font-family:"Figtree";font-weight:600;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#F7F1E6}
+ table.cmp thead th.now{color:var(--ink)}
+ table.cmp .metric{font-weight:600}
+ table.cmp td.now{font-family:"Figtree";font-weight:700}
+ table.cmp td.prev{color:var(--muted)}
+ table.cmp tbody tr:last-child td{border-bottom:none}
+ table.cmp col.nowcol{background:#FBF4E9}
+ table.cmp tr.grp td{background:#F5EFE3;font-family:"Figtree";font-weight:700;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:8px 18px;text-align:left}
+ .flow-cell .r{font-family:"Figtree";font-weight:700;font-size:15px}
+ .flow-cell .o,.o{font-size:12px;color:var(--muted)}
+ .wk-block{margin-top:20px}
+ .wk-title{display:flex;align-items:baseline;gap:12px;margin:0 2px 10px}
+ .wk-title h3{font-size:16px;font-weight:800}
+ .wk-title .sum{font-family:"Figtree";font-weight:600;font-size:13px;color:var(--muted)}
+ .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+ table.snd{width:100%;border-collapse:collapse;min-width:520px}
+ table.snd th,table.snd td{padding:10px 16px;font-size:13.5px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+ table.snd th:first-child,table.snd td:first-child{text-align:left}
+ table.snd thead th{font-family:"Figtree";font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#F7F1E6}
+ table.snd td.name{font-weight:600}
+ table.snd td.rev{font-family:"Figtree";font-weight:700}
+ .cap{font-size:12.5px;color:var(--muted);margin-top:11px;padding-left:2px;line-height:1.55}
+ footer{border-top:2px solid var(--ink);margin-top:16px;padding:26px 0 60px;color:var(--muted);font-size:12.5px}
+ footer .mark{font-family:"Figtree";font-weight:800;color:var(--ink);font-size:15px}
+ footer p{margin-top:8px;max-width:740px;line-height:1.55}
+ .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+ .rv.in{opacity:1;transform:none}
+ @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+ @media (max-width:720px){
+ .hero{grid-template-columns:1fr;gap:22px}.trend{border-left:none;border-top:1px solid #3f3a33;padding-left:0;padding-top:20px}
+ .store-grid{grid-template-columns:repeat(2,1fr)}
+ .grid4{grid-template-columns:repeat(2,1fr)}
+ .mast{padding:30px 0 14px}
+ }
+ @media (max-width:560px){
+ .store-grid{grid-template-columns:1fr}
+ .grid4{grid-template-columns:1fr}
+ .sum-sec{grid-template-columns:1fr;gap:10px}.sum-eyebrow{padding-top:0}
+ .tabbar{gap:20px}
+ }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+ <div class="mast">
+ <div class="eyebrow">YoY Retention Audit · Klaviyo</div>
+ <h1>Summer 2026 vs. Summer 2025</h1>
+ <div class="sub">Jun 1&ndash;Aug 31, 2026 vs. <b>Jun 1&ndash;Aug 31, 2025</b> · Liverpool LA email, SMS &amp; flows</div>
+ </div>
+</div>
+
+<div class="tabs">
+ <div class="tabbar">
+ <button class="tab active" data-tab="summary">Summary<small>the quick read</small></button>
+ <button class="tab" data-tab="full">Full report<small>all the detail</small></button>
+ </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="panel active" id="summary">
+<div class="wrap">
+ <div class="hero rv">
+ <div>
+ <div class="lbl">Total Klaviyo-attributed revenue · this summer</div>
+ <div class="big" id="heroNum">$0</div>
+ <div class="wowline"><b>&minus;8.7%</b> vs. last summer ($945,252)</div>
+ <div class="split">
+ <div class="split-bar"><div class="c" style="width:38.3%"></div><div class="f" style="width:61.7%"></div></div>
+ <div class="split-keys">
+ <div class="keyitem"><span class="dot" style="background:var(--wine)"></span>Campaigns <b>$330,893</b> <span class="w">&minus;12.2%</span></div>
+ <div class="keyitem"><span class="dot" style="background:var(--herb)"></span>Flows <b>$532,199</b> <span class="w">&minus;6.6%</span></div>
+ </div>
+ </div>
+ </div>
+ <div class="trend">
+ <div class="tlbl">By month · combined channels</div>
+ <div class="trow"><span class="wk">June</span><div class="tmeter"><div class="fl" style="width:71.2%"></div><div class="fl now" style="width:75.2%"></div></div><span class="amt">+5.7%</span></div>
+ <div class="trow"><span class="wk">July</span><div class="tmeter"><div class="fl" style="width:93.1%"></div><div class="fl now" style="width:79.3%"></div></div><span class="amt">&minus;14.9%</span></div>
+ <div class="trow"><span class="wk">August</span><div class="tmeter"><div class="fl" style="width:100%"></div><div class="fl now" style="width:86.8%"></div></div><span class="amt">&minus;13.2%</span></div>
+ </div>
+ </div>
+
+ <p class="intro-line rv">Klaviyo-driven revenue was <b>$863,092</b> this summer, down from <b>$945,252</b> last summer &mdash; a real but explainable <b>8.7% decline</b>. Engagement itself held up: open rates, click rates and deliverability are flat to better than last year, and flow conversion rates actually improved. What changed is <b>volume and targeting</b> on campaigns, and <b>order value inside cart-recovery flows</b>. June was even slightly ahead of last June; the gap is concentrated in July and August.</p>
+
+ <div class="sum-sec rv">
+ <div class="sum-eyebrow">Email campaigns</div>
+ <div class="right">
+ <div class="sum-headline"><span class="fig">$283,545</span><span class="minichip down">&minus;9.5% YoY</span></div>
+ <p class="sum-body">Sent about 30% fewer campaigns (77 &rarr; 54) to a broader list &mdash; median audience per send is up 75%, from 116.5K to 204.0K. Last summer paired big sends with small, high-converting drops like Liverpool Bucks reminders; most of that targeted layer is gone. <b>Revenue per recipient fell 38.6%.</b> Two blockbuster Labor Day sends alone carried $45.4K last August; nothing this year came close.</p>
+ </div>
+ </div>
+
+ <div class="sum-sec rv">
+ <div class="sum-eyebrow">SMS campaigns</div>
+ <div class="right">
+ <div class="sum-headline"><span class="fig">$47,348</span><span class="minichip down">&minus;24.0% YoY</span></div>
+ <p class="sum-body">Same pattern, sharper: more sends (18&rarr;22) to a bigger list (+65% recipients), but revenue per recipient down 54%. Worth noting: <b>2025 had zero SMS sends in August</b> (program went quiet after July 25). Comparing the overlapping June&ndash;July window only, SMS is down 45.6%, not 24% &mdash; the headline number is actually flattered by August 2026 having SMS at all.</p>
+ </div>
+ </div>
+
+ <div class="sum-sec rv">
+ <div class="sum-eyebrow">Flows</div>
+ <div class="right">
+ <div class="sum-headline"><span class="fig">$532,199</span><span class="minichip down">&minus;6.6% YoY</span></div>
+ <p class="sum-body">The most stable channel. Flow deliveries are up 61% and orders are up 6.8% &mdash; more people are flowing through automations and buying. But revenue per delivery fell 42%. <b>Cart-recovery flows (Added to Cart + Abandoned Checkout) are the single biggest driver, down $62.5K (&minus;24.3%)</b> on lower order value, not lower engagement. Loyalty &amp; rewards flows are up 54.6% and are a genuine bright spot.</p>
+ </div>
+ </div>
+
+ <div class="sum-flags rv">
+ <div class="sum-eyebrow" style="margin-bottom:12px">Worth flagging</div>
+ <div class="flags">
+ <div class="fl-item"><b>Cart recovery lost value per order, not orders.</b> Added to Cart delivered almost the same volume as last year (&minus;1%) with a slightly better click rate, but AOV inside the flow fell from $194 to $162 (&minus;16%). Abandoned Checkout saw real volume loss too (&minus;24% delivered, fewer people abandoning at checkout in the first place). Together: &minus;$62.5K, the largest single driver in the audit.</div>
+ <div class="fl-item"><b>Campaigns shifted from targeted drops to broad blasts.</b> About 30% fewer sends, median audience per send up 75%. The Liverpool Bucks loyalty-reminder cadence that drove $17.5K last summer is down to $3.0K (&minus;82.5%) this year on far fewer sends.</div>
+ <div class="fl-item"><b>Welcome Series had a slow June, already recovered.</b> The SMS welcome flow was rebuilt this year: $5K in June 2026 vs. $32.5K in June 2025, but $23K in July and $41K in August &mdash; back on pace. Combined welcome revenue is down 15.2% for the summer, concentrated almost entirely in that June transition.</div>
+ <div class="fl-item"><b>Not everything is down.</b> Loyalty &amp; rewards flows (+54.6%), Back in Stock and related flows (+173.6%), and win-back/review flows (+11.3%) all grew. Deliverability also improved &mdash; email bounce rate, spam complaints, and unsubscribes are all lower than last summer.</div>
+ </div>
+ </div>
+</div>
+</div>
+
+<!-- FULL REPORT -->
+<div class="panel" id="full">
+<div class="wrap">
+
+ <section>
+ <div class="sec-head rv"><h2>Revenue overview</h2><div class="tag">Klaviyo total · YoY</div></div>
+ <p class="lede rv">Total attributed revenue fell <b>8.7%</b>, from $945,252 to $863,092. Campaigns pulled back harder (&minus;11.9%) than flows (&minus;6.6%), and flows now carry a slightly larger share of the total (61.7% vs. 60.3% last year).</p>
+ <div class="grid4 rv">
+ <div class="stile"><div class="k">Total revenue</div><div class="v">$863,092</div><span class="minichip down">&minus;8.7%</span></div>
+ <div class="stile"><div class="k">Campaigns (email+SMS)</div><div class="v">$330,893</div><span class="minichip down">&minus;11.9%</span></div>
+ <div class="stile"><div class="k">Flows</div><div class="v">$532,199</div><span class="minichip down">&minus;6.6%</span></div>
+ <div class="stile"><div class="k">Flow share of total</div><div class="v">61.7%</div><span class="minichip flat">was 60.3%</span></div>
+ </div>
+ <div class="cap">Klaviyo campaign and flow revenue, Jun 1&ndash;Aug 31, both years. Internal test/QA sends excluded; genuine marketing campaigns included regardless of size, including $0-revenue referral and discount sends.</div>
+ </section>
+
+ <section>
+ <div class="sec-head rv"><h2>By month</h2><div class="tag">Combined channels · Jun&ndash;Aug</div></div>
+ <p class="lede rv">June actually ran slightly ahead of last year. The whole gap is in July and August &mdash; the two months carrying the biggest promotional weight (4th of July, Labor Day / End of Season).</p>
+ <div class="cmp-wrap rv">
+ <table class="cmp">
+ <colgroup><col><col><col class="nowcol"><col></colgroup>
+ <thead><tr><th>Month</th><th>Summer 2025</th><th class="now">Summer 2026</th><th>YoY</th></tr></thead>
+ <tbody>
+ <tr><td class="metric">June</td><td class="prev">$254,691</td><td class="now">$269,198</td><td><span class="minichip up">+5.7%</span></td></tr>
+ <tr><td class="metric">July</td><td class="prev">$332,786</td><td class="now">$283,286</td><td><span class="minichip down">&minus;14.9%</span></td></tr>
+ <tr><td class="metric">August</td><td class="prev">$357,775</td><td class="now">$310,608</td><td><span class="minichip down">&minus;13.2%</span></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="cap">Sum of email, SMS and flow revenue delivered in each calendar month, both years.</div>
+ </section>
+
+ <section>
+ <div class="sec-head rv"><h2>Campaigns &mdash; Email</h2><div class="tag">Klaviyo campaign summary</div></div>
+ <p class="lede rv">Every unique count fell except clicks and opens, which grew only because far more people were mailed. The real story is in the rates: <b>revenue per recipient down 38.6%</b> and placed-order rate down 37.7%, while open and click rates held up fine.</p>
+ <div class="cmp-wrap rv">
+ <table class="cmp">
+ <colgroup><col><col class="nowcol"><col></colgroup>
+ <thead><tr><th>Metric</th><th>Summer 2025</th><th class="now">Summer 2026</th></tr></thead>
+ <tbody>
+ <tr class="grp"><td colspan="3">Volume</td></tr>
+ <tr><td class="metric">Campaigns sent</td><td class="prev">77</td><td class="now">54</td></tr>
+ <tr><td class="metric">Total recipients</td><td class="prev">7,024,783</td><td class="now">10,353,764</td></tr>
+ <tr><td class="metric">Median recipients / send</td><td class="prev">116,516</td><td class="now">204,045</td></tr>
+ <tr class="grp"><td colspan="3">Unique counts</td></tr>
+ <tr><td class="metric">Unique opens</td><td class="prev">3,760,399</td><td class="now">5,298,711</td></tr>
+ <tr><td class="metric">Unique clicks</td><td class="prev">52,892</td><td class="now">96,720</td></tr>
+ <tr><td class="metric">Orders placed</td><td class="prev">1,882</td><td class="now">1,734</td></tr>
+ <tr><td class="metric">Revenue</td><td class="prev">$313,232</td><td class="now">$283,545</td></tr>
+ <tr class="grp"><td colspan="3">Rates &amp; deliverability</td></tr>
+ <tr><td class="metric">Open rate</td><td class="prev">53.5%</td><td class="now">51.2%</td></tr>
+ <tr><td class="metric">Click rate</td><td class="prev">0.75%</td><td class="now">0.93%</td></tr>
+ <tr><td class="metric">Placed order rate</td><td class="prev">0.0268%</td><td class="now">0.0167%</td></tr>
+ <tr><td class="metric">Revenue per recipient</td><td class="prev">$0.0446</td><td class="now">$0.0274</td></tr>
+ <tr><td class="metric">Bounce rate</td><td class="prev">0.302%</td><td class="now">0.203%</td></tr>
+ <tr><td class="metric">Unsubscribes</td><td class="prev">33,757</td><td class="now">11,804</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="cap">"Campaigns sent" excludes internal test/QA sends; genuine marketing drops are included (referral shares, community discounts), most of which carry $0 revenue in both years.</div>
+
+ <div class="wk-block rv">
+ <div class="wk-title"><h3>Top sends, summer 2025</h3><span class="sum">by revenue</span></div>
+ <div class="tbl-wrap"><table class="snd">
+ <thead><tr><th>Send</th><th>Recipients</th><th>Revenue</th></tr></thead>
+ <tbody>
+ <tr><td class="name">8/30 End of Season Labor Day Sale Continues</td><td>167,382</td><td class="rev">$23,398</td></tr>
+ <tr><td class="name">8/28 End of Season Labor Day Sale Begins</td><td>165,635</td><td class="rev">$22,022</td></tr>
+ <tr><td class="name">7/2 4th of July Sale Begins &ndash; Early Access</td><td>194,820</td><td class="rev">$10,592</td></tr>
+ <tr><td class="name">7/3 4th of July Early Access &ndash; Last Chance</td><td>177,449</td><td class="rev">$9,640</td></tr>
+ <tr><td class="name">8/26 Get Ready &ndash; Sale is Coming</td><td>168,260</td><td class="rev">$8,954</td></tr>
+ <tr><td class="name">6/20 Summer Solstice Sale Begins</td><td>126,934</td><td class="rev">$8,803</td></tr>
+ </tbody>
+ </table></div>
+ <div class="cap">The two Labor Day sends alone brought in $45.4K &mdash; nearly 15% of the entire summer's email revenue from two sends.</div>
+ </div>
+
+ <div class="wk-block rv">
+ <div class="wk-title"><h3>Top sends, summer 2026</h3><span class="sum">by revenue</span></div>
+ <div class="tbl-wrap"><table class="snd">
+ <thead><tr><th>Send</th><th>Recipients</th><th>Revenue</th></tr></thead>
+ <tbody>
+ <tr><td class="name">8/28 Fall Neutrals Just Got Better</td><td>189,973</td><td class="rev">$12,925</td></tr>
+ <tr><td class="name">7/1 Early Access Begins &ndash; 4th of July</td><td>61,201</td><td class="rev">$11,912</td></tr>
+ <tr><td class="name">6/08 Best Sellers &ndash; Trucker Jacket</td><td>213,282</td><td class="rev">$9,920</td></tr>
+ <tr><td class="name">8/23 Boots On &ndash; The Bootcut Is Back</td><td>215,913</td><td class="rev">$9,035</td></tr>
+ <tr><td class="name">8/21 Wear Anywhere Jacket</td><td>191,870</td><td class="rev">$8,600</td></tr>
+ <tr><td class="name">8/25 Take It Easy &ndash; Your Fall Foundation</td><td>190,465</td><td class="rev">$8,233</td></tr>
+ </tbody>
+ </table></div>
+ <div class="cap">No single send broke $13K this year. Revenue is spread thinner across more list-wide sends rather than concentrated in a couple of standout promotions.</div>
+ </div>
+ </section>
+
+ <section>
+ <div class="sec-head rv"><h2>Campaigns &mdash; SMS</h2><div class="tag">Klaviyo campaign summary</div></div>
+ <p class="lede rv">SMS lost more ground than email on a per-recipient basis, and the headline number undersells it: 2025 sent zero SMS campaigns in August, so the two summers aren't fully apples-to-apples.</p>
+ <div class="cmp-wrap rv">
+ <table class="cmp">
+ <colgroup><col><col class="nowcol"><col></colgroup>
+ <thead><tr><th>Metric</th><th>Summer 2025</th><th class="now">Summer 2026</th></tr></thead>
+ <tbody>
+ <tr class="grp"><td colspan="3">Volume</td></tr>
+ <tr><td class="metric">Campaigns sent</td><td class="prev">18 (Jun&ndash;Jul only)</td><td class="now">22 (Jun&ndash;Aug)</td></tr>
+ <tr><td class="metric">Total recipients</td><td class="prev">900,220</td><td class="now">1,489,418</td></tr>
+ <tr class="grp"><td colspan="3">Unique counts</td></tr>
+ <tr><td class="metric">Unique clicks</td><td class="prev">81,181</td><td class="now">106,759</td></tr>
+ <tr><td class="metric">Orders placed</td><td class="prev">396</td><td class="now">330</td></tr>
+ <tr><td class="metric">Revenue</td><td class="prev">$62,277</td><td class="now">$47,348</td></tr>
+ <tr class="grp"><td colspan="3">Rates &amp; deliverability</td></tr>
+ <tr><td class="metric">Click rate</td><td class="prev">9.02%</td><td class="now">7.17%</td></tr>
+ <tr><td class="metric">Placed order rate</td><td class="prev">0.044%</td><td class="now">0.022%</td></tr>
+ <tr><td class="metric">Revenue per recipient</td><td class="prev">$0.0692</td><td class="now">$0.0318</td></tr>
+ <tr><td class="metric">Bounce rate</td><td class="prev">0.63%</td><td class="now">1.62%</td></tr>
+ <tr><td class="metric">Unsubscribes</td><td class="prev">3,593</td><td class="now">1,637</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="cap"><b>Like-for-like check:</b> comparing only the overlapping June&ndash;July window (2025 sent no SMS in August), revenue goes from $62,277 to $33,864 &mdash; a <b>45.6% decline</b>, nearly double the 24.0% headline. August 2026's $13,484 in SMS revenue is real, incremental volume 2025 didn't have, and it's flattering the YoY comparison. SMS bounce rate also rose meaningfully (0.63% &rarr; 1.62%) and is worth a list-hygiene check.</div>
+ </section>
+
+ <section>
+ <div class="sec-head rv"><h2>Flows</h2><div class="tag">Live automations · email &amp; SMS</div></div>
+ <p class="lede rv">Flows are the most resilient channel. Deliveries are up 61%, and orders are actually up 6.8% &mdash; more people are moving through automations and converting. Revenue is down because <b>revenue per delivery fell 42%</b>, concentrated almost entirely in cart-recovery flows losing order value.</p>
+ <div class="cmp-wrap rv">
+ <table class="cmp">
+ <colgroup><col><col class="nowcol"><col></colgroup>
+ <thead><tr><th>Metric</th><th>Summer 2025</th><th class="now">Summer 2026</th></tr></thead>
+ <tbody>
+ <tr><td class="metric">Delivered</td><td class="prev">390,685</td><td class="now">628,745</td></tr>
+ <tr><td class="metric">Unique opens</td><td class="prev">186,807</td><td class="now">258,492</td></tr>
+ <tr><td class="metric">Unique clicks</td><td class="prev">35,908</td><td class="now">52,417</td></tr>
+ <tr><td class="metric">Orders placed</td><td class="prev">3,708</td><td class="now">3,960</td></tr>
+ <tr><td class="metric">Revenue</td><td class="prev">$569,743</td><td class="now">$532,199</td></tr>
+ <tr><td class="metric">Open rate</td><td class="prev">47.8%</td><td class="now">41.1%</td></tr>
+ <tr><td class="metric">Click rate</td><td class="prev">9.19%</td><td class="now">8.34%</td></tr>
+ <tr><td class="metric">Placed order rate</td><td class="prev">0.949%</td><td class="now">0.630%</td></tr>
+ <tr><td class="metric">Revenue per delivery</td><td class="prev">$1.46</td><td class="now">$0.85</td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <div class="wk-block rv">
+ <div class="wk-title"><h3>Revenue by flow group</h3><span class="sum">Jun&ndash;Aug, both years</span></div>
+ <div class="cmp-wrap"><table class="cmp">
+ <colgroup><col><col class="nowcol"><col><col></colgroup>
+ <thead><tr><th>Flow group</th><th>Summer 2025</th><th class="now">Summer 2026</th><th>YoY</th></tr></thead>
+ <tbody>
+ <tr><td class="metric">Cart recovery <span class="o">(Added to Cart, Abandoned Checkout, Browse Abandonment, Price Drop)</span></td><td class="prev">$257,450</td><td class="flow-cell now"><span class="r">$194,950</span></td><td><span class="minichip down">&minus;24.3%</span></td></tr>
+ <tr><td class="metric">Welcome series <span class="o">(rebuilt/renamed for 2026)</span></td><td class="prev">$173,421</td><td class="flow-cell now"><span class="r">$147,084</span></td><td><span class="minichip down">&minus;15.2%</span></td></tr>
+ <tr><td class="metric">Post-purchase &amp; shipping</td><td class="prev">$68,303</td><td class="flow-cell now"><span class="r">$66,817</span></td><td><span class="minichip flat">&minus;2.2%</span></td></tr>
+ <tr><td class="metric">Loyalty &amp; rewards</td><td class="prev">$39,004</td><td class="flow-cell now"><span class="r">$60,287</span></td><td><span class="minichip up">+54.6%</span></td></tr>
+ <tr><td class="metric">Win-back &amp; reviews</td><td class="prev">$14,361</td><td class="flow-cell now"><span class="r">$15,988</span></td><td><span class="minichip up">+11.3%</span></td></tr>
+ <tr><td class="metric">Other <span class="o">(Back in Stock, Concierge, Cross-sell)</span></td><td class="prev">$17,203</td><td class="flow-cell now"><span class="r">$47,072</span></td><td><span class="minichip up">+173.6%</span></td></tr>
+ </tbody>
+ </table></div>
+ <div class="cap">Grouped by function since Klaviyo flow names change year to year (e.g. "Welcome Series &ndash; SMS 2025" became "Welcome Series &ndash; SMS 2026"). Groups sum to the full $569,743 / $532,199 totals above.</div>
+ </div>
+
+ <div class="wk-block rv">
+ <div class="wk-title"><h3>Cart recovery, flow by flow</h3><span class="sum">the largest driver, in detail</span></div>
+ <div class="tbl-wrap"><table class="snd">
+ <thead><tr><th>Flow</th><th>Delivered</th><th>Orders</th><th>Implied AOV</th><th>Revenue</th></tr></thead>
+ <tbody>
+ <tr><td class="name">Added to Cart &middot; 2025</td><td>33,228</td><td>544</td><td>$194.28</td><td class="rev">$105,691</td></tr>
+ <tr><td class="name">Added to Cart &middot; 2026</td><td>32,889</td><td>520</td><td>$162.45</td><td class="rev">$84,472</td></tr>
+ <tr><td class="name">Abandoned Checkout &middot; 2025</td><td>13,524</td><td>505</td><td>$162.59</td><td class="rev">$82,107</td></tr>
+ <tr><td class="name">Abandoned Checkout &middot; 2026</td><td>10,292</td><td>408</td><td>$137.74</td><td class="rev">$56,198</td></tr>
+ </tbody>
+ </table></div>
+ <div class="cap">Added to Cart delivered almost the same volume (&minus;1%) with a slightly <b>better</b> click rate (8.6%&rarr;10.0%) and order rate (1.64%&rarr;1.58%, essentially flat) &mdash; but implied AOV fell 16.4%. Abandoned Checkout lost real volume too (&minus;23.9% delivered, fewer people reaching and abandoning checkout), with AOV down 15.3%. Engagement isn't the problem in either flow; order value is.</div>
+ </div>
+ </section>
+
+ <section>
+ <div class="sec-head rv"><h2>Deliverability &amp; list health</h2><div class="tag">Email + SMS · YoY</div></div>
+ <p class="lede rv">Deliverability improved on email and is not behind the revenue decline. SMS bounce rate rose but off a small base.</p>
+ <div class="cmp-wrap rv">
+ <table class="cmp">
+ <colgroup><col><col class="nowcol"><col></colgroup>
+ <thead><tr><th>Metric</th><th>Summer 2025</th><th class="now">Summer 2026</th></tr></thead>
+ <tbody>
+ <tr class="grp"><td colspan="3">Email</td></tr>
+ <tr><td class="metric">Bounce rate</td><td class="prev">0.302%</td><td class="now">0.203%</td></tr>
+ <tr><td class="metric">Spam complaints</td><td class="prev">1,082</td><td class="now">808</td></tr>
+ <tr><td class="metric">Unsubscribes</td><td class="prev">33,757</td><td class="now">11,804</td></tr>
+ <tr class="grp"><td colspan="3">SMS</td></tr>
+ <tr><td class="metric">Bounce rate</td><td class="prev">0.63%</td><td class="now">1.62%</td></tr>
+ <tr><td class="metric">Unsubscribes</td><td class="prev">3,593</td><td class="now">1,637</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="cap">Email deliverability and list sentiment both improved YoY &mdash; fewer bounces, fewer spam complaints, far fewer unsubscribes, despite 47% more recipients mailed. SMS bounce rate increase is worth a quick number-hygiene check but is small in absolute terms.</div>
+ </section>
+
+</div>
+</div>
+
+<div class="wrap">
+ <footer>
+ <div class="mark">DigitsUp</div>
+ <p>Liverpool LA YoY retention audit &middot; Jun 1&ndash;Aug 31, 2026 vs. Jun 1&ndash;Aug 31, 2025. Source: Klaviyo campaign (email + SMS) and flow exports, both years, pulled Sep 14, 2026. Internal test/QA sends excluded from campaign counts; revenue totals include genuine marketing sends regardless of value. Flow revenue uses current Klaviyo attribution regardless of a flow's present-day status label, since flows are frequently renamed or rebuilt year to year (see flow-group note). No Shopify store-wide total is included here &mdash; these figures are Klaviyo-attributed only and reflect the retention channel DigitsUp manages, not total store revenue. Confidential, internal use only.</p>
+ </footer>
+</div>
+
+<script>
+ var heroDone=false;
+ function runHero(){
+ if(heroDone)return;heroDone=true;
+ var el=document.getElementById('heroNum'),target=863092,s=null,dur=1100;
+ function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+ function step(t){if(!s)s=t;var p=Math.min((t-s)/dur,1);var e=1-Math.pow(1-p,3);
+ el.textContent=fmt(target*e);if(p<1)requestAnimationFrame(step);else el.textContent='$863,092';}
+ requestAnimationFrame(step);
+ }
+ function revealIn(panel){panel.querySelectorAll('.rv').forEach(function(n){n.classList.add('in')});}
+ var tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel');
+ tabs.forEach(function(t){t.addEventListener('click',function(){
+ tabs.forEach(function(x){x.classList.remove('active')});
+ panels.forEach(function(x){x.classList.remove('active')});
+ t.classList.add('active');
+ var p=document.getElementById(t.dataset.tab);p.classList.add('active');
+ window.scrollTo({top:0});
+ revealIn(p);
+ });});
+ runHero();
+ var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.1});
+ document.querySelectorAll('#summary .rv').forEach(function(n){io.observe(n)});
+</script>
+</body>
+</html>
